@@ -1,0 +1,11 @@
+<Information>
+  <Id>251</Id>
+  <EntityType>House</EntityType>
+  <Name>Archery Range</Name>
+  <Description>Used to create and improve archers.</Description>
+  <Domain>Ground</Domain>
+  <MaxNumber>15</MaxNumber>
+  <RequiredUpgrades>
+    <Upgrade RequiredUpgradeId="310"/>
+  </RequiredUpgrades>
+</Information>

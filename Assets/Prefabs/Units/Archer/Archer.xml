@@ -1,0 +1,9 @@
+<Information>
+  <Id>140</Id>
+  <EntityType>Archer</EntityType>
+  <Name>Archer</Name>
+  <Description>Quick and light. Weak at close range; excels at battle from distance.</Description>
+  <Domain>Ground</Domain>
+  <MaxNumber>50</MaxNumber>
+  <RequiredUpgrades/>
+</Information>

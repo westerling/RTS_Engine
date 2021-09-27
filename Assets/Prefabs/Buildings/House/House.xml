@@ -1,0 +1,9 @@
+<Information>
+  <Id>202</Id>
+  <EntityType>House</EntityType>
+  <Name>House</Name>
+  <Description>Each House supports 5 units.</Description>
+  <Domain>Ground</Domain>
+  <MaxNumber>15</MaxNumber>
+  <RequiredUpgrades/>
+</Information>

@@ -1,0 +1,9 @@
+<Information>
+  <Id>201</Id>
+  <EntityType>House</EntityType>
+  <Name>Town Center</Name>
+  <Description>Town Center.</Description>
+  <Domain>Ground</Domain>
+  <MaxNumber>5</MaxNumber>
+  <RequiredUpgrades/>
+</Information>

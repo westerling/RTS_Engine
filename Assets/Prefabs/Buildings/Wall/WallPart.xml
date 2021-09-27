@@ -1,0 +1,9 @@
+<Information>
+  <Id>211</Id>
+  <EntityType>House</EntityType>
+  <Name>Wall</Name>
+  <Description>A Wall</Description>
+  <Domain>Ground</Domain>
+  <MaxNumber>400</MaxNumber>
+  <RequiredUpgrades/>
+</Information>

@@ -1,0 +1,132 @@
+<Upgrades>
+  <Upgrade>
+    <Id>301</Id>
+    <UpgradeEffect>Addition</UpgradeEffect>
+    <!--<RequiredUpgrades>
+      <Upgrade RequiredUpgradeId="301"/>
+    </RequiredUpgrades>-->
+    <RequiredBuildings>
+      <RequiredBuilding RequiredBuildingId="201"/>
+    </RequiredBuildings>
+    <AffectedEnteties>
+      <AffectedEntity AffectedEntityId="200"/>
+    </AffectedEnteties>
+    <AffectedAttributes>
+      <Attribute>
+        <AttributeType>Training</AttributeType>
+        <Amount>5</Amount>
+      </Attribute>
+    </AffectedAttributes>
+    <Attributes>
+      <Attribute>
+        <AttributeType>Training</AttributeType>
+        <Amount>5</Amount>
+      </Attribute>
+      <Attribute>
+        <AttributeType>CostFood</AttributeType>
+        <Amount>800</Amount>
+      </Attribute>
+      <Attribute>
+        <AttributeType>CostGold</AttributeType>
+        <Amount>400</Amount>
+      </Attribute>
+      <Attribute>
+        <AttributeType>CostStone</AttributeType>
+        <Amount>100</Amount>
+      </Attribute>
+      <Attribute>
+        <AttributeType>CostWood</AttributeType>
+        <Amount>100</Amount>
+      </Attribute>
+    </Attributes>
+  </Upgrade>
+  <Upgrade>
+    <Id>302</Id>
+    <UpgradeEffect>Addition</UpgradeEffect>
+    <!--<RequiredUpgrades>
+      <Upgrade RequiredUpgradeId="301"/>
+    </RequiredUpgrades>-->
+    <RequiredBuildings>
+      <RequiredBuilding RequiredBuildingId="201"/>
+    </RequiredBuildings>
+    <AffectedEnteties>
+      <AffectedEntity AffectedEntityId="200"/>
+    </AffectedEnteties>
+    <AffectedAttributes>
+      <Attribute>
+        <AttributeType>Training</AttributeType>
+        <Amount>5</Amount>
+      </Attribute>
+    </AffectedAttributes>
+    <Attributes>
+      <Attribute>
+        <AttributeType>Training</AttributeType>
+        <Amount>5</Amount>
+      </Attribute>
+      <Attribute>
+        <AttributeType>CostFood</AttributeType>
+        <Amount>1500</Amount>
+      </Attribute>
+      <Attribute>
+        <AttributeType>CostGold</AttributeType>
+        <Amount>1000</Amount>
+      </Attribute>
+      <Attribute>
+        <AttributeType>CostStone</AttributeType>
+        <Amount>250</Amount>
+      </Attribute>
+      <Attribute>
+        <AttributeType>CostWood</AttributeType>
+        <Amount>250</Amount>
+      </Attribute>
+    </Attributes>
+  </Upgrade>
+  <Upgrade>
+    <Id>310</Id>
+    <UpgradeEffect>Addition</UpgradeEffect>
+    <!--<RequiredUpgrades>
+      <Upgrade RequiredUpgradeId="301"/>
+    </RequiredUpgrades>-->
+    <RequiredBuildings>
+      <RequiredBuilding RequiredBuildingId="201"/>
+    </RequiredBuildings>
+    <AffectedEnteties>
+      <AffectedEntity AffectedEntityId="201"/>
+      <AffectedEntity AffectedEntityId="101"/>
+    </AffectedEnteties>
+    <AffectedAttributes>
+      <Attribute>
+        <AttributeType>Training</AttributeType>
+        <Amount>5</Amount>
+      </Attribute>
+    </AffectedAttributes>
+    <AffectedAttributes>
+      <Attribute>
+        <AttributeType>HitPoints</AttributeType>
+        <Amount>50000</Amount>
+      </Attribute>
+    </AffectedAttributes>
+    <Attributes>
+      <Attribute>
+        <AttributeType>Training</AttributeType>
+        <Amount>1</Amount>
+      </Attribute>
+      <Attribute>
+        <AttributeType>CostFood</AttributeType>
+        <Amount>0</Amount>
+      </Attribute>
+      <Attribute>
+        <AttributeType>CostGold</AttributeType>
+        <Amount>0</Amount>
+      </Attribute>
+      <Attribute>
+        <AttributeType>CostStone</AttributeType>
+        <Amount>0</Amount>
+      </Attribute>
+      <Attribute>
+        <AttributeType>CostWood</AttributeType>
+        <Amount>0</Amount>
+      </Attribute>
+    </Attributes>
+  </Upgrade>
+</Upgrades>

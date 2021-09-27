@@ -1,0 +1,9 @@
+<Information>
+  <Id>221</Id>
+  <EntityType>House</EntityType>
+  <Name>Lumber Camp</Name>
+  <Description>Used to deposit wood and research wood-gathering improvements.</Description>
+  <Domain>Ground</Domain>
+  <MaxNumber>15</MaxNumber>
+  <RequiredUpgrades/>
+</Information>

@@ -1,0 +1,9 @@
+<Information>
+  <Id>101</Id>
+  <EntityType>Villager</EntityType>
+  <Name>Villager</Name>
+  <Description>Gathers wood, food, stone, gold. Builds and repairs buildings. Also repairs ships, siege weapons.</Description>
+  <Domain>Ground</Domain>
+  <MaxNumber>50</MaxNumber>
+  <RequiredUpgrades/>
+</Information>
