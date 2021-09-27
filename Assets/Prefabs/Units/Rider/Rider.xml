@@ -1,0 +1,9 @@
+<Information>
+  <Id>120</Id>
+  <EntityType>Infantry</EntityType>
+  <Name>Swordsman</Name>
+  <Description>Cheap and quick to create.</Description>
+  <Domain>Ground</Domain>
+  <MaxNumber>50</MaxNumber>
+  <RequiredUpgrades/>
+</Information>

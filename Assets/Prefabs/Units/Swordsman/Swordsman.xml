@@ -1,0 +1,9 @@
+<Information>
+  <Id>120</Id>
+  <EntityType>Swordsman</EntityType>
+  <Name>Swordsman</Name>
+  <Description>Quick and light.</Description>
+  <Domain>Ground</Domain>
+  <MaxNumber>50</MaxNumber>
+  <RequiredUpgrades/>
+</Information>

@@ -1,0 +1,9 @@
+<Information>
+  <Id>220</Id>
+  <EntityType>House</EntityType>
+  <Name>Mill</Name>
+  <Description>Droppoint for food</Description>
+  <Domain>Ground</Domain>
+  <MaxNumber>15</MaxNumber>
+  <RequiredUpgrades/>
+</Information>

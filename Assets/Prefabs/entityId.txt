@@ -1,0 +1,13 @@
+101	-	Villager
+120	-	Swordsman
+140	-	Archer
+201	-	Town Center
+202	-	House
+220	-	Mill
+221 -	Lumber Camp
+250	-	Barracks
+251	-	Archery Range
+301	-	Second Age
+302	-	Third Age
+303 -	Fourth Age
+310	-	Loom

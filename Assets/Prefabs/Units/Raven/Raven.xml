@@ -1,0 +1,9 @@
+<Information>
+  <Id>160</Id>
+  <EntityType>Scout</EntityType>
+  <Name>Raven</Name>
+  <Description>Quick and light. Likes to fly.</Description>
+  <Domain>Ground</Domain>
+  <MaxNumber>50</MaxNumber>
+  <RequiredUpgrades/>
+</Information>

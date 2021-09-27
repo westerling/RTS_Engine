@@ -1,0 +1,9 @@
+<Information>
+  <Id>250</Id>
+  <EntityType>House</EntityType>
+  <Name>Barracks</Name>
+  <Description>Used to create and improve infantry.</Description>
+  <Domain>Ground</Domain>
+  <MaxNumber>15</MaxNumber>
+  <RequiredUpgrades/>
+</Information>
