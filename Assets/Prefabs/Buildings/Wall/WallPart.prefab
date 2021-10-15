@@ -212,10 +212,10 @@ BoxCollider:
   m_GameObject: {fileID: 4309669020891701889}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 5, z: 5}
+  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!208 &3176061529906635542
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -262,7 +262,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  health: {fileID: 2140595229544194780}
   healthBarImage: {fileID: 9121700356063538767}
 --- !u!114 &4741190181223067789
 MonoBehaviour:
@@ -279,10 +278,10 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   m_Icon: {fileID: 21300000, guid: f848b6032fa128148a6ab201393c0893, type: 3}
-  m_Id: -1
-  m_EntityType: 0
-  m_EntityName: Unknown
-  m_Description: This is an unknown object.
+  m_Id: 211
+  m_EntityType: 11
+  m_EntityName: Wall Part
+  m_Description: Part of wall.
   m_RequiredUpgrades: 
   m_AimAtPoint: {fileID: 1618383091392354114}
   m_Domain: 0
@@ -321,10 +320,12 @@ MonoBehaviour:
   health: {fileID: 2140595229544194780}
   buildingPreview: {fileID: 3128475550081364578, guid: 3d44c9a8b32ecaf4389216c49d661625, type: 3}
   construction: {fileID: 8827082878475793465}
-  enableOnBuild:
+  m_EnableOnBuild:
   - {fileID: 4931189841741992368}
   builders: []
   m_BuildingIsCompleted: 0
+  m_DestructionStageOne: []
+  m_DestructionStageTwo: []
 --- !u!114 &1765676319716578855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -368,7 +369,7 @@ MonoBehaviour:
     - m_Amount: 2
       m_AttributeType: 23
     - m_Amount: 7
-      m_AttributeType: 19
+      m_AttributeType: 20
 --- !u!1 &4931189841741992368
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,7 +381,6 @@ GameObject:
   - component: {fileID: 8521504684400035658}
   - component: {fileID: 3275868685842770809}
   - component: {fileID: 4856728115723782348}
-  - component: {fileID: 2341161491004419757}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Untagged
@@ -451,19 +451,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2341161491004419757
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4931189841741992368}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5763651041595805815
 GameObject:
   m_ObjectHideFlags: 0
@@ -770,8 +757,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e25129b865b402d419ea5be34ee7fb95, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e25129b865b402d419ea5be34ee7fb95, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e25129b865b402d419ea5be34ee7fb95, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.26
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e25129b865b402d419ea5be34ee7fb95, type: 3}
       propertyPath: m_LocalPosition.y

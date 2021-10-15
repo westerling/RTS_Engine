@@ -3,18 +3,29 @@ using UnityEngine;
 
 public class Build : NetworkBehaviour
 {
-    private float rotationSpeed = 20f;
-    private Builder builder;
+    private float m_RotationSpeed = 20f;
+    private Builder m_Builder;
+    private Unit m_Unit;
 
-    private void Start()
+    public override void OnStartServer()
     {
-        builder = GetComponent<Builder>();
+        m_Unit = GetComponent<Unit>();
+        m_Builder = GetComponent<Builder>();
     }
 
     [ServerCallback]
     private void Update()
     {
-        var target = builder.Target;
+        if (m_Unit.UnitMovement.Task == Task.Build)
+        {
+            UnitBuild();
+            return;
+        } 
+    }
+
+    private void UnitBuild()
+    {
+        var target = m_Builder.Target;
 
         if (target == null)
         {
@@ -39,16 +50,16 @@ public class Build : NetworkBehaviour
                 Quaternion.LookRotation(target.transform.position - transform.position);
 
             transform.rotation = Quaternion.RotateTowards(
-                transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        }       
+                transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
+        }
     }
 
     [Server]
     private bool CanRepairTarget()
     {
-        var size = Utils.AtBuildingEdge(builder.Target);
+        var size = Utils.AtBuildingEdge(m_Builder.Target);
 
-        return (builder.Target.transform.position - transform.position).sqrMagnitude <=
+        return (m_Builder.Target.transform.position - transform.position).sqrMagnitude <=
             (size) * (size);
     }
 
@@ -58,4 +69,9 @@ public class Build : NetworkBehaviour
         building.AddBuilder(unit);
     }
 
+    [ClientRpc]
+    private void ClientDebug(string message)
+    {
+        Debug.Log(message);
+    }
 }

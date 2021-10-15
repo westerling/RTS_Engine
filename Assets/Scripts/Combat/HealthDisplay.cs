@@ -5,10 +5,9 @@ using Mirror;
 public class HealthDisplay : NetworkBehaviour
 {
     [SerializeField]
-    private Health m_Health = null;
-
-    [SerializeField]
     private Image healthBarImage = null;
+
+    private Health m_Health = null;
 
     public Health Health
     {
@@ -18,10 +17,7 @@ public class HealthDisplay : NetworkBehaviour
 
     private void Awake()
     {
-        if (Health == null)
-        {
-            return;
-        }
+        m_Health = GetComponent<Health>();
 
         SetupListeners();
     }

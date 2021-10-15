@@ -49,6 +49,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""MouseScrollY"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""60f17761-5487-4409-8804-7e835cda1dcb"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -137,6 +145,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard & Mouse"",
                     ""action"": ""Shift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1f038465-8684-4bc9-aef2-ad523261081f"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseScrollY"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -295,6 +314,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         m_Player_Chat = m_Player.FindAction("Chat", throwIfNotFound: true);
         m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
+        m_Player_MouseScrollY = m_Player.FindAction("MouseScrollY", throwIfNotFound: true);
         // UnitsSelected
         m_UnitsSelected = asset.FindActionMap("UnitsSelected", throwIfNotFound: true);
         m_UnitsSelected_Newaction = m_UnitsSelected.FindAction("New action", throwIfNotFound: true);
@@ -361,6 +381,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Pause;
     private readonly InputAction m_Player_Chat;
     private readonly InputAction m_Player_Shift;
+    private readonly InputAction m_Player_MouseScrollY;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
@@ -369,6 +390,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputAction @Chat => m_Wrapper.m_Player_Chat;
         public InputAction @Shift => m_Wrapper.m_Player_Shift;
+        public InputAction @MouseScrollY => m_Wrapper.m_Player_MouseScrollY;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -390,6 +412,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Shift.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
                 @Shift.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
                 @Shift.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
+                @MouseScrollY.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseScrollY;
+                @MouseScrollY.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseScrollY;
+                @MouseScrollY.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseScrollY;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -406,6 +431,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Shift.started += instance.OnShift;
                 @Shift.performed += instance.OnShift;
                 @Shift.canceled += instance.OnShift;
+                @MouseScrollY.started += instance.OnMouseScrollY;
+                @MouseScrollY.performed += instance.OnMouseScrollY;
+                @MouseScrollY.canceled += instance.OnMouseScrollY;
             }
         }
     }
@@ -565,6 +593,7 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnPause(InputAction.CallbackContext context);
         void OnChat(InputAction.CallbackContext context);
         void OnShift(InputAction.CallbackContext context);
+        void OnMouseScrollY(InputAction.CallbackContext context);
     }
     public interface IUnitsSelectedActions
     {

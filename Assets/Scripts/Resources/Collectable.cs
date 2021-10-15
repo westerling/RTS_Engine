@@ -41,7 +41,7 @@ public class Collectable : Interactable
         return isInfinite || Quantity > 0;
     }
 
-    public void GatherResources(int gatherAmount)
+    public bool GatherResources(int gatherAmount)
     {
         if (gatherAmount > m_Quantity)
         {
@@ -53,6 +53,8 @@ public class Collectable : Interactable
         if (Quantity <= 0)
         {
             Destroy(this.gameObject);
+            return false;
         }
+        return true;
     }
 }

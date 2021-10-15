@@ -232,7 +232,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  health: {fileID: 2140595229544194780}
   healthBarImage: {fileID: 9121700356063538767}
 --- !u!114 &1765676319716578855
 MonoBehaviour:
@@ -267,8 +266,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   m_Icon: {fileID: 21300000, guid: 0daa9bee085884a4c9cc64c6f758d2b2, type: 3}
-  m_Id: -1
-  m_EntityType: 0
+  m_Id: 221
+  m_EntityType: 13
   m_EntityName: Lumber Camp
   m_Description: Used to deposit wood and research wood-gathering improvements.
   m_RequiredUpgrades: 
@@ -309,9 +308,11 @@ MonoBehaviour:
   health: {fileID: 2140595229544194780}
   buildingPreview: {fileID: 3128475550081364578, guid: 477e3357845ba9d48b7566728fdd11fb, type: 3}
   construction: {fileID: 7389182210869339001}
-  enableOnBuild: []
+  m_EnableOnBuild: []
   builders: []
   m_BuildingIsCompleted: 0
+  m_DestructionStageOne: []
+  m_DestructionStageTwo: []
   m_Resource: 3
 --- !u!114 &2910173948125487360
 MonoBehaviour:
@@ -338,7 +339,7 @@ MonoBehaviour:
     - m_Amount: 100
       m_AttributeType: 23
     - m_Amount: 35
-      m_AttributeType: 19
+      m_AttributeType: 20
 --- !u!1 &4931189841741992368
 GameObject:
   m_ObjectHideFlags: 0

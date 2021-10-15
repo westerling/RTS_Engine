@@ -231,7 +231,7 @@ public class SelectionHandler : MonoBehaviour
         var min = selectionBox.anchoredPosition - (selectionBox.sizeDelta / 2);
         var max = selectionBox.anchoredPosition + (selectionBox.sizeDelta / 2);
 
-        foreach (var unit in player.GetMyUnits())
+        foreach (var unit in player.DeployedUnits)
         {
             if (Selected.Select(go => go.GetComponent<Unit>()).Contains(unit))
             {
@@ -353,7 +353,7 @@ public class SelectionHandler : MonoBehaviour
 
     private void AddBehaviours(ActionBehaviour[] behaviours)
     {
-        var priorUpgrades = player.GetMyUpgrades();
+        var priorUpgrades = player.MyUpgrades;
         foreach (var behaviour in behaviours)
         {
             var showButton = true;
@@ -398,6 +398,11 @@ public class SelectionHandler : MonoBehaviour
         foreach (var unit in Selected)
         {
             unit.GetComponent<Interactable>().Deselect();
+
+            if (unit.TryGetComponent(out Builder builder))
+            {
+
+            }
         }
 
         Selected.Clear();

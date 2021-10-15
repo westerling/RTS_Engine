@@ -66,5 +66,10 @@ public class DeliverResource : NetworkBehaviour
         return (transform.position - this.transform.position).sqrMagnitude <=
             (4f) * (4f);
     }
+
+    private void ClientDebug(string text)
+    {
+        Debug.Log(text);
+    }
 }
 

@@ -69,8 +69,6 @@ public class UnitMovement : NetworkBehaviour
             UpdateTargetPosition();
         }
 
-        //ClientDebug(m_Agent.stoppingDistance.ToString());
-
         m_Agent.SetDestination(MovementList[0]);
 
         if (m_Agent.remainingDistance <= m_Agent.stoppingDistance && !m_Agent.pathPending)
@@ -263,6 +261,7 @@ public class UnitMovement : NetworkBehaviour
             }
         }
     }
+
     #endregion
 
     [ClientRpc]

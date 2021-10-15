@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using System;
 using UnityEngine;
 
 public class Builder : BaseUnitClickAction
@@ -12,17 +13,56 @@ public class Builder : BaseUnitClickAction
         set { m_Target = value; }
     }
 
-    #region server
 
-    [Command]
-    public void CmdSetTarget(GameObject targetGameObject)
+    public void AddListener()
     {
-        if (!targetGameObject.TryGetComponent(out Building target))
+        Building.AuthorityOnConstructionStarted += AuthorityHandleBuildingsSpawned;
+    }
+
+    public void RemoveListener()
+    {
+        Building.AuthorityOnConstructionStarted -= AuthorityHandleBuildingsSpawned;
+    }
+
+    private void AuthorityHandleBuildingsSpawned(Building building)
+    {
+        CmdSetTarget(building);
+    }
+
+    public void FindNewTarget()
+    {
+        var player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
+
+        var constructions = player.Constructions;
+
+        if (constructions.Count == 0)
         {
             return;
         }
 
-        Target = target;
+        var closestConstruction = constructions[0];
+        var distance = Vector3.Distance(closestConstruction.gameObject.transform.position, transform.position);
+
+        foreach (var construction in constructions)
+        {
+            var newDistance = Vector3.Distance(construction.gameObject.transform.position, transform.position);
+
+            if (newDistance < distance)
+            {
+                closestConstruction = construction;
+                distance = newDistance;
+            }
+        }
+
+        Target = closestConstruction;
+    }
+
+    #region server
+
+    [Command]
+    public void CmdSetTarget(Building targetBuilding)
+    {
+        Target = targetBuilding;
     }
 
     [Command]

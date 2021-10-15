@@ -128,9 +128,9 @@ GameObject:
   - component: {fileID: 1703170001031860377}
   - component: {fileID: 6280015821325441730}
   - component: {fileID: 4741190181223067789}
+  - component: {fileID: 3783630038247267299}
   - component: {fileID: 1765676319716578855}
   - component: {fileID: -8402645301040859453}
-  - component: {fileID: 3783630038247267299}
   m_Layer: 13
   m_Name: Barracks
   m_TagString: Untagged
@@ -234,7 +234,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  health: {fileID: 2140595229544194780}
   healthBarImage: {fileID: 9121700356063538767}
 --- !u!114 &6280015821325441730
 MonoBehaviour:
@@ -267,8 +266,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   m_Icon: {fileID: 21300000, guid: a4eeb9c26c3c16e469eb5b1039512d80, type: 3}
-  m_Id: -1
-  m_EntityType: 0
+  m_Id: 250
+  m_EntityType: 11
   m_EntityName: Barracks
   m_Description: Used to create and improve infantry. Required for Archery Range,
     Stable.
@@ -310,10 +309,37 @@ MonoBehaviour:
   health: {fileID: 2140595229544194780}
   buildingPreview: {fileID: 3128475550081364578, guid: a6f6813e21baf4e41ba6313aad1c0888, type: 3}
   construction: {fileID: 7389182210869339001}
-  enableOnBuild:
-  - {fileID: 4931189841741992368}
+  m_EnableOnBuild: []
   builders: []
   m_BuildingIsCompleted: 0
+  m_DestructionStageOne: []
+  m_DestructionStageTwo: []
+--- !u!114 &3783630038247267299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4309669020891701889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61dc3582bc159254b9635f25d6706fc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Stats:
+    m_Attributes:
+    - m_Amount: 1200
+      m_AttributeType: 1
+    - m_Amount: 1
+      m_AttributeType: 3
+    - m_Amount: 7
+      m_AttributeType: 4
+    - m_Amount: 6
+      m_AttributeType: 2
+    - m_Amount: 175
+      m_AttributeType: 23
+    - m_Amount: 5
+      m_AttributeType: 20
 --- !u!114 &1765676319716578855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,34 +372,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Position: 0
   m_Unit: {fileID: 5625393431626882855, guid: d62b307f9b473464b828d70b104a51f1, type: 3}
---- !u!114 &3783630038247267299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4309669020891701889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61dc3582bc159254b9635f25d6706fc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Stats:
-    m_Attributes:
-    - m_Amount: 1200
-      m_AttributeType: 1
-    - m_Amount: 10
-      m_AttributeType: 10
-    - m_Amount: 1
-      m_AttributeType: 3
-    - m_Amount: 7
-      m_AttributeType: 4
-    - m_Amount: 6
-      m_AttributeType: 2
-    - m_Amount: 175
-      m_AttributeType: 23
-    - m_Amount: 50
-      m_AttributeType: 19
 --- !u!1 &4565621393463079485
 GameObject:
   m_ObjectHideFlags: 0

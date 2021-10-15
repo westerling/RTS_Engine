@@ -24,16 +24,16 @@ public class RtsPlayer : NetworkBehaviour
     private Upgrade[] m_Upgrades = new Upgrade[0];
 
     [SyncVar(hook = nameof(ClientHandleFoodUpdated))]
-    private int food;
+    private int m_Food;
 
     [SyncVar(hook = nameof(ClientHandleGoldUpdated))]
-    private int gold;
+    private int m_Gold;
 
     [SyncVar(hook = nameof(ClientHandleStoneUpdated))]
-    private int stone;
+    private int m_Stone;
 
     [SyncVar(hook = nameof(ClientHandleWoodUpdated))]
-    private int wood;
+    private int m_Wood;
 
     [SyncVar(hook = nameof(ClientHandleCurrentPopulationUpdated))]
     private int m_CurrentPopulation;
@@ -42,7 +42,7 @@ public class RtsPlayer : NetworkBehaviour
     private int m_MaxPopulation;
 
     [SyncVar(hook = nameof(AuthorityHandlePartyOwnerStateUpdated))]
-    private bool isPartyOwner = false;
+    private bool m_IsPartyOwner = false;
 
     [SyncVar(hook = nameof(ClientHandleDisplayNameUpdated))]
     private string m_DisplayName;
@@ -60,76 +60,77 @@ public class RtsPlayer : NetworkBehaviour
     private List<GameObjectIdentity> m_Researchables = new List<GameObjectIdentity>();
     private List<Unit> m_DeployedUnits = new List<Unit>();
     private List<Building> m_DeployedBuildings = new List<Building>();
-    private List<Building> m_RepairableBuldings = new List<Building>();
+    private List<Building> m_Constructions = new List<Building>();
     private Color m_TeamColor = new Color();
 
     public int CurrentPopulation
     {
-        get { return m_CurrentPopulation; }
+        get => m_CurrentPopulation;
     }
 
     public int MaxPopulation
     {
-        get { return m_MaxPopulation; }
+        get => m_MaxPopulation;
+        set => m_MaxPopulation = value;
     }
 
     public string DisplayName
     {
-        get { return m_DisplayName; }
-        set { m_DisplayName = value; }
+        get => m_DisplayName;
+        set => m_DisplayName = value;
     }
 
     public Transform MainCameraTransform
     {
-        get { return m_MainCameraTransform; }
-        set { m_MainCameraTransform = value; }
+        get => m_MainCameraTransform;
+        set => m_MainCameraTransform = value;
     }
 
     public Color TeamColor
     {
-        get { return m_TeamColor; }
-        set { m_TeamColor = value; }
+        get => m_TeamColor;
+        set => m_TeamColor = value;
     }
 
     public Faction Faction
     {
-        get { return m_Faction; }
-        set { m_Faction = value; }
+        get => m_Faction;
+        set => m_Faction = value;
     }
 
-    public List<Building> RepairableBuildings
+    public List<Building> DeployedBuildings
     {
-        get { return m_RepairableBuldings; }
-        set { m_RepairableBuldings = value; }
+        get => m_DeployedBuildings;
     }
 
-    public List<Unit> GetMyUnits()
+    public List<Building> Constructions
     {
-        return m_DeployedUnits;
+        get => m_Constructions;
     }
 
-    public List<int> GetMyUpgrades()
+
+    public List<Unit> DeployedUnits
     {
-        return myUpgrades;
+        get => m_DeployedUnits;
     }
 
-    public List<Building> GetMyBuildings()
+    public List<int> MyUpgrades
     {
-        return m_DeployedBuildings;
+        get => myUpgrades;
     }
 
-    public bool GetPartyOwner()
+    public bool IsPartyOwner
     {
-        return isPartyOwner;
+        get => m_IsPartyOwner;
     }
 
     public IDictionary<Resource, int> GetResources()
     {
         IDictionary<Resource, int> d = new Dictionary<Resource, int>();
-        d.Add(new KeyValuePair<Resource, int>(Resource.Food, food));
-        d.Add(new KeyValuePair<Resource, int>(Resource.Gold, gold));
-        d.Add(new KeyValuePair<Resource, int>(Resource.Stone, stone));
-        d.Add(new KeyValuePair<Resource, int>(Resource.Wood, wood));
+        d.Add(new KeyValuePair<Resource, int>(Resource.Food, m_Food));
+        d.Add(new KeyValuePair<Resource, int>(Resource.Gold, m_Gold));
+        d.Add(new KeyValuePair<Resource, int>(Resource.Stone, m_Stone));
+        d.Add(new KeyValuePair<Resource, int>(Resource.Wood, m_Wood));
 
         return d;
     }
@@ -228,7 +229,7 @@ public class RtsPlayer : NetworkBehaviour
         return true;
     }
 
-    public bool CanPlaceBuilding(BoxCollider collider, Vector3 point, int id)
+    public bool CanPlaceBuilding(BoxCollider collider, Vector3 point)
     {
         if (Physics.CheckBox(
             point + collider.center,
@@ -249,7 +250,8 @@ public class RtsPlayer : NetworkBehaviour
         Unit.ServerOnUnitSpawned += ServerHandleUnitsSpawned;
         Unit.ServerOnUnitDespawned += ServerHandleUnitsSpawned;
 
-        Building.ServerOnBuildingSpawned += ServerHandleBuildingsSpawned;
+        Building.ServerHandleConstructionStarted += ServerHandleConstructionStarted;
+        Building.ServerHandleBuildingCompleted += ServerHandleBuildingCompleted;
         Building.ServerOnBuildingDespawned += ServerHandleBuildingsDespawned;
 
         Upgrade.ServerOnUpgradeAdded += ServerHandleUpgradeAdded;
@@ -263,10 +265,10 @@ public class RtsPlayer : NetworkBehaviour
 
     private void SetStartResources()
     {
-        food = 5000;
-        gold = 5000;
-        stone = 5000;
-        wood = 5000;
+        m_Food = 5000;
+        m_Gold = 5000;
+        m_Stone = 5000;
+        m_Wood = 5000;
     }
 
     private void SetupResearchables()
@@ -301,7 +303,7 @@ public class RtsPlayer : NetworkBehaviour
         Unit.ServerOnUnitSpawned -= ServerHandleUnitsSpawned;
         Unit.ServerOnUnitDespawned -= ServerHandleUnitsSpawned;
 
-        Building.ServerOnBuildingSpawned -= ServerHandleBuildingsSpawned;
+        Building.ServerHandleConstructionStarted -= ServerHandleConstructionStarted;
         Building.ServerOnBuildingDespawned -= ServerHandleBuildingsDespawned;
     }
 
@@ -314,7 +316,7 @@ public class RtsPlayer : NetworkBehaviour
     [Server]
     public void SetPartyOwner(bool state)
     {
-        isPartyOwner = state;
+        m_IsPartyOwner = state;
     }
 
     [Server]
@@ -332,13 +334,13 @@ public class RtsPlayer : NetworkBehaviour
     [Command]
     public void CmdSetMaximumPopulation(int population)
     {
-        m_MaxPopulation += population;
+        MaxPopulation += population;
     }
 
     [Server]
     public void SetMaximumPopulation(int population)
     {
-        m_MaxPopulation += population;
+        MaxPopulation += population;
     }
 
     [Command]
@@ -359,16 +361,16 @@ public class RtsPlayer : NetworkBehaviour
         switch ((Resource)resourceType)
         {
             case Resource.Food:
-                food += amount;
+                m_Food += amount;
                 break;
             case Resource.Gold:
-                gold += amount;
+                m_Gold += amount;
                 break;
             case Resource.Stone:
-                stone += amount;
+                m_Stone += amount;
                 break;
             case Resource.Wood:
-                wood += amount;
+                m_Wood += amount;
                 break;
         }
     }
@@ -379,16 +381,16 @@ public class RtsPlayer : NetworkBehaviour
         switch ((Resource)resourceType)
         {
             case Resource.Food:
-                food += amount;
+                m_Food += amount;
                 break;
             case Resource.Gold:
-                gold += amount;
+                m_Gold += amount;
                 break;
             case Resource.Stone:
-                stone += amount;
+                m_Stone += amount;
                 break;
             case Resource.Wood:
-                wood += amount;
+                m_Wood += amount;
                 break;
         }
     }
@@ -396,7 +398,7 @@ public class RtsPlayer : NetworkBehaviour
     [Command]
     public void CmdStartGame(int mapId)
     {
-        if (!isPartyOwner)
+        if (!m_IsPartyOwner)
         {
             return;
         }
@@ -405,7 +407,7 @@ public class RtsPlayer : NetworkBehaviour
     }
 
     [Command]
-    public void CmdTryPlaceBuilding(int buildingId, Vector3 point)
+    public void CmdTryPlaceBuilding(int buildingId, Vector3 point, Quaternion rotation)
     {
         Building buildingToPlace = null;
 
@@ -430,19 +432,18 @@ public class RtsPlayer : NetworkBehaviour
 
         var collider = buildingToPlace.GetComponent<BoxCollider>();
 
-        if (!CanPlaceBuilding(collider, point, buildingId))
+        if (!CanPlaceBuilding(collider, point))
         {
             return;
         }
 
         var buildingInstance = Instantiate(
             buildingToPlace.gameObject, 
-            point, 
-            buildingToPlace.transform.rotation);
+            point,
+            rotation);
 
         NetworkServer.Spawn(buildingInstance, connectionToClient);
 
-        //var stats = m_StatsManager.GetBuildingStats(buildingId);
         var stats = buildingToPlace.GetLocalStats();
         var cost = stats.GetCost();
 
@@ -492,7 +493,7 @@ public class RtsPlayer : NetworkBehaviour
             return;
         }
 
-        m_DeployedUnits.Add(unit);
+        DeployedUnits.Add(unit);
         SetCurrentPopulation(1);
         
         if (!hasAuthority)
@@ -510,23 +511,28 @@ public class RtsPlayer : NetworkBehaviour
             return;
         }
 
-        m_DeployedUnits.Remove(unit);
+        DeployedUnits.Remove(unit);
         SetCurrentPopulation(-1);
-    } 
-    
-    private void ServerHandleBuildingsSpawned(Building building)
+    }
+
+    private void ServerHandleBuildingCompleted(Building building)
+    {
+        Constructions.Remove(building);
+        DeployedBuildings.Add(building);
+        building.SetFOVAvailability(true);
+
+        var stats = building.GetLocalStats();
+        CmdSetMaximumPopulation((int)stats.GetAttributeAmount(AttributeType.Population));
+    }
+
+    private void ServerHandleConstructionStarted(Building building)
     {
         if (building.connectionToClient.connectionId != connectionToClient.connectionId)
         {
             return;
         }
 
-        m_DeployedBuildings.Add(building);
-        building.SetFOVAvailability(true);
-
-        //var stats = m_StatsManager.GetBuildingStats(building.Id);
-        var stats = building.GetLocalStats();
-        SetMaximumPopulation((int)stats.GetAttributeAmount(AttributeType.Population));
+        Constructions.Add(building);
     }    
     
     private void ServerHandleBuildingsDespawned(Building building)
@@ -536,7 +542,7 @@ public class RtsPlayer : NetworkBehaviour
             return;
         }
 
-        m_DeployedBuildings.Remove(building);
+        DeployedBuildings.Remove(building);
 
         var stats = building.GetLocalStats();
         SetMaximumPopulation(-(int)stats.GetAttributeAmount(AttributeType.Population));
@@ -586,7 +592,8 @@ public class RtsPlayer : NetworkBehaviour
         Unit.AuthorityOnUnitSpawned += AuthorityHandleUnitsSpawned;
         Unit.AuthorityOnUnitDespawned += AuthorityHandleUnitsDespawned;
 
-        Building.AuthorityOnBuildingSpawned += AuthorityHandleBuildingsSpawned;
+        Building.AuthorityOnConstructionStarted += AuthorityHandleConstructionStarted;
+        Building.AuthorityOnBuildingCompleted += AuthorityHandleBuildingCompleted;
         Building.AuthorityOnBuildingDespawned += AuthorityHandleBuildingsDespawned;
 
         Upgrade.AuthorityOnUpgradeAdded += AuthorityHandleUpgradeAdded;
@@ -626,7 +633,7 @@ public class RtsPlayer : NetworkBehaviour
         Unit.AuthorityOnUnitSpawned -= AuthorityHandleUnitsSpawned;
         Unit.AuthorityOnUnitDespawned -= AuthorityHandleUnitsDespawned;
 
-        Building.AuthorityOnBuildingSpawned -= AuthorityHandleBuildingsSpawned;
+        Building.AuthorityOnConstructionStarted -= AuthorityHandleConstructionStarted;
         Building.AuthorityOnBuildingDespawned -= AuthorityHandleBuildingsDespawned;
     }
 
@@ -642,26 +649,34 @@ public class RtsPlayer : NetworkBehaviour
 
     private void AuthorityHandleUnitsSpawned(Unit unit)
     {
-        m_DeployedUnits.Add(unit);
+        DeployedUnits.Add(unit);
         CmdSetCurrentPopulation(1);
         unit.SetFOVAvailability(true);
     }
 
     private void AuthorityHandleUnitsDespawned(Unit unit)
     {
-        m_DeployedUnits.Remove(unit);
+        DeployedUnits.Remove(unit);
         CmdSetCurrentPopulation(-1);
     }
 
-    private void AuthorityHandleBuildingsSpawned(Building building)
+    private void AuthorityHandleConstructionStarted(Building building)
     {
-        m_DeployedBuildings.Add(building);
+        Constructions.Add(building);
+    }
+
+    private void AuthorityHandleBuildingCompleted(Building building)
+    {
+        Constructions.Remove(building);
+        DeployedBuildings.Add(building);
         building.SetFOVAvailability(true);
+        var stats = building.GetLocalStats();
+        CmdSetMaximumPopulation((int)stats.GetAttributeAmount(AttributeType.Population));
     }
 
     private void AuthorityHandleBuildingsDespawned(Building building)
     {
-        m_DeployedBuildings.Remove(building);
+        DeployedBuildings.Remove(building);
 
         var stats = building.GetLocalStats();
         CmdSetMaximumPopulation(-(int)stats.GetAttributeAmount(AttributeType.Population));
@@ -670,8 +685,6 @@ public class RtsPlayer : NetworkBehaviour
     private void AuthorityHandleUpgradeAdded(Upgrade upgrade)
     {
         myUpgrades.Add(upgrade.Id);
-
-        //UpgradeCheck(upgrade);
     }
 
     private void ClientHandleDisplayNameUpdated(string oldDisplayName, string newDisplayName)

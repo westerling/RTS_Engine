@@ -263,7 +263,6 @@ public class InfoDisplay : NetworkBehaviour
     [ClientRpc]
     private void HandleHealthChanged(int currentHealth, int maxHealth)
     {
-        Debug.Log("health udate");
         healthImage.fillAmount = (float)currentHealth / maxHealth;
 
         healthText.text = currentHealth + "/" + maxHealth;

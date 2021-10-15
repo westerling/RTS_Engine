@@ -126,8 +126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30942b47c86f484489d377da8a44bf1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  building: {fileID: 4741190181223067789, guid: c0d81e12ad1883f43998a5238a9d5804, type: 3}
-  floorMask:
+  m_Building: {fileID: -460078944814654638, guid: c0d81e12ad1883f43998a5238a9d5804, type: 3}
+  m_PlaceMask:
     serializedVersion: 2
     m_Bits: 4096
 --- !u!65 &-2893313075919995447

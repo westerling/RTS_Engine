@@ -239,4 +239,9 @@ public class Utils : NetworkBehaviour
     {      
         return building.gameObject.GetComponent<Collider>().bounds.max.x / 2;
     }
+
+    public static int SortByDistance(Vector3 pos, GameObject go1, GameObject go2)
+    {
+        return Vector3.Distance(pos, go1.transform.position).CompareTo(Vector3.Distance(pos, go2.transform.position));
+    }
 }

@@ -158,9 +158,9 @@ GameObject:
   - component: {fileID: 1703170001031860377}
   - component: {fileID: 6280015821325441730}
   - component: {fileID: 4741190181223067789}
+  - component: {fileID: 2844310377157181911}
   - component: {fileID: 1765676319716578855}
   - component: {fileID: 1831693291894029437}
-  - component: {fileID: 2844310377157181911}
   m_Layer: 13
   m_Name: Mill
   m_TagString: Untagged
@@ -264,7 +264,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  health: {fileID: 2140595229544194780}
   healthBarImage: {fileID: 9121700356063538767}
 --- !u!114 &6280015821325441730
 MonoBehaviour:
@@ -297,10 +296,10 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   m_Icon: {fileID: 21300000, guid: e383866d917ad124791ec688303b5def, type: 3}
-  m_Id: -1
-  m_EntityType: 0
-  m_EntityName: Unknown
-  m_Description: This is an unknown object.
+  m_Id: 220
+  m_EntityType: 13
+  m_EntityName: Mill
+  m_Description: Used to deposit and upgrade food.
   m_RequiredUpgrades: 
   m_AimAtPoint: {fileID: 2644878275345842533}
   m_Domain: 0
@@ -339,10 +338,37 @@ MonoBehaviour:
   health: {fileID: 2140595229544194780}
   buildingPreview: {fileID: 3128475550081364578, guid: 435c8d5c58551d14081c9c8bf8e024d6, type: 3}
   construction: {fileID: 8625100395118004043}
-  enableOnBuild:
-  - {fileID: 4931189841741992368}
+  m_EnableOnBuild: []
   builders: []
   m_BuildingIsCompleted: 0
+  m_DestructionStageOne: []
+  m_DestructionStageTwo: []
+--- !u!114 &2844310377157181911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4309669020891701889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61dc3582bc159254b9635f25d6706fc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Stats:
+    m_Attributes:
+    - m_Amount: 600
+      m_AttributeType: 1
+    - m_Amount: 1
+      m_AttributeType: 3
+    - m_Amount: 7
+      m_AttributeType: 4
+    - m_Amount: 7
+      m_AttributeType: 2
+    - m_Amount: 100
+      m_AttributeType: 23
+    - m_Amount: 35
+      m_AttributeType: 20
 --- !u!114 &1765676319716578855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,34 +403,6 @@ MonoBehaviour:
   syncInterval: 0.1
   resourcesPerInterval: 10
   interval: 2
---- !u!114 &2844310377157181911
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4309669020891701889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61dc3582bc159254b9635f25d6706fc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Stats:
-    m_Attributes:
-    - m_Amount: 600
-      m_AttributeType: 1
-    - m_Amount: 5
-      m_AttributeType: 10
-    - m_Amount: 1
-      m_AttributeType: 3
-    - m_Amount: 7
-      m_AttributeType: 4
-    - m_Amount: 7
-      m_AttributeType: 2
-    - m_Amount: 100
-      m_AttributeType: 23
-    - m_Amount: 35
-      m_AttributeType: 19
 --- !u!1 &4931189841741992368
 GameObject:
   m_ObjectHideFlags: 0

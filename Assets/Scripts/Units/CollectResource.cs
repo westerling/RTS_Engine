@@ -64,6 +64,7 @@ public class CollectResource : NetworkBehaviour
 
             if (!resource.CanGather())
             {
+                FindNewResource();
                 return;
             }
 
@@ -108,6 +109,22 @@ public class CollectResource : NetworkBehaviour
             transform.rotation = Quaternion.RotateTowards(
                 transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
+    }
+
+    private void FindNewResource()
+    {
+        var resourceArray = GameObject.FindGameObjectsWithTag("Resource");
+        var resourceList = new List<GameObject>();
+
+        foreach (var resource in resourceArray)
+        {
+            if (resource.GetComponent<Collectable>().Resource == collector.Resource)
+            {
+                resourceList.Add(resource);
+            }
+        }
+
+        resourceList.Sort((go1, go2) => Vector3.Distance(transform.position, go1.transform.position).CompareTo(Vector3.Distance(transform.position, go2.transform.position)));
     }
 
     [Server]

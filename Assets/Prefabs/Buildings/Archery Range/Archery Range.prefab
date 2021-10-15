@@ -158,9 +158,9 @@ GameObject:
   - component: {fileID: 1703170001031860377}
   - component: {fileID: 6280015821325441730}
   - component: {fileID: 4741190181223067789}
+  - component: {fileID: 4915678159356355415}
   - component: {fileID: 1765676319716578855}
   - component: {fileID: -8402645301040859453}
-  - component: {fileID: 4915678159356355415}
   m_Layer: 13
   m_Name: Archery Range
   m_TagString: Untagged
@@ -264,7 +264,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  health: {fileID: 2140595229544194780}
   healthBarImage: {fileID: 9121700356063538767}
 --- !u!114 &6280015821325441730
 MonoBehaviour:
@@ -297,8 +296,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   m_Icon: {fileID: 21300000, guid: 8dcb4d7a4bcdbaa4788c5913c20816eb, type: 3}
-  m_Id: -1
-  m_EntityType: 0
+  m_Id: 251
+  m_EntityType: 11
   m_EntityName: Archery Range
   m_Description: Used to create and improve archers.
   m_RequiredUpgrades: 
@@ -339,10 +338,37 @@ MonoBehaviour:
   health: {fileID: 2140595229544194780}
   buildingPreview: {fileID: 3128475550081364578, guid: a1c0d6849bbfd3b4098fe49c69941538, type: 3}
   construction: {fileID: 3630511121189281428}
-  enableOnBuild:
-  - {fileID: 4931189841741992368}
+  m_EnableOnBuild: []
   builders: []
   m_BuildingIsCompleted: 0
+  m_DestructionStageOne: []
+  m_DestructionStageTwo: []
+--- !u!114 &4915678159356355415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4309669020891701889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61dc3582bc159254b9635f25d6706fc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Stats:
+    m_Attributes:
+    - m_Amount: 1500
+      m_AttributeType: 1
+    - m_Amount: 1
+      m_AttributeType: 3
+    - m_Amount: 8
+      m_AttributeType: 4
+    - m_Amount: 6
+      m_AttributeType: 2
+    - m_Amount: 175
+      m_AttributeType: 23
+    - m_Amount: 30
+      m_AttributeType: 20
 --- !u!114 &1765676319716578855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -375,34 +401,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Position: 0
   m_Unit: {fileID: 5625393431626882855, guid: 69119fdb8b1a5ca43a00eff53293b591, type: 3}
---- !u!114 &4915678159356355415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4309669020891701889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61dc3582bc159254b9635f25d6706fc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Stats:
-    m_Attributes:
-    - m_Amount: 1500
-      m_AttributeType: 1
-    - m_Amount: 10
-      m_AttributeType: 10
-    - m_Amount: 1
-      m_AttributeType: 3
-    - m_Amount: 8
-      m_AttributeType: 4
-    - m_Amount: 6
-      m_AttributeType: 2
-    - m_Amount: 175
-      m_AttributeType: 23
-    - m_Amount: 50
-      m_AttributeType: 19
 --- !u!1 &4931189841741992368
 GameObject:
   m_ObjectHideFlags: 0

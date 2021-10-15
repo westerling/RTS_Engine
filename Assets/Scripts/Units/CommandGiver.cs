@@ -26,11 +26,13 @@ public class CommandGiver : MonoBehaviour
         mainCamera = Camera.main;
         m_CursorManager = NetworkClient.connection.identity.GetComponent<CursorManager>();
         GameOverHandler.ClientOnGameOver += ClientHandleGameOver;
+        Building.AuthorityOnConstructionStarted += AuthorityHandleConstructionStarted;
     }
 
     private void OnDestroy()
     {
         GameOverHandler.ClientOnGameOver -= ClientHandleGameOver;
+        Building.AuthorityOnConstructionStarted -= AuthorityHandleConstructionStarted;
     }
 
     private void Update()
@@ -302,7 +304,7 @@ public class CommandGiver : MonoBehaviour
                 return;
             }
 
-            builder.CmdSetTarget(building.gameObject);
+            builder.CmdSetTarget(building);
             unit.UnitMovement.CmdSetTask((int)Task.Build);
             unit.UnitMovement.CmdBuild();
             
@@ -314,13 +316,18 @@ public class CommandGiver : MonoBehaviour
         enabled = false;
     }
 
+    private void AuthorityHandleConstructionStarted(Building building)
+    {
+        TryBuild(building);
+    }
+
     private GameObject FindClosestDropoff(Resource resource)
     {
         var player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
 
         var dropOffList = new List<GameObject>();
 
-        foreach (var building in player.GetMyBuildings())
+        foreach (var building in player.DeployedBuildings)
         {
             if (!building.hasAuthority)
             {
