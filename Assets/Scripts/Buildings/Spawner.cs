@@ -7,21 +7,20 @@ public class Spawner : NetworkBehaviour
     [SerializeField]
     private Transform m_SpawnPoint;
 
-    [SerializeField]
-    private GameObject m_RallyPoint;
-
     [SyncVar]
     private float m_ResearchTimer;
 
+    private Vector3 m_RallyPoint;
     private List<GameObject> m_SpawnQueue = new List<GameObject>();
     private RtsPlayer player;
     private float m_SpawnTime = 0f;
     private int maxQueue = 16;
-    private bool m_QueuePaused = false;
 
     public override void OnStartServer()
     {
         player = connectionToClient.identity.GetComponent<RtsPlayer>();
+        var rallyPoint = new Vector3(transform.position.x + 10, transform.position.y, transform.position.z);
+        m_RallyPoint = rallyPoint;
     }
 
     private void Update()
@@ -55,7 +54,7 @@ public class Spawner : NetworkBehaviour
         set { m_SpawnPoint = value; }
     }
 
-    public GameObject RallyPoint
+    public Vector3 RallyPoint
     {
         get { return m_RallyPoint; }
         set { m_RallyPoint = value; }
@@ -102,10 +101,9 @@ public class Spawner : NetworkBehaviour
 
             var spawnInstance = Instantiate(objectToSpawn, SpawnPoint.position, SpawnPoint.rotation);
             var unitMovement = spawnInstance.GetComponent<UnitMovement>();
-            spawnInstance.GetComponent<Targetable>().SetFOVAvailability(true);
 
             NetworkServer.Spawn(spawnInstance, connectionToClient);
-            unitMovement.ServerMove(RallyPoint.transform.position);
+            unitMovement.ServerMove(RallyPoint);
         }
         else if (objectToSpawn.TryGetComponent(out Upgrade upgrade))
         {
@@ -135,6 +133,12 @@ public class Spawner : NetworkBehaviour
 
             SpawnTime = stats.GetAttributeAmount(AttributeType.Training); ;
         }
+    }
+
+    [Command]
+    public void CmdSetRallyPoint(Vector3 point)
+    {
+        RallyPoint = point;
     }
 
     [Command]

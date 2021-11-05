@@ -140,6 +140,14 @@ public enum CursorType
     CollectFood = 3,
     Mine = 4,
     Axe = 5,
+    Move = 6,
+    Rally = 7
+}
+
+public enum CommandIconType
+{
+    Move = 0,
+    Rally = 1
 }
 
 public enum InfoPanelType
@@ -151,9 +159,29 @@ public enum InfoPanelType
     Research
 }
 
+public enum EntitySize
+{
+    Tiny = 0,
+    Small = 1,
+    Normal = 2,
+    Large = 3,
+    Huge = 4
+}
+
 public enum NodeState
 {
     RUNNING,
     SUCCESS,
     FAILURE
+}
+
+public enum Trend
+{
+    Freefall = 0,
+    Downward = 1,
+    Negative = 2,
+    Unchnged = 3,
+    Positive = 4,
+    Upward = 5,
+    Bull = 6
 }

@@ -358,11 +358,11 @@ public class SelectionHandler : MonoBehaviour
         {
             var showButton = true;
 
-            var neededUpgrades = behaviour.PriorUpgrades;
+            var requiredUpgrades = behaviour.PriorUpgrades;
 
-            foreach (var neededUpgrade in neededUpgrades)
+            foreach (var requiredUpgrade in requiredUpgrades)
             {
-                if (!(priorUpgrades.Contains(neededUpgrade)))
+                if (!(priorUpgrades.Contains(requiredUpgrade)))
                 {
                     showButton = false;
                 }

@@ -1,4 +1,6 @@
 ﻿using Mirror;
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,10 +13,11 @@ public class Interactable : GameObjectIdentity
     private Domain m_Domain = Domain.Ground;
 
     [SerializeField]
-    private UnityEvent onSelected = null;
+    private EntitySize m_Size = EntitySize.Normal;
 
-    [SerializeField]
-    private UnityEvent onDeselected = null;
+    private GameObject m_SelectionIndicator = null;
+
+
 
     public Transform AimAtPoint
     {
@@ -26,6 +29,11 @@ public class Interactable : GameObjectIdentity
         get { return m_Domain; }
     }
 
+    public EntitySize Size 
+    {
+        get => m_Size; 
+    }
+
     [Client]
     public void Select()
     {
@@ -34,7 +42,7 @@ public class Interactable : GameObjectIdentity
             return;
         }
 
-        onSelected?.Invoke();
+        AddSelectionIndicator();
     }
 
     [Client]
@@ -45,6 +53,44 @@ public class Interactable : GameObjectIdentity
             return;
         }
 
-        onDeselected?.Invoke();
+        RemoveSelectionIndicator();
+    }
+
+    private void AddSelectionIndicator()
+    {
+        var cursorManager = NetworkClient.connection.identity.GetComponent<CursorManager>();
+        var indicator = cursorManager.SelectionIndicators[(int)Size];
+
+        m_SelectionIndicator = Instantiate(indicator, transform);
+    }
+
+    private void RemoveSelectionIndicator()
+    {
+        if (m_SelectionIndicator == null)
+        {
+            return;
+        }
+
+        Destroy(m_SelectionIndicator);
+    }
+
+    [Client]
+    public void Flash()
+    {
+        StartCoroutine(FlashCoroutine());
+    }
+
+    public IEnumerator FlashCoroutine()
+    {
+        AddSelectionIndicator();
+
+        var spriteRenderer = m_SelectionIndicator.GetComponent<SpriteRenderer>();
+        for (int i = 0; i < 4; i++)
+        {
+            spriteRenderer.enabled = (i % 2 == 0);
+            yield return new WaitForSeconds(i % 2 == 0 ? 0.2f : 0.1f);
+        }
+
+        RemoveSelectionIndicator();
     }
 }

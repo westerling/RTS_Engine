@@ -50,15 +50,19 @@ public class Unit : Targetable
     public override void OnStartServer()
     {
         ServerOnUnitSpawned?.Invoke(this);
-
         m_Health.ServerOnDie += ServerHandleDie;
         Upgrade.ServerOnUpgradeAdded += ServerHandleUpgradeAdded;
+
+        if (hasAuthority)
+        {
+            SetFOVAvailability(true);
+        }
     }
 
     public override void OnStopServer()
     {
         ServerOnUnitDespawned?.Invoke(this);
-
+        SetFOVAvailability(false);
         m_Health.ServerOnDie -= ServerHandleDie;
     }
 
@@ -75,6 +79,7 @@ public class Unit : Targetable
     public override void OnStartAuthority()
     {
         AuthorityOnUnitSpawned?.Invoke(this);
+        SetFOVAvailability(true);
         Upgrade.AuthorityOnUpgradeAdded += AuthorityHandleUpgradeAdded;
     }
 
@@ -95,6 +100,7 @@ public class Unit : Targetable
             return;
         }
 
+        SetFOVAvailability(false);
         AuthorityOnUnitDespawned?.Invoke(this);
     }
 

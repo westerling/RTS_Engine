@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 165553621503783630}
   - component: {fileID: -2893313075919995447}
   m_Layer: 5
-  m_Name: WallPreview
+  m_Name: TowerPreview
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eff758c4490d44a4596d971918e776d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Building: {fileID: 4741190181223067789, guid: 0d1e2cc5fcf2e4c40b39a2ea4c9dddac, type: 3}
+  m_Building: {fileID: 7998316973431361161, guid: 0d1e2cc5fcf2e4c40b39a2ea4c9dddac, type: 3}
   m_WallPart: {fileID: 4741190181223067789, guid: d9a4016577fbfc54b807a40285facd9f, type: 3}
   m_DummyTower: {fileID: 3128475550081364578, guid: 4427be856b5722e4b9a3b34f331365a8, type: 3}
 --- !u!65 &-2893313075919995447

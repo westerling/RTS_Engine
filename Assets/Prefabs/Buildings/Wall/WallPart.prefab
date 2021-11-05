@@ -285,47 +285,19 @@ MonoBehaviour:
   m_RequiredUpgrades: 
   m_AimAtPoint: {fileID: 1618383091392354114}
   m_Domain: 0
-  onSelected:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6344865870688763386}
-        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  onDeselected:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6344865870688763386}
-        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  m_Size: 1
   m_Targeter: {fileID: 0}
   m_FieldOfView: {fileID: 1442965554600451861}
-  health: {fileID: 2140595229544194780}
-  buildingPreview: {fileID: 3128475550081364578, guid: 3d44c9a8b32ecaf4389216c49d661625, type: 3}
-  construction: {fileID: 8827082878475793465}
+  m_Health: {fileID: 2140595229544194780}
+  m_BuildingPreview: {fileID: 3128475550081364578, guid: 3d44c9a8b32ecaf4389216c49d661625, type: 3}
+  m_Construction: {fileID: 8827082878475793465}
   m_EnableOnBuild:
   - {fileID: 4931189841741992368}
-  builders: []
   m_BuildingIsCompleted: 0
   m_DestructionStageOne: []
   m_DestructionStageTwo: []
+  m_CanRotate: 0
+  m_IsStartupBuilding: 0
 --- !u!114 &1765676319716578855
 MonoBehaviour:
   m_ObjectHideFlags: 0

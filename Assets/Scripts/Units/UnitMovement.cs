@@ -110,8 +110,7 @@ public class UnitMovement : NetworkBehaviour
 
     [Command]
     public void CmdMove(Vector3 position)
-    {
-        
+    {  
         ServerMove(position);
     }
 
@@ -185,7 +184,8 @@ public class UnitMovement : NetworkBehaviour
         {
             if ((target.transform.position - transform.position).sqrMagnitude > 2f * 2f)
             {
-                m_Agent.stoppingDistance = Utils.AtBuildingEdge(target.GetComponent<Building>());
+                //m_Agent.stoppingDistance = Utils.AtBuildingEdge(target.GetComponent<Building>());
+                m_Agent.stoppingDistance = Utils.DistanceToBuilding(target.GetComponent<Building>().Size);
                 Task = Task.Deliver;
                 ServerMove(target.transform.position, true);
             }
@@ -223,7 +223,8 @@ public class UnitMovement : NetworkBehaviour
         {
             if ((target.transform.position - transform.position).sqrMagnitude > 2f * 2f)
             {
-                m_Agent.stoppingDistance = Utils.AtBuildingEdge(target.GetComponent<Building>());
+                //m_Agent.stoppingDistance = Utils.AtBuildingEdge(target.GetComponent<Building>());
+                m_Agent.stoppingDistance = Utils.DistanceToBuilding(target.GetComponent<Building>().Size);
                 Task = Task.Build;
                 ServerMove(target.transform.position, true);
             }

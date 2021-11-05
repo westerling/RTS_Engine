@@ -7,13 +7,13 @@ using UnityEngine.SceneManagement;
 public class RtsNetworkManager : NetworkManager
 {
     [SerializeField]
-    private GameObject startBuilding = null;
+    private GameObject m_StartBuilding = null;
 
     [SerializeField]
-    private GameObject[] startUnits = null;
+    private GameObject[] m_StartUnits = null;
 
     [SerializeField]
-    private GameOverHandler gameOverHandler = null;
+    private GameOverHandler m_GameOverHandler = null;
 
     public List<RtsPlayer> Players { get; } = new List<RtsPlayer>();
     public static event Action ClientOnConnected;
@@ -83,25 +83,27 @@ public class RtsNetworkManager : NetworkManager
     {
         if (SceneManager.GetActiveScene().name.StartsWith("Scene_Map"))
         {
-            GameOverHandler gameOverHandlerInstance = Instantiate(gameOverHandler);
+            GameOverHandler gameOverHandlerInstance = Instantiate(m_GameOverHandler);
 
             NetworkServer.Spawn(gameOverHandlerInstance.gameObject);
 
             foreach(var player in Players)
             {
-                var baseInstance = Instantiate(startBuilding, GetStartPosition().position, Quaternion.identity);
-
+                var baseInstance = Instantiate(m_StartBuilding, GetStartPosition().position, Quaternion.identity);
+                             
                 NetworkServer.Spawn(baseInstance, player.connectionToClient);
 
-                baseInstance.GetComponent<Building>().InitializeStartupBuilding();
+                //baseInstance.AddComponent<StartupBuilding>();
 
-                foreach (var unit in startUnits)
+                System.Random rnd = new System.Random();
+
+                for (var i = 0; i < m_StartUnits.Length; i++)
                 {
-                    var spawnPoint = baseInstance.GetComponent<Spawner>().SpawnPoint;
+                    var spawnPoint = baseInstance.GetComponent<Spawner>().RallyPoint;
+                    var position = new Vector3(spawnPoint.x + rnd.Next(2, 5), spawnPoint.y, spawnPoint.z + rnd.Next(2, 5));
+                    var spawnInstance = Instantiate(m_StartUnits[i], position, Quaternion.identity);
 
-                    var unitInstance = Instantiate(unit, spawnPoint.position, Quaternion.identity);
-
-                    NetworkServer.Spawn(unitInstance, player.connectionToClient);
+                    NetworkServer.Spawn(spawnInstance, player.connectionToClient);
                 }
             }
         }

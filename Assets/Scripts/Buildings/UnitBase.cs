@@ -1,7 +1,5 @@
 ﻿using Mirror;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UnitBase : NetworkBehaviour
@@ -38,8 +36,5 @@ public class UnitBase : NetworkBehaviour
 
         NetworkServer.Destroy(gameObject);
     }
-    #endregion
-
-    #region client
     #endregion
 }

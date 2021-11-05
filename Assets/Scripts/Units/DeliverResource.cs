@@ -17,6 +17,7 @@ public class DeliverResource : NetworkBehaviour
     {
         if (unit.UnitMovement?.Task == Task.Deliver)
         {
+            ClientDebug("deliver!");
             Deliver();
         }
     }
@@ -33,7 +34,7 @@ public class DeliverResource : NetworkBehaviour
         if (deliveryPoint.TryGetComponent(out DropOff dropOff))
         {
 
-            if (!CanDeliver(deliveryPoint.transform))
+            if (!CanDeliver(dropOff))
             {
                 return;
             }
@@ -44,7 +45,7 @@ public class DeliverResource : NetworkBehaviour
         if (deliveryPoint.TryGetComponent(out TownCenter townCenter))
         {
 
-            if (!CanDeliver(deliveryPoint.transform))
+            if (!CanDeliver(townCenter))
             {
                 return;
             }
@@ -61,10 +62,10 @@ public class DeliverResource : NetworkBehaviour
     }
 
     [Server]
-    private bool CanDeliver(Transform transform)
+    private bool CanDeliver(Building building)
     {
         return (transform.position - this.transform.position).sqrMagnitude <=
-            (4f) * (4f);
+            (Utils.DistanceToBuilding(building.Size)) * (Utils.DistanceToBuilding(building.Size));
     }
 
     private void ClientDebug(string text)

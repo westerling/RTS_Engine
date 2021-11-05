@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 7129427637932551831}
   - component: {fileID: 8545433442610744866}
   m_Layer: 5
-  m_Name: WallPreviewGhost
+  m_Name: TowerPreviewGhost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

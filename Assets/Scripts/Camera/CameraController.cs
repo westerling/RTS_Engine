@@ -22,6 +22,9 @@ public class CameraController : NetworkBehaviour
     [SerializeField]
     private Material m_MinimapIndicatorMaterial;
 
+    [SerializeField]
+    private int m_CameraHeight = 100;
+
     private float speed = 50f;
     private float screenBorderThickness = 10f;
     private Controls controls;
@@ -161,7 +164,7 @@ public class CameraController : NetworkBehaviour
 
         pos.x = Mathf.Clamp(pos.x, screenXLimit.x, screenXLimit.y);
         pos.z = Mathf.Clamp(pos.z, screenZLimit.x, screenZLimit.y);
-        pos.y = Mathf.Lerp(pos.y, UpdateHeight() + 40, 0.1f);
+        pos.y = Mathf.Lerp(pos.y, UpdateHeight() + m_CameraHeight, 0.1f);
 
         playerCameraTransform.position = pos;
     }

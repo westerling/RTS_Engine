@@ -123,7 +123,7 @@ public class InfoDisplay : NetworkBehaviour
     {
         foreach (var health in healthList)
         {
-            health.EventHealthChanged += HandleHealthChanged;
+            health.EventHealthChanged += RpcHandleHealthChanged;
         }
     }
 
@@ -192,7 +192,7 @@ public class InfoDisplay : NetworkBehaviour
 
         foreach (var health in healthList)
         {
-            health.EventHealthChanged -= HandleHealthChanged;
+            health.EventHealthChanged -= RpcHandleHealthChanged;
         }
 
         healthList.Clear();
@@ -261,7 +261,7 @@ public class InfoDisplay : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void HandleHealthChanged(int currentHealth, int maxHealth)
+    private void RpcHandleHealthChanged(int currentHealth, int maxHealth)
     {
         healthImage.fillAmount = (float)currentHealth / maxHealth;
 

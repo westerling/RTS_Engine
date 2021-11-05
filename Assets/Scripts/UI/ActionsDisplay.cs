@@ -34,11 +34,7 @@ public class ActionsDisplay : MonoBehaviour
     public void AddButton(Sprite pic, Action onClick, int position)
     {
         var index = actionCalls.Count;
-
-        //if (buttons[position].IsActive())
-        //{
-        //    return;
-        //}
+        //var index = position;
 
         buttons[index].gameObject.SetActive(true);
         buttons[index].GetComponent<Image>().sprite = pic;

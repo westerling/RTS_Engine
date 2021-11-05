@@ -80,12 +80,12 @@ MonoBehaviour:
   - {fileID: 5816816821383708304, guid: fb798217821cf6d47b2f12e5a6ff6487, type: 3}
   - {fileID: 3210503346243835104, guid: 673d4d7411a022d4a95d5e5b2b73f265, type: 3}
   - {fileID: 5386544005808535492, guid: 91285c0b5e409bf4ba511892e7db1e59, type: 3}
-  startBuilding: {fileID: 4309669020891701889, guid: c0d81e12ad1883f43998a5238a9d5804, type: 3}
-  startUnits:
-  - {fileID: 5625393431626882863, guid: f1ad28bd725f2a149a44b805b169ec70, type: 3}
-  - {fileID: 5625393431626882863, guid: f1ad28bd725f2a149a44b805b169ec70, type: 3}
+  m_StartBuilding: {fileID: 4309669020891701889, guid: c0d81e12ad1883f43998a5238a9d5804, type: 3}
+  m_StartUnits:
   - {fileID: 5625393431626882863, guid: d62b307f9b473464b828d70b104a51f1, type: 3}
-  gameOverHandler: {fileID: 6463105333049133202, guid: 91285c0b5e409bf4ba511892e7db1e59, type: 3}
+  - {fileID: 5625393431626882863, guid: f1ad28bd725f2a149a44b805b169ec70, type: 3}
+  - {fileID: 5625393431626882863, guid: f1ad28bd725f2a149a44b805b169ec70, type: 3}
+  m_GameOverHandler: {fileID: 6463105333049133202, guid: 91285c0b5e409bf4ba511892e7db1e59, type: 3}
 --- !u!114 &1758341138
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
 public abstract class Targetable : Interactable
 {
@@ -30,9 +31,21 @@ public abstract class Targetable : Interactable
         get { return m_FieldOfViewDistance; }
     }
 
-    public void SetFOVAvailability(bool isEnabled)
+    [Command]
+    public void CmdSetFOVAvailability(bool enabled)
     {
-        FieldOfView?.SetActive(isEnabled);
+        ServerSetFov(enabled);
+    }
+
+    [Server]
+    public void ServerSetFov(bool enabled)
+    {
+        FieldOfView?.SetActive(enabled);
+    }
+
+    public void SetFOVAvailability(bool enabled)
+    {
+        FieldOfView?.SetActive(enabled);
     }
 
     public bool Pacifist

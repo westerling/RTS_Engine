@@ -95,11 +95,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  aimAtPoint: {fileID: 0}
-  currentGatherers: 0
-  resourceType: 3
+  m_Icon: {fileID: 21300000, guid: f43241f798f4cf944be80d465435c252, type: 3}
+  m_Id: -1
+  m_EntityType: 19
+  m_EntityName: Tree
+  m_Description: This is a tree.
+  m_RequiredUpgrades: 
+  m_AimAtPoint: {fileID: 0}
+  m_Domain: 0
+  m_Size: 1
+  m_Resource: 0
   isInfinite: 0
-  quantity: 100
+  m_Quantity: 100
 --- !u!1001 &6527221208028211226
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -174,6 +181,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 6e3a0f4c366b59546b053672a4a5292c, type: 3}
       propertyPath: m_Name
       value: _ree01
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6e3a0f4c366b59546b053672a4a5292c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e3a0f4c366b59546b053672a4a5292c, type: 3}

@@ -50,7 +50,7 @@ public class Health : NetworkBehaviour
     public override void OnStartServer()
     {
         Stats = GetComponent<LocalStats>().Stats;
-        SetMaxHealth();
+        AlterMaxHealth();
         
         UnitBase.ServerOnPlayerDie += ServerHandlePlayerDie;
         GetComponent<LocalStats>().StatsAltered += HandleAlteredStats;
@@ -63,13 +63,13 @@ public class Health : NetworkBehaviour
     }
 
     [Command]
-    private void CmdSetMaxHealth()
+    private void CmdAlterMaxHealth()
     {
-        SetMaxHealth();
+        AlterMaxHealth();
     }
 
     [Server]
-    private void SetMaxHealth()
+    private void AlterMaxHealth()
     {
         var newMaxHealth = (int)Stats.GetAttributeAmount(AttributeType.HitPoints);
         
@@ -120,10 +120,33 @@ public class Health : NetworkBehaviour
         ServerOnDie?.Invoke();
     }
 
+    [Command]
+    public void CmdSetMaxHealth()
+    {
+        SetMaxHealth();
+    }
+
+    [Server]
+    public void SetMaxHealth()
+    {
+        CurrentHealth = MaxHealth;
+    }
+
+    [Command]
+    public void CmdSetHealth(int health)
+    {
+        SetHealth(health);
+    }
+
     [Server]
     public void SetHealth(int health)
     {
         CurrentHealth = health;
+        if (CurrentHealth > MaxHealth)
+        {
+            CurrentHealth = MaxHealth;
+        }
+
         EventHealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
 
@@ -144,7 +167,7 @@ public class Health : NetworkBehaviour
     private void HandleAlteredStats(Stats stats)
     {
         Stats = stats;
-        CmdSetMaxHealth();
+        CmdAlterMaxHealth();
     }
 
     #endregion

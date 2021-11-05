@@ -19,8 +19,6 @@ public class Collectable : Interactable
         get => m_Resource;
     }
 
-    
-
     public int CurrentGatherers
     {
         get => m_CurrentGatherers;

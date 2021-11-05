@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 public static class Globals
 {
     public static int FlatTerrainLayerMask = 1 << 16;
@@ -10,4 +12,5 @@ public static class Globals
     public static int FovLayerMask = 1 << 17;
 
     public static int WallPlacementLayerMask = TerrainLayerMask | BuildingLayerMask | FovLayerMask;
+
 }

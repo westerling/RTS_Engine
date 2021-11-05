@@ -57,7 +57,8 @@ public class Build : NetworkBehaviour
     [Server]
     private bool CanRepairTarget()
     {
-        var size = Utils.AtBuildingEdge(m_Builder.Target);
+        //var size = Utils.AtBuildingEdge(m_Builder.Target);
+        var size = Utils.DistanceToBuilding(m_Builder.Target.Size);
 
         return (m_Builder.Target.transform.position - transform.position).sqrMagnitude <=
             (size) * (size);

@@ -95,7 +95,7 @@ public class SingleDisplay : NetworkBehaviour
             return;
         }
 
-        m_Health.EventHealthChanged -= HandleHealthChanged;
+        m_Health.EventHealthChanged -= RpcHandleHealthChanged;
         
         if (m_Collector is null)
         {
@@ -226,7 +226,7 @@ public class SingleDisplay : NetworkBehaviour
     {
         m_Health = health;
 
-        health.EventHealthChanged += HandleHealthChanged;
+        health.EventHealthChanged += RpcHandleHealthChanged;
     }
 
     public void SetupCollector(Collector collector)
@@ -248,7 +248,7 @@ public class SingleDisplay : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void HandleHealthChanged(int currentHealth, int maxHealth)
+    private void RpcHandleHealthChanged(int currentHealth, int maxHealth)
     {
         SetupHealth(currentHealth, maxHealth);
     }

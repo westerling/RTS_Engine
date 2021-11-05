@@ -39,7 +39,7 @@ public class HealthDisplay : NetworkBehaviour
             return;
         }
 
-        Health.EventHealthChanged += HandleHealthChanged;
+        Health.EventHealthChanged += RpcHandleHealthChanged;
     }
 
     public void RemoveListeners()
@@ -49,11 +49,11 @@ public class HealthDisplay : NetworkBehaviour
             return;
         }
 
-        Health.EventHealthChanged -= HandleHealthChanged;
+        Health.EventHealthChanged -= RpcHandleHealthChanged;
     }
 
     [ClientRpc]
-    private void HandleHealthChanged(int currentHealth, int maxHealth)
+    private void RpcHandleHealthChanged(int currentHealth, int maxHealth)
     {
         healthBarImage.fillAmount = (float)currentHealth / maxHealth;
     }

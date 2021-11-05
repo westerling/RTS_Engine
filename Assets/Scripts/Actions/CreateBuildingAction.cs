@@ -24,7 +24,6 @@ public class CreateBuildingAction : ActionBehaviour
     public override Action GetClickAction()
     {
         return delegate () {
-            //var stats = m_StatsManager.GetBuildingStats(Id);
             var stats = m_Building.GetComponent<LocalStats>().Stats;
 
             if (!Utils.CanAfford(m_Player.GetResources(), stats.GetCost()))
@@ -32,7 +31,7 @@ public class CreateBuildingAction : ActionBehaviour
                 return;
             }
 
-            Instantiate(m_Building.GetBuildingPreview());
+            Instantiate(m_Building.BuildingPreview);
         };
     }
 }

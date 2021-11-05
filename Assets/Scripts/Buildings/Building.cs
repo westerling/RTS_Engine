@@ -6,19 +6,16 @@ using System.Collections.Generic;
 public class Building : Targetable
 {
     [SerializeField]
-    private Health health = null;
+    private Health m_Health = null;
 
     [SerializeField]
-    private GameObject buildingPreview;
+    private GameObject m_BuildingPreview;
 
     [SerializeField]
-    private GameObject construction;
+    private GameObject m_Construction;
 
     [SerializeField]
     private List<GameObject> m_EnableOnBuild = new List<GameObject>();
-
-    [SerializeField]
-    private List<Unit> m_Builders = new List<Unit>();
 
     [SerializeField]
     [SyncVar(hook = nameof(HandleBuildingStateUpdated))]
@@ -33,12 +30,12 @@ public class Building : Targetable
     [SerializeField]
     private bool m_CanRotate;
 
+    private List<Unit> m_Builders = new List<Unit>();
     private RtsPlayer m_Player;
-    private float buildTimer = 0;
+    private float m_BuildTimer = 0;
 
-
-    public static event Action<Building> ServerHandleConstructionStarted;
-    public static event Action<Building> ServerHandleBuildingCompleted;
+    public static event Action<Building> ServerOnConstructionStarted;
+    public static event Action<Building> ServerOnBuildingCompleted;
     public static event Action<Building> ServerOnBuildingDespawned;
 
     public static event Action<Building> AuthorityOnConstructionStarted;
@@ -47,43 +44,35 @@ public class Building : Targetable
 
     protected RtsPlayer Player
     {
-        get { return m_Player; }
-        set { m_Player = value; }
+        get => m_Player;
+        set => m_Player = value;
     }
 
     public bool BuildingIsCompleted
     {
         get => m_BuildingIsCompleted;
-        set 
-        { 
-            if (value)
-            {
-                if (hasAuthority)
-                {
-                    AuthorityOnBuildingCompleted?.Invoke(this);
-                }
-                ServerHandleBuildingCompleted?.Invoke(this);
-            }
-
-            m_BuildingIsCompleted = value;
-        }
+        set => m_BuildingIsCompleted = value;
     }
 
     public List<GameObject> EnableOnBuild
     {
         get => m_EnableOnBuild;
-        set => m_EnableOnBuild = value;
     }
 
     public bool CanRotate 
     { 
         get => m_CanRotate; 
-        set => m_CanRotate = value; 
+    }   
+    
+    public GameObject BuildingPreview
+    {
+        get => m_BuildingPreview;
     }
+
 
     private void Update()
     {
-        if (health.HasFullHealth())
+        if (m_Health.HasFullHealth())
         {
             return;
         }
@@ -95,14 +84,14 @@ public class Building : Targetable
 
         CheckBuilders();
 
-        buildTimer += Time.deltaTime;
+        m_BuildTimer += Time.deltaTime;
 
-        if (buildTimer < 1)
+        if (m_BuildTimer < 1)
         {
             return;
         }
 
-        buildTimer = 0;
+        m_BuildTimer = 0;
 
         UnitsBuild();            
     }
@@ -127,15 +116,9 @@ public class Building : Targetable
         }
     }
 
-    public void InitializeStartupBuilding()
+    public void InitializeConstruction()
     {
-        AuthorityOnBuildingCompleted?.Invoke(this);
-        BuildingIsCompleted = true;
-    }
-
-    public void InitializeBuilding()
-    {
-        SetHealth(1);
+        m_Health.SetHealth(1);
         RpcInitializeBuilding();
     }
 
@@ -158,8 +141,8 @@ public class Building : Targetable
     {
         var stats = GetComponent<LocalStats>().Stats;
         var constructionTime = 3 * (stats.GetAttributeAmount(AttributeType.Training)) / (m_Builders.Count + 2);
-        var buildPerSecond = (health.MaxHealth / constructionTime);
-        var currentHealth = (health.CurrentHealth + buildPerSecond);
+        var buildPerSecond = (m_Health.MaxHealth / constructionTime);
+        var currentHealth = (m_Health.CurrentHealth + buildPerSecond);
 
         if (BuildingIsCompleted)
         {
@@ -183,46 +166,40 @@ public class Building : Targetable
             }
         }
 
-        CmdSetHealth((int)currentHealth);
-    }
-
-    public GameObject GetBuildingPreview()
-    {
-        return buildingPreview;
+        m_Health.CmdSetHealth((int)currentHealth);
     }
 
     #region server
 
-    [Command]
-    private void CmdSetHealth(int amount)
-    {
-        health.SetHealth(amount);
-    }
-
-    [Server]
-    private void SetHealth(int amount)
-    {
-        health.SetHealth(amount);
-    }
-
     public override void OnStartServer()
     {
-        health.ServerOnDie += ServerHandleDie;
-        ServerHandleConstructionStarted?.Invoke(this);
+        m_Health.ServerOnDie += ServerHandleDie;
+
+        ServerOnConstructionStarted?.Invoke(this);
 
         GameOverHandler.ServerOnGameOver += ServerHandleGameOver;
-        health.EventHealthChanged += RpcHandleHealthChanged;
+        StartupBuilding.ServerOnStartupBuildingAdded += ServerHandleStartBuilding;
+        m_Health.EventHealthChanged += RpcHandleHealthChanged;
 
         Player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
     }
 
     public override void OnStopServer()
     {
-        health.ServerOnDie -= ServerHandleDie;
+        m_Health.ServerOnDie -= ServerHandleDie;
         ServerOnBuildingDespawned?.Invoke(this);
 
         GameOverHandler.ServerOnGameOver -= ServerHandleGameOver;
-        health.EventHealthChanged -= RpcHandleHealthChanged;
+        StartupBuilding.ServerOnStartupBuildingAdded -= ServerHandleStartBuilding;
+        m_Health.EventHealthChanged -= RpcHandleHealthChanged;
+    }
+
+    [Server]
+    private void ServerHandleStartBuilding()
+    {
+        m_BuildingIsCompleted = true;
+        ServerOnBuildingCompleted?.Invoke(this);
+        HandleEnabledComponents(true);
     }
 
     [Server]
@@ -236,6 +213,7 @@ public class Building : Targetable
     {
         NetworkServer.Destroy(gameObject);
     }
+
     #endregion
 
     #region client
@@ -244,6 +222,17 @@ public class Building : Targetable
     public override void OnStartAuthority()
     {
         AuthorityOnConstructionStarted?.Invoke(this);
+        StartupBuilding.AuthorityOnStartupBuildingAdded += AuthorityHandleStartBuilding;
+    }
+
+    private void AuthorityHandleStartBuilding()
+    {
+        if (hasAuthority)
+        {
+            m_BuildingIsCompleted = true;
+            AuthorityOnBuildingCompleted?.Invoke(this);
+            HandleEnabledComponents(true);
+        }
     }
 
     public override void OnStopClient()
@@ -277,7 +266,12 @@ public class Building : Targetable
             script.enabled = newState;
         }
 
-        construction.SetActive(!newState);
+        m_Construction.SetActive(!newState);
+
+        if (hasAuthority)
+        {
+            SetFOVAvailability(newState);
+        }
     }
 
     [ClientRpc]
@@ -296,9 +290,14 @@ public class Building : Targetable
             return;
         }
 
-        if (health.HasFullHealth())
+        if (m_Health.HasFullHealth())
         {
             BuildingIsCompleted = true;
+            
+            if (hasAuthority)
+            {
+                AuthorityOnBuildingCompleted?.Invoke(this);
+            }
 
             foreach (var builder in m_Builders)
             {
@@ -346,5 +345,10 @@ public class Building : Targetable
     {
     }
 
+    [ClientRpc]
+    private void ClientDebug(string message)
+    {
+        Debug.Log(message);
+    }
     #endregion
 }

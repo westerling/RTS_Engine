@@ -236,8 +236,29 @@ public class Utils : NetworkBehaviour
     }
 
     public static float AtBuildingEdge(Building building)
-    {      
+    {
+        var size = building.Size;
+
         return building.gameObject.GetComponent<Collider>().bounds.max.x / 2;
+    }
+
+    public static float DistanceToBuilding(EntitySize size)
+    {
+        switch (size)
+        {
+            case EntitySize.Tiny:
+                return 1f;
+            case EntitySize.Small:
+                return 2.5f;
+            case EntitySize.Normal:
+                return 3f;
+            case EntitySize.Large:
+                return 4f;
+            case EntitySize.Huge:
+                return 5f;
+            default:
+                return 2f;
+        }
     }
 
     public static int SortByDistance(Vector3 pos, GameObject go1, GameObject go2)

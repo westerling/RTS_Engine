@@ -1,11 +1,24 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class CursorManager : MonoBehaviour
 {
     [SerializeField]
     private Texture2D[] m_Cursors;
 
+    [SerializeField]
+    private GameObject m_MoveIcon;
+
     private CursorType m_CursorType = CursorType.Normal;
+
+    [SerializeField]
+    private GameObject[] m_SelectionIndicators = null;
+
+    public GameObject[] SelectionIndicators
+    { 
+        get => m_SelectionIndicators; 
+        set => m_SelectionIndicators = value; 
+    }
 
     private void Start()
     {
@@ -37,5 +50,29 @@ public class CursorManager : MonoBehaviour
         }
 
         m_CursorType = cursorType;
+    }
+
+    public void Flashtarget(GameObject target)
+    {
+        StopAllCoroutines();
+        m_MoveIcon.SetActive(false);
+        if (target.TryGetComponent(out Interactable interactable))
+        {
+            interactable.Flash();
+        }
+    }
+
+    public void SetCommandCursor(Vector3 point)
+    {
+        StopAllCoroutines();
+        StartCoroutine(CommandCursorCoroutine(point));
+    }
+
+    IEnumerator CommandCursorCoroutine(Vector3 point)
+    {
+        m_MoveIcon.SetActive(true);
+        m_MoveIcon.transform.position = point;
+        yield return new WaitForSeconds(1);
+        m_MoveIcon.SetActive(false);
     }
 }

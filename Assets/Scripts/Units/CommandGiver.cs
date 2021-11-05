@@ -117,6 +117,7 @@ public class CommandGiver : MonoBehaviour
         }
 
         TryMove(hit.point);
+        m_CursorManager.SetCommandCursor(hit.point);
     }
     
     private void BuildingSelected(RaycastHit hit)
@@ -131,6 +132,7 @@ public class CommandGiver : MonoBehaviour
         }
 
         TrySetRallyPoint(hit.point);
+        m_CursorManager.SetCommandCursor(hit.point);
     }
 
     private void ResetTargets()
@@ -156,7 +158,7 @@ public class CommandGiver : MonoBehaviour
         {
             if (building.TryGetComponent(out Spawner spawner))
             {
-                spawner.RallyPoint.transform.position = point;
+                spawner.CmdSetRallyPoint(point);
             }
         }
     }
@@ -230,6 +232,7 @@ public class CommandGiver : MonoBehaviour
                 unit.UnitMovement.CmdAttack();
             }
         }
+        m_CursorManager.Flashtarget(target.gameObject);
     }
 
     private void TryCollect(Collectable resource)
@@ -251,6 +254,7 @@ public class CommandGiver : MonoBehaviour
 
             unit.UnitMovement.CmdCollect();
         }
+        m_CursorManager.Flashtarget(resource.gameObject);
     }
 
     private void TryDeliver(DropOff dropOff)
@@ -270,9 +274,10 @@ public class CommandGiver : MonoBehaviour
 
             unit.UnitMovement.CmdDeliver();
         }
+        m_CursorManager.Flashtarget(dropOff.gameObject);
     }
 
-    private void TryDeliver(TownCenter townCeter)
+    private void TryDeliver(TownCenter townCenter)
     {
         var unitList = m_SelectionHandler.Selected.Select(go => go.GetComponent<Unit>()).ToList();
 
@@ -286,14 +291,16 @@ public class CommandGiver : MonoBehaviour
             }
 
             unit.UnitMovement.CmdSetTask((int)Task.Deliver);
-            unit.UnitMovement.CmdMove(townCeter.gameObject.transform.position);
-            collector.CmdSetDropOff(townCeter.gameObject);
+            unit.UnitMovement.CmdMove(townCenter.gameObject.transform.position);
+            collector.CmdSetDropOff(townCenter.gameObject);
         }
+        m_CursorManager.Flashtarget(townCenter.gameObject);
     }
 
     private void TryBuild(Building building)
     {
         var unitList = m_SelectionHandler.Selected.Select(go => go.GetComponent<Unit>()).ToList();
+        var anyBuilder = false;
 
         foreach (Unit unit in unitList)
         {
@@ -304,10 +311,14 @@ public class CommandGiver : MonoBehaviour
                 return;
             }
 
+            anyBuilder = true;
             builder.CmdSetTarget(building);
             unit.UnitMovement.CmdSetTask((int)Task.Build);
-            unit.UnitMovement.CmdBuild();
-            
+            unit.UnitMovement.CmdBuild();  
+        }
+        if (anyBuilder)
+        {
+            m_CursorManager.Flashtarget(building.gameObject);
         }
     }
 

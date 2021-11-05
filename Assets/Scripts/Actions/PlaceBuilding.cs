@@ -10,7 +10,6 @@ public class PlaceBuilding : PlaceBuildingBase
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Globals.TerrainLayerMask))
         {
-            //Player.CmdTryPlaceBuilding(Building.Id, hit.point, Building.transform.rotation);
             Player.CmdTryPlaceBuilding(Building.Id, hit.point, this.transform.rotation);
             Destroy(this.gameObject);
         }
