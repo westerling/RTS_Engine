@@ -136,7 +136,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4075802967577387856}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3535151090535750214}
@@ -278,7 +278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  m_SpawnPoint: {fileID: 0}
+  m_SpawnPoint: {fileID: 1947108729880634004}
 --- !u!114 &4741190181223067789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,7 +313,6 @@ MonoBehaviour:
   m_DestructionStageOne: []
   m_DestructionStageTwo: []
   m_CanRotate: 0
-  m_IsStartupBuilding: 0
 --- !u!114 &4915678159356355415
 MonoBehaviour:
   m_ObjectHideFlags: 0

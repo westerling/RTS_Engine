@@ -496,18 +496,14 @@ public class RtsPlayer : NetworkBehaviour
         {
             return;
         }
-
-        //DeployedUnits.Add(unit);
-        
+    
         if (!hasAuthority)
         {
             return;
         }
-        //?
-        DeployedUnits.Add(unit);
 
+        DeployedUnits.Add(unit);
         SetCurrentPopulation(1);
-        //unit.SetFOVAvailability(true);
     }    
     
     private void ServerHandleUnitsDespawned(Unit unit)
@@ -667,7 +663,6 @@ public class RtsPlayer : NetworkBehaviour
     {
         DeployedUnits.Add(unit);
         CmdSetCurrentPopulation(1);
-        //unit.SetFOVAvailability(true);
     }
 
     private void AuthorityHandleUnitDespawned(Unit unit)

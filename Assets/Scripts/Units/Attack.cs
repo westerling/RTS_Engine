@@ -1,6 +1,6 @@
 ﻿using Mirror;
 
-public class Attack : NetworkBehaviour
+public abstract class Attack : NetworkBehaviour
 {
     private Stats m_Stats;
     private Targeter m_Targeter;
@@ -31,15 +31,5 @@ public class Attack : NetworkBehaviour
         Stats = stats;
     }
 
-    [Server]
-    protected bool IsCloseEnoughToTarget()
-    {
-        if (Stats == null)
-        {
-            return false;
-        }
-
-        return (Targeter.Target.transform.position - transform.position).sqrMagnitude <=
-            (Stats.GetAttributeAmount(AttributeType.Range) * Stats.GetAttributeAmount(AttributeType.Range));
-    }
+    public abstract bool IsCloseEnoughToTarget();
 }

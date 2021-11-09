@@ -40,6 +40,18 @@ public class Melee : Attack
         }
     }
 
+    [Server]
+    public override bool IsCloseEnoughToTarget()
+    {
+        if (Stats == null)
+        {
+            return false;
+        }
+
+        return (Targeter.Target.transform.position - transform.position).sqrMagnitude <= 
+            Utils.DistanceToBuilding(Targeter.Target.Size) * Utils.DistanceToBuilding(Targeter.Target.Size);
+    }
+
     [ClientRpc]
     private void ClientDebug(string message)
     {

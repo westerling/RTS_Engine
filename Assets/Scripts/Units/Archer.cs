@@ -49,4 +49,16 @@ public class Archer : Attack
             lastFireTime = Time.time;
         }
     }
+
+    [Server]
+    public override bool IsCloseEnoughToTarget()
+    {
+        if (Stats == null)
+        {
+            return false;
+        }
+
+        return (Targeter.Target.transform.position - transform.position).sqrMagnitude <=
+            (Stats.GetAttributeAmount(AttributeType.Range) * Stats.GetAttributeAmount(AttributeType.Range));
+    }
 }

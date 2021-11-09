@@ -194,6 +194,12 @@ public class Building : Targetable
         m_Health.EventHealthChanged -= RpcHandleHealthChanged;
     }
 
+    [Command]
+    private void CmdBuildingCompleted()
+    {
+        ServerOnBuildingCompleted?.Invoke(this);
+    }
+
     [Server]
     private void ServerHandleStartBuilding()
     {
@@ -296,7 +302,9 @@ public class Building : Targetable
             
             if (hasAuthority)
             {
+                Debug.Log("shits done");
                 AuthorityOnBuildingCompleted?.Invoke(this);
+                CmdBuildingCompleted();
             }
 
             foreach (var builder in m_Builders)
