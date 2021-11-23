@@ -1,6 +1,5 @@
 ﻿using Mirror;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 public class GameObjectIdentity : NetworkBehaviour
@@ -52,40 +51,4 @@ public class GameObjectIdentity : NetworkBehaviour
     {
         get { return m_RequiredUpgrades; }
     }
-
-    //public void ReadStats()
-    //{
-    //    if (m_Information == null)
-    //    {
-    //        return;
-    //    }
-
-    //    var stream = new MemoryStream(m_Information.bytes);
-    //    var info = Utils.Deserialize<EntityInformation>(stream);
-
-    //    if (info == null)
-    //    {
-    //        return;
-    //    }
-
-    //    Id = info.Id;
-    //    Name = info.EntityName;
-    //    Description = info.Description;
-    //    Domain = info.Domain;
-    //    EntityType = info.EntityType;
-    //    MaxNumber = info.MaxNumber;
-    //    RequiredUpgrades = CreateRequiredUpgradesList(info.RequiredUpgrades.RequiredUpgrade);
-    //}
-
-    //private List<int> CreateRequiredUpgradesList(List<RequiredUpgradeData> requiredUpgrades)
-    //{
-    //    var requiredUpgradeList = new List<int>();
-
-    //    foreach (var requiredUpgrade in requiredUpgrades)
-    //    {
-    //        requiredUpgradeList.Add(requiredUpgrade.RequiredUpgradeId);
-    //    }
-
-    //    return requiredUpgradeList;
-    //}
 }

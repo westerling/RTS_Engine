@@ -153,7 +153,7 @@
             "id": "253c8656-3461-4144-912f-6b7a35063c8c",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "House",
                     "type": "Button",
                     "id": "cbf8899d-3542-42e7-b096-bc0fd0ab95fb",
                     "expectedControlType": "Button",
@@ -165,11 +165,11 @@
                 {
                     "name": "",
                     "id": "d5d44f85-fa0a-48d4-a409-bd5c261d45db",
-                    "path": "",
+                    "path": "<Keyboard>/h",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "New action",
+                    "action": "House",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -265,7 +265,7 @@
                 {
                     "name": "",
                     "id": "0c67d659-3356-4ce8-b7e0-e36be0ef611e",
-                    "path": "",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",

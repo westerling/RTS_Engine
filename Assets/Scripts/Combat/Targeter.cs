@@ -16,6 +16,12 @@ public class Targeter : BaseUnitClickAction
     [Command]
     public void CmdSetTarget(GameObject targetGameObject)
     {
+        SetTarget(targetGameObject);
+    }
+
+    [Server]  
+    public void SetTarget(GameObject targetGameObject)
+    {
         if (!targetGameObject.TryGetComponent(out Targetable target))
         {
             return;
@@ -23,7 +29,6 @@ public class Targeter : BaseUnitClickAction
 
         Target = target;
     }
-
 
     [Command]
     public void CmdClearTarget()

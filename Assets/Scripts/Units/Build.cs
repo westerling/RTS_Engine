@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using System.Collections;
 using UnityEngine;
 
 public class Build : NetworkBehaviour
@@ -6,6 +7,7 @@ public class Build : NetworkBehaviour
     private float m_RotationSpeed = 20f;
     private Builder m_Builder;
     private Unit m_Unit;
+    private float m_Timer = 1;
 
     public override void OnStartServer()
     {
@@ -16,27 +18,33 @@ public class Build : NetworkBehaviour
     [ServerCallback]
     private void Update()
     {
-        if (m_Unit.UnitMovement.Task == Task.Build)
-        {
-            UnitBuild();
-            return;
-        } 
-    }
-
-    private void UnitBuild()
-    {
-        var target = m_Builder.Target;
-
-        if (target == null)
+        if (!(m_Unit.UnitMovement.Task == Task.Build))
         {
             return;
         }
 
+        StartCoroutine(UnitBuild());
+        m_Timer -= Time.deltaTime;
+    }
+
+    private IEnumerator UnitBuild()
+    {
+        yield return new WaitUntil(() => m_Timer <= 0);
+        m_Timer = 1;
+        
+        var target = m_Builder.Target;
+
+        if (target == null)
+        {
+            SetNewTarget();
+            yield break;
+        }
+
         if (target.TryGetComponent(out Building building))
         {
-            if (!CanRepairTarget())
+            if (!IsCloseEnough())
             {
-                return;
+                yield break;
             }
 
             var unit = GetComponent<Unit>();
@@ -46,18 +54,55 @@ public class Build : NetworkBehaviour
                 RpcAddBuilder(building, unit);
             }
 
-            var targetRotation =
-                Quaternion.LookRotation(target.transform.position - transform.position);
+            if (building.BuildingIsCompleted)
+            {
+                var player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
+                var cost = building.GetCostForRepairing();
 
-            transform.rotation = Quaternion.RotateTowards(
-                transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
+                if (Utils.CanAfford(player.GetResources(), cost))
+                {
+                    foreach (var resource in cost)
+                    {
+                        player.CmdSetResources((int)resource.Key, -resource.Value);
+                    }
+                }
+            }
+
+            RotateTowardsTarget(target);
+
+            var amount = target.GetRepairAmountPerBuilder();
+
+            if (target.TryGetComponent(out Health health))
+            {
+                var newHealth = health.CurrentHealth + amount;
+                health.SetHealth(newHealth);
+
+                if (health.HasFullHealth())
+                {
+                    SetNewTarget();
+                }
+            }
         }
     }
 
-    [Server]
-    private bool CanRepairTarget()
+    private void SetNewTarget()
     {
-        //var size = Utils.AtBuildingEdge(m_Builder.Target);
+        m_Builder.FindNewTarget();
+        ResetBuilder();
+    }
+
+    private void RotateTowardsTarget(Building target)
+    {
+        var targetRotation = 
+            Quaternion.LookRotation(target.transform.position - transform.position);
+
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
+    }
+
+    [Server]
+    private bool IsCloseEnough()
+    {
         var size = Utils.DistanceToBuilding(m_Builder.Target.Size);
 
         return (m_Builder.Target.transform.position - transform.position).sqrMagnitude <=
@@ -68,6 +113,11 @@ public class Build : NetworkBehaviour
     private void RpcAddBuilder(Building building, Unit unit)
     {
         building.AddBuilder(unit);
+    }
+
+    private void ResetBuilder()
+    {
+        m_Unit.UnitMovement.Build();
     }
 
     [ClientRpc]

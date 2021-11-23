@@ -52,12 +52,6 @@ public class InfoDisplay : NetworkBehaviour
     void Start()
     {
         player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
-        //player.ClientOnSelectedGameObject += ClientHandleSelectedGameObject;
-    }
-
-    private void OnDestroy()
-    {
-        //player.ClientOnSelectedGameObject -= ClientHandleSelectedGameObject;
     }
 
     private void UpdateUnitInfo(Unit unit)

@@ -1,5 +1,4 @@
 ﻿using Mirror;
-using System;
 using UnityEngine;
 
 public class Builder : BaseUnitClickAction
@@ -13,22 +12,33 @@ public class Builder : BaseUnitClickAction
         set { m_Target = value; }
     }
 
+    #region server
 
-    public void AddListener()
+    [Command]
+    public void CmdSetTarget(Building targetBuilding)
     {
-        Building.AuthorityOnConstructionStarted += AuthorityHandleBuildingsSpawned;
+        Target = targetBuilding;
     }
 
-    public void RemoveListener()
+    [Command]
+    public void CmdClearTarget()
     {
-        Building.AuthorityOnConstructionStarted -= AuthorityHandleBuildingsSpawned;
+        ClearTarget();
     }
 
-    private void AuthorityHandleBuildingsSpawned(Building building)
+    [Server]
+    public override void ClearTarget()
     {
-        CmdSetTarget(building);
+        if (Target == null)
+        {
+            return;
+        }
+
+        Target.RemoveBuilder(GetComponent<Unit>());
+        Target = null;
     }
 
+    [Server]
     public void FindNewTarget()
     {
         var player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
@@ -57,29 +67,15 @@ public class Builder : BaseUnitClickAction
         Target = closestConstruction;
     }
 
-    #region server
-
-    [Command]
-    public void CmdSetTarget(Building targetBuilding)
-    {
-        Target = targetBuilding;
-    }
-
-    [Command]
-    public void CmdClearTarget()
-    {
-        ClearTarget();
-    }
-
-    [Server]
-    public override void ClearTarget()
-    {
-        Target = null;
-    }
-
     public override void UpdateStats()
     {
         return;
+    }
+
+    [ClientRpc]
+    private void ClientDebug(string message)
+    {
+        Debug.Log(message);
     }
 
     #endregion

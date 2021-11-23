@@ -1,10 +1,12 @@
 ﻿using Mirror;
+using System.Collections;
 using UnityEngine;
 
 public class DeliverResource : NetworkBehaviour
 {
     private Collector collector;
     private Unit unit;
+    private float m_Timer = 1;
 
     public override void OnStartServer()
     {
@@ -15,20 +17,25 @@ public class DeliverResource : NetworkBehaviour
     [ServerCallback]
     private void Update()
     {
-        if (unit.UnitMovement?.Task == Task.Deliver)
+        if (!(unit.UnitMovement?.Task == Task.Deliver))
         {
-            ClientDebug("deliver!");
-            Deliver();
+            return;
         }
+
+        StartCoroutine(Deliver());
+        m_Timer -= Time.deltaTime;
     }
 
-    private void Deliver()
+    private IEnumerator Deliver()
     {
+        yield return new WaitUntil(() => m_Timer <= 0);
+        m_Timer = 1;
+
         var deliveryPoint = collector.DeliveryPoint;
 
         if (deliveryPoint == null)
         {
-            return;
+            yield break;
         }
 
         if (deliveryPoint.TryGetComponent(out DropOff dropOff))
@@ -36,7 +43,7 @@ public class DeliverResource : NetworkBehaviour
 
             if (!CanDeliver(dropOff))
             {
-                return;
+                yield break;
             }
 
             dropOff.Deliver(collector.CarryingAmount);
@@ -47,7 +54,7 @@ public class DeliverResource : NetworkBehaviour
 
             if (!CanDeliver(townCenter))
             {
-                return;
+                yield break;
             }
 
             townCenter.Deliver(collector.Resource, collector.CarryingAmount);

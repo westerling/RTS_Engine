@@ -2,56 +2,88 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class ActionsDisplay : MonoBehaviour
 {
     public static ActionsDisplay Current;
 
     [SerializeField]
-    private List<Button> buttons = new List<Button>();
+    private List<Button> m_ActionButtons = new List<Button>();
 
-    private List<Action> actionCalls = new List<Action>();
+    [SerializeField]
+    private GameObject m_PanelOne;
+    
+    [SerializeField]
+    private GameObject m_PanelTwo;
+
+    private List<Action> m_ActionCalls = new List<Action>();
 
     public ActionsDisplay()
     {
         Current = this;
     }
 
-    public List<Button> GetButtons()
-    {
-        return buttons;
-    }
-
     public void ClearButtons()
     {
-        foreach (var button in buttons)
+        foreach (var button in m_ActionButtons)
         {
             button.gameObject.SetActive(false);
         }
-        actionCalls.Clear();
+
+        m_ActionCalls.Clear();
     }
 
-    public void AddButton(Sprite pic, Action onClick, int position)
+    public void AddButton(Sprite pic, Action onClick)
     {
-        var index = actionCalls.Count;
-        //var index = position;
+        var index = m_ActionCalls.Count;
 
-        buttons[index].gameObject.SetActive(true);
-        buttons[index].GetComponent<Image>().sprite = pic;
-        actionCalls.Add(onClick);
+        m_ActionButtons[index].gameObject.SetActive(true);
+        m_ActionButtons[index].GetComponent<Image>().sprite = pic;
+        m_ActionCalls.Add(onClick);
+    }
+
+    public void FillButtons(List<ActionButton> actionButtons)
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            if (actionButtons.Any(b => b.Position == i))
+            {
+                var behaviour = actionButtons.Where(b => b.Position == i).First();
+
+                AddButton(behaviour.Sprite, behaviour.ClickAction);
+            }
+            else
+            {
+                var emptyButton = new ActionButton();
+                AddButton(emptyButton.Sprite, emptyButton.ClickAction);
+            }
+        }
+    }
+
+    public void ResetPanels()
+    {
+        m_PanelOne.SetActive(true);
+        m_PanelTwo.SetActive(false);
+    }
+
+    public void TogglePanels()
+    {
+        m_PanelOne.SetActive(!m_PanelOne.activeSelf);
+        m_PanelTwo.SetActive(!m_PanelTwo.activeSelf);
     }
 
     public void OnButtonClick(int index)
     {
-        actionCalls[index]();
+        m_ActionCalls[index]();
     }
 
     private void Start()
     {
-        for (int i = 0; i < buttons.Count; i++)
+        for (int i = 0; i < m_ActionButtons.Count; i++)
         {
             var index = i;
-            buttons[index].onClick.AddListener(delegate ()
+            m_ActionButtons[index].onClick.AddListener(delegate ()
             {
                 OnButtonClick(index);
             }

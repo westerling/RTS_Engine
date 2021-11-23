@@ -51,7 +51,7 @@ public class UnitProjectile : NetworkBehaviour
 
             if (other.TryGetComponent(out Targetable targetable))
             {
-                targetable.EnemyReaction(Sender);
+                targetable.Reaction(Sender);
             }
         }
 

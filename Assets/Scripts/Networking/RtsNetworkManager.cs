@@ -93,8 +93,6 @@ public class RtsNetworkManager : NetworkManager
                              
                 NetworkServer.Spawn(baseInstance, player.connectionToClient);
 
-                //baseInstance.AddComponent<StartupBuilding>();
-
                 System.Random rnd = new System.Random();
 
                 for (var i = 0; i < m_StartUnits.Length; i++)

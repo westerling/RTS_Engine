@@ -50,13 +50,16 @@ public class RtsPlayer : NetworkBehaviour
     [SerializeField]
     private List<int> myUpgrades = new List<int> {0};
 
-    private Faction m_Faction;
+    
     public event Action<int, Resource> ClientOnResourcesUpdated;
     public event Action<int> ClientOnCurrentPopulationUpdated;
     public event Action<int> ClientOnMaximumPopulationUpdated;
+    
     public static event Action<bool> AuthorityOnPartyOwnerStateUpdated;
     public static event Action ClientOnInfoUpdated;
-
+    public static GameState GameState = GameState.Normal;
+    
+    private Faction m_Faction;
     private List<GameObjectIdentity> m_Researchables = new List<GameObjectIdentity>();
     private List<Unit> m_DeployedUnits = new List<Unit>();
     private List<Building> m_DeployedBuildings = new List<Building>();
@@ -452,7 +455,6 @@ public class RtsPlayer : NetworkBehaviour
 
         foreach (var resourceCostItem in cost)
         {
-            //CmdSetResources((int)resourceCostItem.Key, -cost[resourceCostItem.Key]);
             SetResources((int)resourceCostItem.Key, -cost[resourceCostItem.Key]);
         }
 

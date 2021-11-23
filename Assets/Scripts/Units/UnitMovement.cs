@@ -2,11 +2,15 @@
 using UnityEngine.AI;
 using Mirror;
 using System.Collections.Generic;
+using System.Collections;
 
 public class UnitMovement : NetworkBehaviour
 {
     [SerializeField]
     private NavMeshAgent m_Agent = null;
+
+    [SerializeField]
+    private Unit m_Unit = null;
 
     [SerializeField]
     private Targeter m_Targeter = null;
@@ -23,8 +27,8 @@ public class UnitMovement : NetworkBehaviour
     [SyncVar]
     private List<Vector3> m_MovementList = new List<Vector3>();
 
-    private const float collectStoppingRange = 3f;
     private const float normalStoppingRange = 2f;
+    private float m_Timer = 1;
 
     [SerializeField]
     [SyncVar]
@@ -66,7 +70,8 @@ public class UnitMovement : NetworkBehaviour
 
         if (Task == Task.Attack)
         {
-            UpdateTargetPosition();
+            StartCoroutine(UpdateTargetPosition());
+            m_Timer -= Time.deltaTime;
         }
 
         m_Agent.SetDestination(MovementList[0]);
@@ -103,6 +108,12 @@ public class UnitMovement : NetworkBehaviour
     }
 
     [Command]
+    public void CmdRally()
+    {
+        Rally();
+    }
+
+    [Command]
     public void CmdAddPoint(Vector3 position)
     {
         ServerAddPoint(position);
@@ -122,6 +133,12 @@ public class UnitMovement : NetworkBehaviour
 
     [Command]
     public void CmdSetTask(int newTask)
+    {
+        SetTask(newTask);
+    }
+
+    [Server]
+    public void SetTask(int newTask)
     {
         Task = (Task)newTask;
     }
@@ -180,15 +197,17 @@ public class UnitMovement : NetworkBehaviour
     public void Deliver()
     {
         var target = m_Collector.DeliveryPoint;
-        if (target != null)
+        if (target == null)
         {
-            if ((target.transform.position - transform.position).sqrMagnitude > 2f * 2f)
-            {
-                //m_Agent.stoppingDistance = Utils.AtBuildingEdge(target.GetComponent<Building>());
-                m_Agent.stoppingDistance = Utils.DistanceToBuilding(target.GetComponent<Building>().Size);
-                Task = Task.Deliver;
-                ServerMove(target.transform.position, true);
-            }
+            Task = Task.Idle;
+            return;
+        }
+
+        if ((target.transform.position - transform.position).sqrMagnitude > 2f * 2f)
+        {
+            m_Agent.stoppingDistance = Utils.DistanceToBuilding(target.GetComponent<Building>().Size);
+            Task = Task.Deliver;
+            ServerMove(target.transform.position, true);
         }
     }
 
@@ -197,21 +216,30 @@ public class UnitMovement : NetworkBehaviour
     {
         var target = m_Collector.Target;
 
-        if (target != null)
+        if (target == null)
         {
-            if ((target.transform.position - transform.position).sqrMagnitude > 2f * 2f)
-            {
-                m_Agent.stoppingDistance = normalStoppingRange;
-                Task = Task.Collect;
-                ServerMove(Utils.OffsetPoint(target.transform.position, 1), true);
-            }
+            Task = Task.Idle;
+            return;
+        }
+
+        if ((target.transform.position - transform.position).sqrMagnitude > 2f * 2f)
+        {
+            m_Agent.stoppingDistance = normalStoppingRange;
+            Task = Task.Collect;
+            ServerMove(Utils.OffsetPoint(target.transform.position, 1), true);
         }
     }
 
     [Server]
-    private void Build()
+    public void Build()
     {
         var target = m_Builder.Target;
+
+        if (target == null)
+        {
+            Task = Task.Idle;
+            return;
+        }
 
         if (target.GetComponent<Health>().HasFullHealth())
         {
@@ -219,48 +247,56 @@ public class UnitMovement : NetworkBehaviour
             Task = Task.Idle;
         }
 
-        if (target != null)
-        {
-            if ((target.transform.position - transform.position).sqrMagnitude > 2f * 2f)
-            {
-                //m_Agent.stoppingDistance = Utils.AtBuildingEdge(target.GetComponent<Building>());
-                m_Agent.stoppingDistance = Utils.DistanceToBuilding(target.GetComponent<Building>().Size);
-                Task = Task.Build;
-                ServerMove(target.transform.position, true);
-            }
-        }
+        //if ((target.transform.position - transform.position).sqrMagnitude > 2f * 2f)
+        //{
+            ClientDebug("Here");
+            m_Agent.stoppingDistance = Utils.DistanceToBuilding(target.GetComponent<Building>().Size);
+            Task = Task.Build;
+            ServerMove(target.transform.position, true);
+        //}
     }
 
     [Server]
-    private void Attack()
+    public void Attack()
     {
         var target = m_Targeter.Target;
+        if (target == null)
+        {
+            Task = Task.Idle;
+            return;
+        }
+
         var stats = GetComponent<LocalStats>().Stats;
         var range = stats.GetAttributeAmount(AttributeType.Range);
+        var targetSize = Utils.DistanceToBuilding(target.Size);
 
-        if (target != null)
-        {
-            if ((target.transform.position - transform.position).sqrMagnitude > range * range)
-            {
-                m_Agent.stoppingDistance = normalStoppingRange;
-                Task = Task.Attack;
-                ServerMove(target.transform.position, true);
-            }
-        }
+        Task = Task.Attack;
+        m_Agent.stoppingDistance = range + targetSize;
+        ServerMove(target.transform.position, true);
     }
 
     [Server]
-    private void UpdateTargetPosition()
+    public void Rally()
     {
-        var target = m_Targeter.Target;
+        var target = m_Unit.GarrisonBuilding;
 
-        if (target != null)
+        if (target == null)
         {
-            if ((target.transform.position - MovementList[0]).sqrMagnitude > 1)
-            {
-                MovementList[0] = target.transform.position;
-            }
+            return;
         }
+
+        var targetSize = Utils.DistanceToBuilding(target.Size);
+
+        Task = Task.Rally;
+        m_Agent.stoppingDistance = targetSize;
+        ServerMove(target.transform.position, true);
+    }
+
+    [Server]
+    private IEnumerator UpdateTargetPosition()
+    {
+        yield return new WaitUntil(() => m_Timer <= 0);
+        Attack();
     }
 
     #endregion

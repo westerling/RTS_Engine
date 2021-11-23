@@ -16,6 +16,11 @@ public class Unit : Targetable
     [SerializeField]
     private Builder m_Builder = null;
 
+    [SerializeField]
+    private UnitRally m_UnitRally = null;
+
+    private Building m_GarrisonBuilding = null;
+
     private StanceType m_Stance = StanceType.Defensive;
 
     public static event Action<Unit> ServerOnUnitSpawned;
@@ -45,6 +50,12 @@ public class Unit : Targetable
         set { m_Stance = value; }
     }
 
+    public Building GarrisonBuilding
+    { 
+        get => m_GarrisonBuilding; 
+        set => m_GarrisonBuilding = value; 
+    }
+
     #region server
 
     public override void OnStartServer()
@@ -72,6 +83,28 @@ public class Unit : Targetable
         NetworkServer.Destroy(gameObject);
     }
 
+    [Command]
+    public void CmdSetGarrison(Building garrison)
+    {
+        GarrisonBuilding = garrison;
+    }
+
+    [Command]
+    public void CmdClearGarrison()
+    {
+        ClearGarrison();
+    }
+
+    [Server]
+    public void ClearGarrison()
+    {
+        if (GarrisonBuilding == null)
+        {
+            return;
+        }
+
+        GarrisonBuilding = null;
+    }
     #endregion
 
     #region client
@@ -85,12 +118,12 @@ public class Unit : Targetable
 
     private void AuthorityHandleUpgradeAdded(Upgrade upgrade)
     {
-        //GetComponent<LocalStats>().AlterStats(upgrade.Stats);
+
     }
 
     private void ServerHandleUpgradeAdded(Upgrade obj)
     {
-        //GetComponent<LocalStats>();
+
     }
 
     public override void OnStopClient()
@@ -104,15 +137,39 @@ public class Unit : Targetable
         AuthorityOnUnitDespawned?.Invoke(this);
     }
 
-    public override void EnemyReaction(GameObject sender)
+    public override void Reaction(GameObject sender)
     {
         switch(Stance)
         {
             case StanceType.Offensive:
+                TryTarget(sender);
+                break;
             case StanceType.Defensive:
                 break;
             case StanceType.Flee:
+                TryFlee();
                 break;
+        }
+    }
+
+    private void TryFlee()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void TryTarget(GameObject target)
+    {
+        if (TryGetComponent(out Targeter targeter))
+        {
+            if (targeter == null)
+            {
+                return;
+            }
+
+            targeter.CmdSetTarget(target);
+
+            UnitMovement.SetTask((int)Task.Attack);
+            UnitMovement.Attack();
         }
     }
 

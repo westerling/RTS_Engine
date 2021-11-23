@@ -1,18 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-public class OpenWindowAction : MonoBehaviour
+public class OpenWindowAction : ActionBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private GameObject WindowToOpen = null;
 
-    // Update is called once per frame
-    void Update()
+    public override Action GetClickAction()
     {
-        
+        return delegate ()
+        {
+            WindowToOpen.SetActive(true);
+        };
     }
 }

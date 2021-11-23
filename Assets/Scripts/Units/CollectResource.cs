@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public class CollectResource : NetworkBehaviour
     private float rotationSpeed = 20f;
     private Collector collector;
     private Unit unit;
-    private float collectTimer = 0;
+    private float m_Timer = 1;
     private float farmerSpeed = 1f;
     private float forageSpeed = 1f;
     private float goldMinerSpeed = 1f;
@@ -33,20 +34,25 @@ public class CollectResource : NetworkBehaviour
     [ServerCallback]
     private void Update()
     {
-        if (unit.UnitMovement.Task == Task.Collect)
+        if (!(unit.UnitMovement.Task == Task.Collect))
         {
-            Collect();
             return;
-        }     
+        }
+
+        StartCoroutine(Collect());
+        m_Timer -= Time.deltaTime;
     }
 
-    private void Collect()
+    private IEnumerator Collect()
     {
+        yield return new WaitUntil(() => m_Timer <= 0);
+        m_Timer = 1;
+
         var target = collector.Target;
 
         if (target == null)
         {
-            return;
+            yield break;
         }
 
         if (target.TryGetComponent(out Collectable resource))
@@ -54,18 +60,18 @@ public class CollectResource : NetworkBehaviour
             if (collector.CarryingAmountIsFull())
             {
                 unit.UnitMovement.Deliver();
-                return;
+                yield break;
             }
 
             if (!CanCollectTarget(target.transform))
             {
-                return;
+                yield break;
             }
 
             if (!resource.CanGather())
             {
                 FindNewResource();
-                return;
+                yield break;
             }
 
             var resourceType = target.Resource;
@@ -88,16 +94,7 @@ public class CollectResource : NetworkBehaviour
                     break;
             }
 
-            collectTimer += Time.deltaTime;
-
-            var timeToCollect = 1f / collectPerSecond;
-
-            if (collectTimer < timeToCollect)
-            {
-                return;
-            }
-
-            collectTimer = 0;
+            m_Timer = 1f / collectPerSecond;
 
             collector.AddResource(resourceType);
 

@@ -261,6 +261,12 @@ public class Utils : NetworkBehaviour
         }
     }
 
+    public bool IsCloseEnough(Vector3 targetPosition, float size)
+    {
+        return (targetPosition - transform.position).sqrMagnitude <=
+            (size) * (size);
+    }
+
     public static int SortByDistance(Vector3 pos, GameObject go1, GameObject go2)
     {
         return Vector3.Distance(pos, go1.transform.position).CompareTo(Vector3.Distance(pos, go2.transform.position));

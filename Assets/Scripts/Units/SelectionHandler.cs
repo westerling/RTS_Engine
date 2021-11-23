@@ -260,7 +260,7 @@ public class SelectionHandler : MonoBehaviour
 
         Selected.Add(unit.gameObject);
 
-        foreach (Unit selectedUnit in Selected.Select(go => go.GetComponent<Unit>()))
+        foreach (var selectedUnit in Selected.Select(go => go.GetComponent<Unit>()))
         {
             selectedUnit.Select();
         }
@@ -326,6 +326,7 @@ public class SelectionHandler : MonoBehaviour
             var unitBehaviours = selected.GetComponents<ActionBehaviour>();
             
             AddBehaviours(unitBehaviours);
+            
 
             return;
         }
@@ -354,6 +355,8 @@ public class SelectionHandler : MonoBehaviour
     private void AddBehaviours(ActionBehaviour[] behaviours)
     {
         var priorUpgrades = player.MyUpgrades;
+        var buttonList = new List<ActionButton>();
+
         foreach (var behaviour in behaviours)
         {
             var showButton = true;
@@ -375,12 +378,11 @@ public class SelectionHandler : MonoBehaviour
 
             if (showButton)
             {
-                ActionsDisplay.Current.AddButton(
-                behaviour.Icon,
-                behaviour.GetClickAction(),
-                behaviour.Position);
+                buttonList.Add(new ActionButton(behaviour.Icon, behaviour.GetClickAction(), behaviour.Position));
             }
         }
+        ActionsDisplay.Current.FillButtons(buttonList);
+        ActionsDisplay.Current.ResetPanels();
     }
 
     private void AddArmyInformation(Unit unit)

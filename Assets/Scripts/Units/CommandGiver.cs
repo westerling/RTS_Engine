@@ -81,6 +81,13 @@ public class CommandGiver : MonoBehaviour
         {
             if (building.hasAuthority)
             {
+                var isRallying = false;
+
+                if (isRallying)
+                {
+                    TryGarrison(building);
+                }
+
                 if (building.TryGetComponent(out Health health))
                 {
                     if (!health.HasFullHealth())
@@ -139,7 +146,7 @@ public class CommandGiver : MonoBehaviour
     {
         var unitList = m_SelectionHandler.Selected.Select(go => go.GetComponent<Targetable>()).ToList();
 
-        foreach (Targetable go in unitList)
+        foreach (var go in unitList)
         {
             go.Targeter?.CmdClearTarget();
             if (go.TryGetComponent(out Unit unit))
@@ -154,7 +161,7 @@ public class CommandGiver : MonoBehaviour
     {
         var buildingList = m_SelectionHandler.Selected.Select(go => go.GetComponent<Building>()).ToList();
 
-        foreach (Building building in buildingList)
+        foreach (var building in buildingList)
         {
             if (building.TryGetComponent(out Spawner spawner))
             {
@@ -216,7 +223,7 @@ public class CommandGiver : MonoBehaviour
     {
         var selectedList = m_SelectionHandler.Selected.Select(go => go.GetComponent<Targetable>()).ToList();
 
-        foreach (Targetable go in selectedList)
+        foreach (var go in selectedList)
         {
             var targeter = go.Targeter;
 
@@ -320,6 +327,19 @@ public class CommandGiver : MonoBehaviour
         {
             m_CursorManager.Flashtarget(building.gameObject);
         }
+    }
+
+    private void TryGarrison(Building building)
+    {
+        var unitList = m_SelectionHandler.Selected.Select(go => go.GetComponent<Unit>()).ToList();
+
+        foreach (Unit unit in unitList)
+        {
+            unit.UnitMovement.CmdSetTask((int)Task.Rally);
+            unit.UnitMovement.CmdMove(building.gameObject.transform.position);
+            unit.CmdSetGarrison(building);
+        }
+        m_CursorManager.Flashtarget(building.gameObject);
     }
 
     private void ClientHandleGameOver(string winner)

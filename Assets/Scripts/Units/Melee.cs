@@ -1,42 +1,61 @@
 ﻿using Mirror;
+using System.Collections;
 using UnityEngine;
 
 public class Melee : Attack
 {    
-    private float rotationSpeed = 20f;
-    private float lastFireTime;
+    private float m_RotationSpeed = 5f;
+    private float m_Timer = 1;
+    private Unit m_Unit;
 
+    public override void OnStartServer()
+    {
+        m_Unit = GetComponent<Unit>();
+    }
 
     [ServerCallback]
     private void Update()
     {
+        if (!(m_Unit.UnitMovement.Task == Task.Attack))
+        {
+            return;
+        }
+
+        StartCoroutine(UnitAttack());
+        m_Timer -= Time.deltaTime;       
+    }
+
+    private IEnumerator UnitAttack()
+    {
+        yield return new WaitUntil(() => m_Timer <= 0);
+        m_Timer = Stats.GetAttributeAmount(AttributeType.RateOfFire);
+
         var target = Targeter.Target;
 
         if (target == null)
         {
-            return;
+            yield break;
         }
 
         if (!IsCloseEnoughToTarget())
         {
-            ClientDebug("not close enough");
-            return;
+            yield break;
         }
-        ClientDebug("close enough");
+
         var targetRotation =
             Quaternion.LookRotation(target.transform.position - transform.position);
 
         transform.rotation = Quaternion.RotateTowards(
-            transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
 
-        if (Time.time > (1 / Stats.GetAttributeAmount(AttributeType.RateOfFire)) + lastFireTime)
+        if (target.TryGetComponent(out Health health))
         {
-            if (target.TryGetComponent(out Health health))
-            {
-                health.DealDamage((int)Stats.GetAttributeAmount(AttributeType.Attack), (int)AttackStyle.Melee);
-            }
+            health.DealDamage((int)Stats.GetAttributeAmount(AttributeType.Attack), (int)AttackStyle.Melee);
 
-            lastFireTime = Time.time;
+            if (target.TryGetComponent(out Targetable targetable))
+            {
+                targetable.Reaction(gameObject);
+            }
         }
     }
 
@@ -48,8 +67,11 @@ public class Melee : Attack
             return false;
         }
 
-        return (Targeter.Target.transform.position - transform.position).sqrMagnitude <= 
-            Utils.DistanceToBuilding(Targeter.Target.Size) * Utils.DistanceToBuilding(Targeter.Target.Size);
+        var unitRange = Stats.GetAttributeAmount(AttributeType.Range);
+        var targetSize = Utils.DistanceToBuilding(Targeter.Target.Size);
+
+        return (Targeter.Target.transform.position - transform.position).sqrMagnitude <=
+             (unitRange + targetSize) * (unitRange + targetSize);
     }
 
     [ClientRpc]

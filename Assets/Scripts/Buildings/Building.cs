@@ -31,6 +31,7 @@ public class Building : Targetable
     private bool m_CanRotate;
 
     private List<Unit> m_Builders = new List<Unit>();
+    private List<Unit> m_GarrisonUnits = new List<Unit>();
     private RtsPlayer m_Player;
     private float m_BuildTimer = 0;
 
@@ -69,51 +70,29 @@ public class Building : Targetable
         get => m_BuildingPreview;
     }
 
-
-    private void Update()
+    public IDictionary<Resource, int> GetCostForRepairing()
     {
-        if (m_Health.HasFullHealth())
-        {
-            return;
-        }
+        var stats = GetComponent<LocalStats>().Stats;
+        var cost = stats.GetCost();
+        var constructionTime = 3 * (stats.GetAttributeAmount(AttributeType.Training)) / (m_Builders.Count + 2);
 
-        if (m_Builders.Count <= 0)
-        {
-            return;
-        }
+        IDictionary<Resource, int> repairCost = new Dictionary<Resource, int>();
+        repairCost.Add(new KeyValuePair<Resource, int>(Resource.Food, cost[Resource.Food] / 2 / (int)constructionTime));
+        repairCost.Add(new KeyValuePair<Resource, int>(Resource.Gold, cost[Resource.Gold] / 2 / (int)constructionTime));
+        repairCost.Add(new KeyValuePair<Resource, int>(Resource.Stone, cost[Resource.Stone] / 2 / (int)constructionTime));
+        repairCost.Add(new KeyValuePair<Resource, int>(Resource.Wood, cost[Resource.Wood] / 2 / (int)constructionTime));
 
-        CheckBuilders();
-
-        m_BuildTimer += Time.deltaTime;
-
-        if (m_BuildTimer < 1)
-        {
-            return;
-        }
-
-        m_BuildTimer = 0;
-
-        UnitsBuild();            
+        return repairCost;
     }
 
-    private void CheckBuilders()
+    public int GetRepairAmountPerBuilder()
     {
-        for (int i = m_Builders.Count - 1; i >= 0; i--)
-        {
-            var task = m_Builders[i].UnitMovement.Task;
-            if (task != Task.Build)
-            {
-                m_Builders.RemoveAt(i);
-                continue;
-            }
+        var stats = GetComponent<LocalStats>().Stats;
+        var constructionTime = 3 * (stats.GetAttributeAmount(AttributeType.Training)) / (m_Builders.Count + 2);
+        var builders = m_Builders.Count == 0 ? 1 : m_Builders.Count;
+        var buildPerSecond = (m_Health.MaxHealth / constructionTime) / builders;
 
-            var target = m_Builders[i].Builder.Target;
-
-            if (target != this)
-            {
-                m_Builders.RemoveAt(i);
-            }
-        }
+        return (int)buildPerSecond;
     }
 
     public void InitializeConstruction()
@@ -137,38 +116,14 @@ public class Building : Targetable
         m_Builders.Add(unit);
     }
 
-    private void UnitsBuild()
+    public void RemoveBuilder(Unit unit)
     {
-        var stats = GetComponent<LocalStats>().Stats;
-        var constructionTime = 3 * (stats.GetAttributeAmount(AttributeType.Training)) / (m_Builders.Count + 2);
-        var buildPerSecond = (m_Health.MaxHealth / constructionTime);
-        var currentHealth = (m_Health.CurrentHealth + buildPerSecond);
-
-        if (BuildingIsCompleted)
+        if (m_Builders.Contains(unit))
         {
-            var cost = stats.GetCost();
-
-            IDictionary<Resource, int> repairCost = new Dictionary<Resource, int>();
-            repairCost.Add(new KeyValuePair<Resource, int>(Resource.Food, cost[Resource.Food] / 2 / (int)constructionTime));
-            repairCost.Add(new KeyValuePair<Resource, int>(Resource.Gold, cost[Resource.Gold] / 2 / (int)constructionTime));
-            repairCost.Add(new KeyValuePair<Resource, int>(Resource.Stone, cost[Resource.Stone] / 2 / (int)constructionTime));
-            repairCost.Add(new KeyValuePair<Resource, int>(Resource.Wood, cost[Resource.Wood] / 2 / (int)constructionTime));
-
-
-            if (!Utils.CanAfford(Player.GetResources(), stats.GetCost()))
-            {
-                return;
-            }
-
-            foreach (var resource in repairCost)
-            {
-                Player.CmdSetResources((int)resource.Key, -resource.Value);
-            }
+            m_Builders.Remove(unit);
+            return;
         }
-
-        m_Health.CmdSetHealth((int)currentHealth);
     }
-
     #region server
 
     public override void OnStartServer()
@@ -223,8 +178,6 @@ public class Building : Targetable
     #endregion
 
     #region client
-
-
     public override void OnStartAuthority()
     {
         AuthorityOnConstructionStarted?.Invoke(this);
@@ -302,14 +255,13 @@ public class Building : Targetable
             
             if (hasAuthority)
             {
-                Debug.Log("shits done");
                 AuthorityOnBuildingCompleted?.Invoke(this);
                 CmdBuildingCompleted();
             }
 
             foreach (var builder in m_Builders)
             {
-                builder.GetComponent<Builder>().FindNewTarget();
+                //builder.GetComponent<Builder>().FindNewTarget();
             }
         }
     }
@@ -349,7 +301,35 @@ public class Building : Targetable
         }
     }
 
-    public override void EnemyReaction(GameObject sender)
+    public bool CanGarrisonUnits()
+    {
+        var stats = GetComponent<LocalStats>().Stats;
+        var garrison = stats.GetAttributeAmount(AttributeType.Garrison);
+
+        return garrison > m_GarrisonUnits.Count;
+    }
+
+    public void GatherUnit(Unit unit)
+    {
+        if (m_GarrisonUnits.Contains(unit))
+        {
+            return;
+        }
+        m_GarrisonUnits.Add(unit);
+        unit.gameObject.SetActive(false);
+    }
+
+    public void RemoveUnit(Unit unit)
+    {
+        if (!m_GarrisonUnits.Contains(unit))
+        {
+            return;
+        }
+        m_GarrisonUnits.Remove(unit);
+        unit.gameObject.SetActive(true);
+    }
+
+    public override void Reaction(GameObject sender)
     {
     }
 

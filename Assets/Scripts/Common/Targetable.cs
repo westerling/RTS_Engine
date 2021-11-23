@@ -8,28 +8,38 @@ public abstract class Targetable : Interactable
 
     [SerializeField]
     private GameObject m_FieldOfView;
+
+    [SerializeField]
+    private Collider m_FieldOfViewCollider = null;
     
     private float m_FieldOfViewDistance = 10;
     private bool m_Pacifist = false;
 
-    public abstract void EnemyReaction(GameObject sender);
+    public abstract void Reaction(GameObject sender);
 
     public Targeter Targeter
     {
-        get { return m_Targeter; }
-        set { m_Targeter = value; }
+        get => m_Targeter;
+        set => m_Targeter = value;
     }
 
     public GameObject FieldOfView
     {
-        get { return m_FieldOfView; }
-        set { m_FieldOfView = value; }
+        get => m_FieldOfView;
+        set => m_FieldOfView = value;
     }
 
     public float FieldOfViewDistance
     {
-        get { return m_FieldOfViewDistance; }
+        get => m_FieldOfViewDistance;
     }
+
+    public bool Pacifist
+    {
+        get => m_Pacifist;
+    }
+
+    #region server
 
     [Command]
     public void CmdSetFOVAvailability(bool enabled)
@@ -48,13 +58,52 @@ public abstract class Targetable : Interactable
         FieldOfView?.SetActive(enabled);
     }
 
-    public bool Pacifist
+    private void OnTriggerEnter(Collider other)
     {
-        get { return m_Pacifist; }
+        Debug.Log("Hit");
+
+        if (other.TryGetComponent(out Targetable targetable))
+        {
+            if (targetable.hasAuthority)
+            {
+                return;
+            }
+            var go = other.gameObject;
+
+            ToggleGameobject(go, true);
+            Targeter.SetTarget(targetable.gameObject);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Debug.Log("Fucked off");
+        if (other.TryGetComponent(out Targetable targetable))
+        {
+            if (targetable.hasAuthority)
+            {
+                return;
+            }
+
+            var go = other.gameObject;
+
+            ToggleGameobject(go, false);
+        }
+    }
+
+    private void ToggleGameobject(GameObject go, bool enabled)
+    {
+        var renderers = GetComponentsInChildren<Renderer>();
+
+        foreach (var renderer in renderers)
+        {
+            renderer.enabled = enabled;
+        }
     }
 
     public Stats GetLocalStats()
     {
         return GetComponent<LocalStats>().Stats;
     }
+    #endregion
 }

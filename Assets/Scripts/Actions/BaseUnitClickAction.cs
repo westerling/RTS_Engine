@@ -5,6 +5,8 @@ public abstract class BaseUnitClickAction : NetworkBehaviour
 {
     public abstract void UpdateStats();
 
+    public abstract void ClearTarget();
+
     public override void OnStartServer()
     {
         UpdateStats();
@@ -25,10 +27,7 @@ public abstract class BaseUnitClickAction : NetworkBehaviour
         ClearTarget();
     }
 
-    [Server]
-    public virtual void ClearTarget()
-    {
-    }
+    
 
     public virtual void HandleStatsAltered(Stats stats)
     {
@@ -36,7 +35,7 @@ public abstract class BaseUnitClickAction : NetworkBehaviour
 
     private void HandleUpgradeAlert(List<int> obj)
     {
-        var id = GetComponent<GameObjectIdentity>().Id; ;
+        var id = GetComponent<GameObjectIdentity>().Id;
 
         if (!obj.Contains(id))
         {

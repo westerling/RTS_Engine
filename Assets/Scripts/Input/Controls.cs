@@ -166,7 +166,7 @@ public class @Controls : IInputActionCollection, IDisposable
             ""id"": ""253c8656-3461-4144-912f-6b7a35063c8c"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""House"",
                     ""type"": ""Button"",
                     ""id"": ""cbf8899d-3542-42e7-b096-bc0fd0ab95fb"",
                     ""expectedControlType"": ""Button"",
@@ -178,11 +178,11 @@ public class @Controls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""d5d44f85-fa0a-48d4-a409-bd5c261d45db"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/h"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard & Mouse"",
-                    ""action"": ""New action"",
+                    ""action"": ""House"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -278,7 +278,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""0c67d659-3356-4ce8-b7e0-e36be0ef611e"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard & Mouse"",
@@ -317,7 +317,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Player_MouseScrollY = m_Player.FindAction("MouseScrollY", throwIfNotFound: true);
         // UnitsSelected
         m_UnitsSelected = asset.FindActionMap("UnitsSelected", throwIfNotFound: true);
-        m_UnitsSelected_Newaction = m_UnitsSelected.FindAction("New action", throwIfNotFound: true);
+        m_UnitsSelected_House = m_UnitsSelected.FindAction("House", throwIfNotFound: true);
         // BuildingSelected
         m_BuildingSelected = asset.FindActionMap("BuildingSelected", throwIfNotFound: true);
         m_BuildingSelected_Chat = m_BuildingSelected.FindAction("Chat", throwIfNotFound: true);
@@ -442,12 +442,12 @@ public class @Controls : IInputActionCollection, IDisposable
     // UnitsSelected
     private readonly InputActionMap m_UnitsSelected;
     private IUnitsSelectedActions m_UnitsSelectedActionsCallbackInterface;
-    private readonly InputAction m_UnitsSelected_Newaction;
+    private readonly InputAction m_UnitsSelected_House;
     public struct UnitsSelectedActions
     {
         private @Controls m_Wrapper;
         public UnitsSelectedActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_UnitsSelected_Newaction;
+        public InputAction @House => m_Wrapper.m_UnitsSelected_House;
         public InputActionMap Get() { return m_Wrapper.m_UnitsSelected; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -457,16 +457,16 @@ public class @Controls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_UnitsSelectedActionsCallbackInterface != null)
             {
-                @Newaction.started -= m_Wrapper.m_UnitsSelectedActionsCallbackInterface.OnNewaction;
-                @Newaction.performed -= m_Wrapper.m_UnitsSelectedActionsCallbackInterface.OnNewaction;
-                @Newaction.canceled -= m_Wrapper.m_UnitsSelectedActionsCallbackInterface.OnNewaction;
+                @House.started -= m_Wrapper.m_UnitsSelectedActionsCallbackInterface.OnHouse;
+                @House.performed -= m_Wrapper.m_UnitsSelectedActionsCallbackInterface.OnHouse;
+                @House.canceled -= m_Wrapper.m_UnitsSelectedActionsCallbackInterface.OnHouse;
             }
             m_Wrapper.m_UnitsSelectedActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
+                @House.started += instance.OnHouse;
+                @House.performed += instance.OnHouse;
+                @House.canceled += instance.OnHouse;
             }
         }
     }
@@ -597,7 +597,7 @@ public class @Controls : IInputActionCollection, IDisposable
     }
     public interface IUnitsSelectedActions
     {
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnHouse(InputAction.CallbackContext context);
     }
     public interface IBuildingSelectedActions
     {

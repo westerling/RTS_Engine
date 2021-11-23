@@ -43,16 +43,16 @@ GameObject:
   - component: {fileID: 4688705249636525851}
   - component: {fileID: 3176061529906635542}
   - component: {fileID: 2140595229544194780}
+  - component: {fileID: 7723439295094127837}
   - component: {fileID: 1703170001031860377}
   - component: {fileID: 1765676319716578855}
   - component: {fileID: 7310868219729971604}
   - component: {fileID: 6280015821325441730}
   - component: {fileID: -460078944814654638}
-  - component: {fileID: -4641286794093473818}
-  - component: {fileID: 4754746237925384742}
-  - component: {fileID: 7723439295094127837}
   - component: {fileID: 5238609639109403790}
   - component: {fileID: 3555989225426376962}
+  - component: {fileID: -4641286794093473818}
+  - component: {fileID: 4754746237925384742}
   m_Layer: 13
   m_Name: TownCenter
   m_TagString: Untagged
@@ -141,6 +141,20 @@ MonoBehaviour:
   syncInterval: 0.1
   m_CurrentHealth: 0
   m_MaxHealth: 1
+--- !u!114 &7723439295094127837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4309669020891701889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ea6778d99562fa4d8017f3129eb71d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
 --- !u!114 &1703170001031860377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,49 +251,6 @@ MonoBehaviour:
   m_DestructionStageOne: []
   m_DestructionStageTwo: []
   m_CanRotate: 0
-  m_IsStartupBuilding: 0
---- !u!114 &-4641286794093473818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4309669020891701889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c77c55cf2ad19114ebf33a02656249a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Position: 0
-  m_Unit: {fileID: 5625393431626882855, guid: f1ad28bd725f2a149a44b805b169ec70, type: 3}
---- !u!114 &4754746237925384742
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4309669020891701889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31b346b92cd6f7c4eaa1a74a5e4a30b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Position: 5
-  m_Upgrade: {fileID: 3957113047111802081, guid: 1e141ae8064303d40b6df566862a08e1, type: 3}
---- !u!114 &7723439295094127837
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4309669020891701889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ea6778d99562fa4d8017f3129eb71d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
 --- !u!114 &5238609639109403790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,6 +307,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+--- !u!114 &-4641286794093473818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4309669020891701889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c77c55cf2ad19114ebf33a02656249a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Position: 1
+  m_Unit: {fileID: 5625393431626882855, guid: f1ad28bd725f2a149a44b805b169ec70, type: 3}
+--- !u!114 &4754746237925384742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4309669020891701889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31b346b92cd6f7c4eaa1a74a5e4a30b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Position: 5
+  m_Upgrade: {fileID: 3957113047111802081, guid: 1e141ae8064303d40b6df566862a08e1, type: 3}
 --- !u!1 &4948351167599653903
 GameObject:
   m_ObjectHideFlags: 0
