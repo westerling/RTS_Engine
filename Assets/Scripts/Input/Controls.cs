@@ -247,7 +247,7 @@ public class @Controls : IInputActionCollection, IDisposable
             ""id"": ""9c2abbb2-e1f6-48bc-a8fa-b087cc31454c"",
             ""actions"": [
                 {
-                    ""name"": ""Quit"",
+                    ""name"": ""Resume"",
                     ""type"": ""Button"",
                     ""id"": ""bb9ddd0f-2ad8-4320-aef9-2c54a0585f53"",
                     ""expectedControlType"": ""Button"",
@@ -279,7 +279,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard & Mouse"",
-                    ""action"": ""Quit"",
+                    ""action"": ""Resume"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -345,7 +345,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Build_Build = m_Build.FindAction("Build", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
-        m_Menu_Quit = m_Menu.FindAction("Quit", throwIfNotFound: true);
+        m_Menu_Resume = m_Menu.FindAction("Resume", throwIfNotFound: true);
         m_Menu_Type = m_Menu.FindAction("Type", throwIfNotFound: true);
         m_Menu_Send = m_Menu.FindAction("Send", throwIfNotFound: true);
     }
@@ -561,14 +561,14 @@ public class @Controls : IInputActionCollection, IDisposable
     // Menu
     private readonly InputActionMap m_Menu;
     private IMenuActions m_MenuActionsCallbackInterface;
-    private readonly InputAction m_Menu_Quit;
+    private readonly InputAction m_Menu_Resume;
     private readonly InputAction m_Menu_Type;
     private readonly InputAction m_Menu_Send;
     public struct MenuActions
     {
         private @Controls m_Wrapper;
         public MenuActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Quit => m_Wrapper.m_Menu_Quit;
+        public InputAction @Resume => m_Wrapper.m_Menu_Resume;
         public InputAction @Type => m_Wrapper.m_Menu_Type;
         public InputAction @Send => m_Wrapper.m_Menu_Send;
         public InputActionMap Get() { return m_Wrapper.m_Menu; }
@@ -580,9 +580,9 @@ public class @Controls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_MenuActionsCallbackInterface != null)
             {
-                @Quit.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnQuit;
-                @Quit.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnQuit;
-                @Quit.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnQuit;
+                @Resume.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnResume;
+                @Resume.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnResume;
+                @Resume.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnResume;
                 @Type.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnType;
                 @Type.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnType;
                 @Type.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnType;
@@ -593,9 +593,9 @@ public class @Controls : IInputActionCollection, IDisposable
             m_Wrapper.m_MenuActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Quit.started += instance.OnQuit;
-                @Quit.performed += instance.OnQuit;
-                @Quit.canceled += instance.OnQuit;
+                @Resume.started += instance.OnResume;
+                @Resume.performed += instance.OnResume;
+                @Resume.canceled += instance.OnResume;
                 @Type.started += instance.OnType;
                 @Type.performed += instance.OnType;
                 @Type.canceled += instance.OnType;
@@ -637,7 +637,7 @@ public class @Controls : IInputActionCollection, IDisposable
     }
     public interface IMenuActions
     {
-        void OnQuit(InputAction.CallbackContext context);
+        void OnResume(InputAction.CallbackContext context);
         void OnType(InputAction.CallbackContext context);
         void OnSend(InputAction.CallbackContext context);
     }

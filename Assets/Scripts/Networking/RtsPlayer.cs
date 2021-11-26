@@ -597,7 +597,6 @@ public class RtsPlayer : NetworkBehaviour
             return;
         }
 
-
         Upgrade.AuthorityOnUpgradeAdded += AuthorityHandleUpgradeAdded;
 
         Unit.AuthorityOnUnitSpawned += AuthorityHandleUnitSpawned;

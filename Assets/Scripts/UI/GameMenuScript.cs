@@ -8,14 +8,25 @@ public class GameMenuScript : NetworkBehaviour
     [SerializeField]
     private GameObject m_MainMenu = null;
 
+    private const string Pause = "Pause";
+    private const string Resume = "Resume";
+
     void Start()
     {
-        InputManager.Current.Controls.actions["Pause"].performed += GeneralControlsPerformed;
+        InputManager.Current.Controls.actions[Pause].performed += PausePerformed;
+        InputManager.Current.Controls.actions[Resume].performed += ResumePerformed;
     }
 
-    private void GeneralControlsPerformed(InputAction.CallbackContext obj)
+    private void PausePerformed(InputAction.CallbackContext obj)
     {
-        m_MainMenu.SetActive(!m_MainMenu.activeInHierarchy);
+        InputManager.Current.SetContext(GameContext.Menu);
+        m_MainMenu.SetActive(true);
+    }
+
+    private void ResumePerformed(InputAction.CallbackContext obj)
+    {
+        InputManager.Current.SetContext(GameContext.Normal);
+        m_MainMenu.SetActive(false);
     }
 
     public void LeaveGame()
@@ -34,6 +45,7 @@ public class GameMenuScript : NetworkBehaviour
 
     private void OnDestroy()
     {
-        InputManager.Current.Controls.actions["Pause"].performed -= GeneralControlsPerformed;
+        InputManager.Current.Controls.actions[Pause].performed -= PausePerformed;
+        InputManager.Current.Controls.actions[Resume].performed -= ResumePerformed;
     }
 }

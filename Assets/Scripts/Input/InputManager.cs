@@ -19,6 +19,12 @@ public class InputManager : MonoBehaviour
         Current = this;
     }
 
+    private void Start()
+    {
+
+        SetContext(GameContext.Normal);
+    }
+
     public void SetContext(GameContext context)
     {
         var actionMap = string.Empty;
@@ -43,5 +49,6 @@ public class InputManager : MonoBehaviour
         }
 
         Controls.SwitchCurrentActionMap(actionMap);
+        Controls.actions.FindActionMap("Camera").Enable();
     }
 }

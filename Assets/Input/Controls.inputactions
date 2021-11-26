@@ -234,7 +234,7 @@
             "id": "9c2abbb2-e1f6-48bc-a8fa-b087cc31454c",
             "actions": [
                 {
-                    "name": "Quit",
+                    "name": "Resume",
                     "type": "Button",
                     "id": "bb9ddd0f-2ad8-4320-aef9-2c54a0585f53",
                     "expectedControlType": "Button",
@@ -266,7 +266,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "Quit",
+                    "action": "Resume",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

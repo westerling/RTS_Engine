@@ -27,26 +27,27 @@ public class CameraController : NetworkBehaviour
 
     private float speed = 50f;
     private float screenBorderThickness = 10f;
-    private Controls controls;
-    private Vector2 previousInput;
     private float m_MinimapIndicatorStrokeWidth = 0.1f;
+    private Vector2 previousInput;
     private Transform m_MinimapIndicator;
     private Mesh m_MinimapIndicatorMesh;
+
+    private const string CameraMovement = "Move Camera";
 
     public override void OnStartAuthority()
     {
         playerCameraTransform.gameObject.SetActive(true);
 
-        InputManager.Current.Controls.actions["Move Camera"].performed += SetPreviousInput;
-        InputManager.Current.Controls.actions["Move Camera"].canceled += SetPreviousInput;
+        InputManager.Current.Controls.actions[CameraMovement].performed += SetPreviousInput;
+        InputManager.Current.Controls.actions[CameraMovement].canceled += SetPreviousInput;
 
         groundTarget.position = Utils.MiddleOfScreenPointToWorld(groundTargetLayerMask);
     }
 
     public override void OnStopAuthority()
     {
-        InputManager.Current.Controls.actions["Move Camera"].performed -= SetPreviousInput;
-        InputManager.Current.Controls.actions["Move Camera"].canceled -= SetPreviousInput;
+        InputManager.Current.Controls.actions[CameraMovement].performed -= SetPreviousInput;
+        InputManager.Current.Controls.actions[CameraMovement].canceled -= SetPreviousInput;
     }
 
     [ClientCallback]
