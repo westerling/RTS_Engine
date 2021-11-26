@@ -37,13 +37,16 @@ public class CameraController : NetworkBehaviour
     {
         playerCameraTransform.gameObject.SetActive(true);
 
-        controls = new Controls();
+        InputManager.Current.Controls.actions["Move Camera"].performed += SetPreviousInput;
+        InputManager.Current.Controls.actions["Move Camera"].canceled += SetPreviousInput;
 
-        controls.Player.MoveCamera.performed += SetPreviousInput;
-        controls.Player.MoveCamera.canceled += SetPreviousInput;
-
-        controls.Enable();
         groundTarget.position = Utils.MiddleOfScreenPointToWorld(groundTargetLayerMask);
+    }
+
+    public override void OnStopAuthority()
+    {
+        InputManager.Current.Controls.actions["Move Camera"].performed -= SetPreviousInput;
+        InputManager.Current.Controls.actions["Move Camera"].canceled -= SetPreviousInput;
     }
 
     [ClientCallback]

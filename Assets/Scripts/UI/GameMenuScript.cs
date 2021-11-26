@@ -7,14 +7,10 @@ public class GameMenuScript : NetworkBehaviour
 {
     [SerializeField]
     private GameObject m_MainMenu = null;
-    
-    private Controls m_Controls;
 
     void Start()
     {
-        m_Controls = new Controls();
-        m_Controls.Player.Pause.performed += GeneralControlsPerformed;
-        m_Controls.Enable();
+        InputManager.Current.Controls.actions["Pause"].performed += GeneralControlsPerformed;
     }
 
     private void GeneralControlsPerformed(InputAction.CallbackContext obj)
@@ -38,6 +34,6 @@ public class GameMenuScript : NetworkBehaviour
 
     private void OnDestroy()
     {
-        m_Controls.Player.Pause.performed -= GeneralControlsPerformed;
+        InputManager.Current.Controls.actions["Pause"].performed -= GeneralControlsPerformed;
     }
 }

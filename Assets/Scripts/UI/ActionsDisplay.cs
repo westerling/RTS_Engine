@@ -3,6 +3,8 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using TMPro;
+using UnityEngine.EventSystems;
 
 public class ActionsDisplay : MonoBehaviour
 {
@@ -24,6 +26,20 @@ public class ActionsDisplay : MonoBehaviour
         Current = this;
     }
 
+    private void Start()
+    {
+        for (int i = 0; i < m_ActionButtons.Count; i++)
+        {
+            var index = i;
+            m_ActionButtons[index].onClick.AddListener(delegate ()
+            {
+                OnButtonClick(index);
+            }
+            );
+        }
+        ClearButtons();
+    }
+
     public void ClearButtons()
     {
         foreach (var button in m_ActionButtons)
@@ -34,12 +50,13 @@ public class ActionsDisplay : MonoBehaviour
         m_ActionCalls.Clear();
     }
 
-    public void AddButton(Sprite pic, Action onClick)
+    public void AddButton(Sprite pic, string description, Action onClick)
     {
         var index = m_ActionCalls.Count;
 
         m_ActionButtons[index].gameObject.SetActive(true);
         m_ActionButtons[index].GetComponent<Image>().sprite = pic;
+        m_ActionButtons[index].GetComponent<HoverText>().Description = description;
         m_ActionCalls.Add(onClick);
     }
 
@@ -51,12 +68,12 @@ public class ActionsDisplay : MonoBehaviour
             {
                 var behaviour = actionButtons.Where(b => b.Position == i).First();
 
-                AddButton(behaviour.Sprite, behaviour.ClickAction);
+                AddButton(behaviour.Sprite, behaviour.Description, behaviour.ClickAction);
             }
             else
             {
                 var emptyButton = new ActionButton();
-                AddButton(emptyButton.Sprite, emptyButton.ClickAction);
+                AddButton(emptyButton.Sprite, string.Empty, emptyButton.ClickAction);
             }
         }
     }
@@ -76,19 +93,5 @@ public class ActionsDisplay : MonoBehaviour
     public void OnButtonClick(int index)
     {
         m_ActionCalls[index]();
-    }
-
-    private void Start()
-    {
-        for (int i = 0; i < m_ActionButtons.Count; i++)
-        {
-            var index = i;
-            m_ActionButtons[index].onClick.AddListener(delegate ()
-            {
-                OnButtonClick(index);
-            }
-            );
-        }
-        ClearButtons();
     }
 }

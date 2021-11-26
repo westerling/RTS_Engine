@@ -378,7 +378,7 @@ public class SelectionHandler : MonoBehaviour
 
             if (showButton)
             {
-                buttonList.Add(new ActionButton(behaviour.Icon, behaviour.GetClickAction(), behaviour.Position));
+                buttonList.Add(new ActionButton(behaviour.Icon, behaviour.Description, behaviour.GetClickAction(), behaviour.Position));
             }
         }
         ActionsDisplay.Current.FillButtons(buttonList);

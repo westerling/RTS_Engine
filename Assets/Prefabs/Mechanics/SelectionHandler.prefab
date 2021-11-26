@@ -142,7 +142,7 @@ MonoBehaviour:
     m_Bits: 29953
   m_CursorLayerMask:
     serializedVersion: 2
-    m_Bits: 58368
+    m_Bits: 25600
   m_SelectionHandler: {fileID: 8159302164680585883}
   m_Formation: {fileID: 7385542725561770386, guid: f7ded4f3f02dd8341bb22b7f7701177b, type: 3}
 --- !u!1 &8159302165139874531

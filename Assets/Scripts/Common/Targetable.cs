@@ -11,7 +11,10 @@ public abstract class Targetable : Interactable
 
     [SerializeField]
     private Collider m_FieldOfViewCollider = null;
-    
+
+    [SerializeField]
+    private LocalStats m_LocalStats;
+
     private float m_FieldOfViewDistance = 10;
     private bool m_Pacifist = false;
 
@@ -21,6 +24,12 @@ public abstract class Targetable : Interactable
     {
         get => m_Targeter;
         set => m_Targeter = value;
+    }
+
+    public LocalStats LocalStats
+    {
+        get => m_LocalStats;
+        set => m_LocalStats = value;
     }
 
     public GameObject FieldOfView
@@ -77,7 +86,6 @@ public abstract class Targetable : Interactable
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Fucked off");
         if (other.TryGetComponent(out Targetable targetable))
         {
             if (targetable.hasAuthority)
@@ -101,9 +109,5 @@ public abstract class Targetable : Interactable
         }
     }
 
-    public Stats GetLocalStats()
-    {
-        return GetComponent<LocalStats>().Stats;
-    }
     #endregion
 }

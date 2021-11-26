@@ -51,4 +51,10 @@ public class GameObjectIdentity : NetworkBehaviour
     {
         get { return m_RequiredUpgrades; }
     }
+
+    [ClientRpc]
+    public void ClientDebug(string message)
+    {
+        Debug.Log(message);
+    }
 }

@@ -48,4 +48,10 @@ public class Targeter : BaseUnitClickAction
     }
 
     #endregion
+
+    [ClientRpc]
+    public void ClientDebug(string message)
+    {
+        Debug.Log(message);
+    }
 }

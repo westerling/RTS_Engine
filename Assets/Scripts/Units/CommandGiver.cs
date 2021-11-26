@@ -335,9 +335,9 @@ public class CommandGiver : MonoBehaviour
 
         foreach (Unit unit in unitList)
         {
-            unit.UnitMovement.CmdSetTask((int)Task.Rally);
+            unit.UnitMovement.CmdSetTask((int)Task.Garrison);
             unit.UnitMovement.CmdMove(building.gameObject.transform.position);
-            unit.CmdSetGarrison(building);
+            unit.UnitMovement.CmdGarrison();
         }
         m_CursorManager.Flashtarget(building.gameObject);
     }

@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -75,6 +76,8 @@ public class Interactable : GameObjectIdentity
     [Client]
     public void Flash()
     {
+        StopAllCoroutines();
+        RemoveSelectionIndicator();
         StartCoroutine(FlashCoroutine());
     }
 

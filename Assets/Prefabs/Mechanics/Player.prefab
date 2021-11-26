@@ -253,6 +253,8 @@ GameObject:
   - component: {fileID: 7434657128762005449}
   - component: {fileID: 3077743320984597565}
   - component: {fileID: 2551487352683436195}
+  - component: {fileID: 526081898847001329}
+  - component: {fileID: 7921546310649256167}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -323,8 +325,8 @@ MonoBehaviour:
   - {fileID: 5625393431626882855, guid: 69119fdb8b1a5ca43a00eff53293b591, type: 3}
   - {fileID: 5625393431626882855, guid: e81f24a90b6159445994344ef216aeed, type: 3}
   - {fileID: 5625393431626882855, guid: b2a4f751ad407744aa5213d37f7983a5, type: 3}
-  - {fileID: 5625393431626882855, guid: d62b307f9b473464b828d70b104a51f1, type: 3}
-  - {fileID: 5625393431626882855, guid: f1ad28bd725f2a149a44b805b169ec70, type: 3}
+  - {fileID: 6216821878503164428, guid: d62b307f9b473464b828d70b104a51f1, type: 3}
+  - {fileID: -2944482102068684238, guid: f1ad28bd725f2a149a44b805b169ec70, type: 3}
   m_Upgrades:
   - {fileID: 862824385943884667, guid: 673d4d7411a022d4a95d5e5b2b73f265, type: 3}
   - {fileID: 3957113047111802081, guid: 1e141ae8064303d40b6df566862a08e1, type: 3}
@@ -381,6 +383,49 @@ MonoBehaviour:
   - {fileID: 321210565886567914, guid: c80333d8a56fc1149a6ad9a6578a6611, type: 3}
   - {fileID: 321210565886567914, guid: 833e85984c7209842bea2ce7f6268e04, type: 3}
   - {fileID: 321210565886567914, guid: ae97e21fe75876e4c908b8ba1642297d, type: 3}
+--- !u!114 &526081898847001329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5443206140980447054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d29ecbdddb6fbc4fb90c95ecc6ca572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Controls: {fileID: 7921546310649256167}
+--- !u!114 &7921546310649256167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5443206140980447054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: e3fcb22ec31a9d64fa1469e1a9fb2006, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &5822657093591046434
 GameObject:
   m_ObjectHideFlags: 0

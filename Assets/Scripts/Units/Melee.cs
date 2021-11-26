@@ -34,14 +34,16 @@ public class Melee : Attack
 
         if (target == null)
         {
+            ClientDebug("Target null");
             yield break;
         }
 
         if (!IsCloseEnoughToTarget())
         {
+            ClientDebug("No");
             yield break;
         }
-
+        ClientDebug("Yes");
         var targetRotation =
             Quaternion.LookRotation(target.transform.position - transform.position);
 
@@ -68,7 +70,7 @@ public class Melee : Attack
         }
 
         var unitRange = Stats.GetAttributeAmount(AttributeType.Range);
-        var targetSize = Utils.DistanceToBuilding(Targeter.Target.Size);
+        var targetSize = Utils.GameObjectSize(Targeter.Target.Size);
 
         return (Targeter.Target.transform.position - transform.position).sqrMagnitude <=
              (unitRange + targetSize) * (unitRange + targetSize);

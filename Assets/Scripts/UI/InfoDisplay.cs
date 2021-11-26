@@ -46,13 +46,7 @@ public class InfoDisplay : NetworkBehaviour
     private GameObject[] armyPanelPrefabs = null;
 
     private List<Health> healthList = new List<Health>();
-    private RtsPlayer player;
     private float progressImageVelocity;
-
-    void Start()
-    {
-        player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
-    }
 
     private void UpdateUnitInfo(Unit unit)
     {

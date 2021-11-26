@@ -242,7 +242,7 @@ public class Utils : NetworkBehaviour
         return building.gameObject.GetComponent<Collider>().bounds.max.x / 2;
     }
 
-    public static float DistanceToBuilding(EntitySize size)
+    public static float GameObjectSize(EntitySize size)
     {
         switch (size)
         {
@@ -261,11 +261,15 @@ public class Utils : NetworkBehaviour
         }
     }
 
-    public bool IsCloseEnough(Vector3 targetPosition, float size)
+    public static bool IsCloseEnough(Interactable interactable, Vector3 position, float range = 0)
     {
-        return (targetPosition - transform.position).sqrMagnitude <=
-            (size) * (size);
+        var size = GameObjectSize(interactable.Size);
+
+        return (interactable.transform.position - position).sqrMagnitude <=
+            (size + range) * (size + range);
     }
+
+
 
     public static int SortByDistance(Vector3 pos, GameObject go1, GameObject go2)
     {

@@ -15,7 +15,7 @@ public class @Controls : IInputActionCollection, IDisposable
     ""name"": ""Controls"",
     ""maps"": [
         {
-            ""name"": ""Player"",
+            ""name"": ""Camera"",
             ""id"": ""d1b94d21-7bbf-48e8-8a64-6404f7ddf49e"",
             ""actions"": [
                 {
@@ -23,30 +23,6 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""a24ab013-3640-4e07-b966-f7189e9896d8"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Pause"",
-                    ""type"": ""Button"",
-                    ""id"": ""cede1708-048d-4005-9108-a2cd30a78429"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Chat"",
-                    ""type"": ""Button"",
-                    ""id"": ""f5abbab8-55ff-46b6-ac81-56a37a55ad8c"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Shift"",
-                    ""type"": ""Button"",
-                    ""id"": ""08ecb5e6-b910-49e7-9187-1b909ff69a8a"",
-                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
@@ -117,39 +93,6 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c2895991-4a64-4bbb-8b39-6fdaf80501ab"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard & Mouse"",
-                    ""action"": ""Pause"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""0686128d-87a5-4111-8267-8cc2ebeca9de"",
-                    ""path"": ""<Keyboard>/enter"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard & Mouse"",
-                    ""action"": ""Chat"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c10019eb-bcdd-4e70-a781-203bbe3716aa"",
-                    ""path"": ""<Keyboard>/leftShift"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard & Mouse"",
-                    ""action"": ""Shift"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""1f038465-8684-4bc9-aef2-ad523261081f"",
                     ""path"": ""<Mouse>/scroll/y"",
                     ""interactions"": """",
@@ -162,7 +105,72 @@ public class @Controls : IInputActionCollection, IDisposable
             ]
         },
         {
-            ""name"": ""UnitsSelected"",
+            ""name"": ""Normal"",
+            ""id"": ""a2449f98-a92b-43a8-a10c-05040fd796cf"",
+            ""actions"": [
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""c44bb1ec-a463-4eaa-89f7-734c63617d92"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Shift"",
+                    ""type"": ""Button"",
+                    ""id"": ""eeae66d3-1264-4417-8a74-2159020a4ba0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Chat"",
+                    ""type"": ""Button"",
+                    ""id"": ""6d9c4813-8c4c-413a-a043-0255a4d1e3fe"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""67d17c90-bf86-42e6-afe8-537958dd9a27"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5e94dbc7-4a73-448d-81b5-b7d9802dcd31"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""85395b42-3516-4ab5-a49f-9ccccc0e107c"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Chat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Selected"",
             ""id"": ""253c8656-3461-4144-912f-6b7a35063c8c"",
             ""actions"": [
                 {
@@ -189,59 +197,21 @@ public class @Controls : IInputActionCollection, IDisposable
             ]
         },
         {
-            ""name"": ""BuildingSelected"",
-            ""id"": ""5804008d-0040-4736-a1a4-2fc325e2451f"",
-            ""actions"": [
-                {
-                    ""name"": ""Chat"",
-                    ""type"": ""Button"",
-                    ""id"": ""574c01b8-405a-4802-a9ff-4b1f2a310010"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Build Villager"",
-                    ""type"": ""Button"",
-                    ""id"": ""58a2b78a-cb7f-40f3-ae94-8d512a831d16"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""a26230be-18c2-4544-9ff6-dc5349f132d5"",
-                    ""path"": ""<Keyboard>/enter"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard & Mouse"",
-                    ""action"": ""Chat"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""df36f000-f8af-498e-a9b3-dcb255a91e45"",
-                    ""path"": ""<Keyboard>/v"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard & Mouse"",
-                    ""action"": ""Build Villager"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""BuildMode"",
+            ""name"": ""Build"",
             ""id"": ""afe1c248-bd16-4da1-85fe-241062fa7aad"",
             ""actions"": [
                 {
                     ""name"": ""Stop"",
                     ""type"": ""Button"",
                     ""id"": ""3fa9b561-6a5c-456a-8d00-74e41c194d4e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Build"",
+                    ""type"": ""Button"",
+                    ""id"": ""275fb5d8-0011-4c87-aee3-d5c50034f9e7"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -258,6 +228,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Stop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""91d8ac91-d502-491e-993e-0cc19af0b407"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Build"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -266,9 +247,25 @@ public class @Controls : IInputActionCollection, IDisposable
             ""id"": ""9c2abbb2-e1f6-48bc-a8fa-b087cc31454c"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""Quit"",
                     ""type"": ""Button"",
                     ""id"": ""bb9ddd0f-2ad8-4320-aef9-2c54a0585f53"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Type"",
+                    ""type"": ""Button"",
+                    ""id"": ""ece348d0-54a6-4c01-913e-2ee879790f6a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Send"",
+                    ""type"": ""Button"",
+                    ""id"": ""d4710b46-a025-410a-b590-a9947c2b6ef5"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -282,7 +279,29 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard & Mouse"",
-                    ""action"": ""New action"",
+                    ""action"": ""Quit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dece3c37-f251-4bc1-bbe0-bc5b0aff2c3a"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Type"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4eb8af91-91bf-4f1c-a9fe-dd050920f053"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Send"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -308,26 +327,27 @@ public class @Controls : IInputActionCollection, IDisposable
         }
     ]
 }");
-        // Player
-        m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_MoveCamera = m_Player.FindAction("Move Camera", throwIfNotFound: true);
-        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
-        m_Player_Chat = m_Player.FindAction("Chat", throwIfNotFound: true);
-        m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
-        m_Player_MouseScrollY = m_Player.FindAction("MouseScrollY", throwIfNotFound: true);
-        // UnitsSelected
-        m_UnitsSelected = asset.FindActionMap("UnitsSelected", throwIfNotFound: true);
-        m_UnitsSelected_House = m_UnitsSelected.FindAction("House", throwIfNotFound: true);
-        // BuildingSelected
-        m_BuildingSelected = asset.FindActionMap("BuildingSelected", throwIfNotFound: true);
-        m_BuildingSelected_Chat = m_BuildingSelected.FindAction("Chat", throwIfNotFound: true);
-        m_BuildingSelected_BuildVillager = m_BuildingSelected.FindAction("Build Villager", throwIfNotFound: true);
-        // BuildMode
-        m_BuildMode = asset.FindActionMap("BuildMode", throwIfNotFound: true);
-        m_BuildMode_Stop = m_BuildMode.FindAction("Stop", throwIfNotFound: true);
+        // Camera
+        m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
+        m_Camera_MoveCamera = m_Camera.FindAction("Move Camera", throwIfNotFound: true);
+        m_Camera_MouseScrollY = m_Camera.FindAction("MouseScrollY", throwIfNotFound: true);
+        // Normal
+        m_Normal = asset.FindActionMap("Normal", throwIfNotFound: true);
+        m_Normal_Pause = m_Normal.FindAction("Pause", throwIfNotFound: true);
+        m_Normal_Shift = m_Normal.FindAction("Shift", throwIfNotFound: true);
+        m_Normal_Chat = m_Normal.FindAction("Chat", throwIfNotFound: true);
+        // Selected
+        m_Selected = asset.FindActionMap("Selected", throwIfNotFound: true);
+        m_Selected_House = m_Selected.FindAction("House", throwIfNotFound: true);
+        // Build
+        m_Build = asset.FindActionMap("Build", throwIfNotFound: true);
+        m_Build_Stop = m_Build.FindAction("Stop", throwIfNotFound: true);
+        m_Build_Build = m_Build.FindAction("Build", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
-        m_Menu_Newaction = m_Menu.FindAction("New action", throwIfNotFound: true);
+        m_Menu_Quit = m_Menu.FindAction("Quit", throwIfNotFound: true);
+        m_Menu_Type = m_Menu.FindAction("Type", throwIfNotFound: true);
+        m_Menu_Send = m_Menu.FindAction("Send", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -374,94 +394,119 @@ public class @Controls : IInputActionCollection, IDisposable
         asset.Disable();
     }
 
-    // Player
-    private readonly InputActionMap m_Player;
-    private IPlayerActions m_PlayerActionsCallbackInterface;
-    private readonly InputAction m_Player_MoveCamera;
-    private readonly InputAction m_Player_Pause;
-    private readonly InputAction m_Player_Chat;
-    private readonly InputAction m_Player_Shift;
-    private readonly InputAction m_Player_MouseScrollY;
-    public struct PlayerActions
+    // Camera
+    private readonly InputActionMap m_Camera;
+    private ICameraActions m_CameraActionsCallbackInterface;
+    private readonly InputAction m_Camera_MoveCamera;
+    private readonly InputAction m_Camera_MouseScrollY;
+    public struct CameraActions
     {
         private @Controls m_Wrapper;
-        public PlayerActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @MoveCamera => m_Wrapper.m_Player_MoveCamera;
-        public InputAction @Pause => m_Wrapper.m_Player_Pause;
-        public InputAction @Chat => m_Wrapper.m_Player_Chat;
-        public InputAction @Shift => m_Wrapper.m_Player_Shift;
-        public InputAction @MouseScrollY => m_Wrapper.m_Player_MouseScrollY;
-        public InputActionMap Get() { return m_Wrapper.m_Player; }
+        public CameraActions(@Controls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @MoveCamera => m_Wrapper.m_Camera_MoveCamera;
+        public InputAction @MouseScrollY => m_Wrapper.m_Camera_MouseScrollY;
+        public InputActionMap Get() { return m_Wrapper.m_Camera; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(PlayerActions set) { return set.Get(); }
-        public void SetCallbacks(IPlayerActions instance)
+        public static implicit operator InputActionMap(CameraActions set) { return set.Get(); }
+        public void SetCallbacks(ICameraActions instance)
         {
-            if (m_Wrapper.m_PlayerActionsCallbackInterface != null)
+            if (m_Wrapper.m_CameraActionsCallbackInterface != null)
             {
-                @MoveCamera.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveCamera;
-                @MoveCamera.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveCamera;
-                @MoveCamera.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveCamera;
-                @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
-                @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
-                @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
-                @Chat.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChat;
-                @Chat.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChat;
-                @Chat.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnChat;
-                @Shift.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
-                @Shift.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
-                @Shift.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShift;
-                @MouseScrollY.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseScrollY;
-                @MouseScrollY.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseScrollY;
-                @MouseScrollY.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMouseScrollY;
+                @MoveCamera.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnMoveCamera;
+                @MoveCamera.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnMoveCamera;
+                @MoveCamera.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnMoveCamera;
+                @MouseScrollY.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnMouseScrollY;
+                @MouseScrollY.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnMouseScrollY;
+                @MouseScrollY.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnMouseScrollY;
             }
-            m_Wrapper.m_PlayerActionsCallbackInterface = instance;
+            m_Wrapper.m_CameraActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @MoveCamera.started += instance.OnMoveCamera;
                 @MoveCamera.performed += instance.OnMoveCamera;
                 @MoveCamera.canceled += instance.OnMoveCamera;
-                @Pause.started += instance.OnPause;
-                @Pause.performed += instance.OnPause;
-                @Pause.canceled += instance.OnPause;
-                @Chat.started += instance.OnChat;
-                @Chat.performed += instance.OnChat;
-                @Chat.canceled += instance.OnChat;
-                @Shift.started += instance.OnShift;
-                @Shift.performed += instance.OnShift;
-                @Shift.canceled += instance.OnShift;
                 @MouseScrollY.started += instance.OnMouseScrollY;
                 @MouseScrollY.performed += instance.OnMouseScrollY;
                 @MouseScrollY.canceled += instance.OnMouseScrollY;
             }
         }
     }
-    public PlayerActions @Player => new PlayerActions(this);
+    public CameraActions @Camera => new CameraActions(this);
 
-    // UnitsSelected
-    private readonly InputActionMap m_UnitsSelected;
-    private IUnitsSelectedActions m_UnitsSelectedActionsCallbackInterface;
-    private readonly InputAction m_UnitsSelected_House;
-    public struct UnitsSelectedActions
+    // Normal
+    private readonly InputActionMap m_Normal;
+    private INormalActions m_NormalActionsCallbackInterface;
+    private readonly InputAction m_Normal_Pause;
+    private readonly InputAction m_Normal_Shift;
+    private readonly InputAction m_Normal_Chat;
+    public struct NormalActions
     {
         private @Controls m_Wrapper;
-        public UnitsSelectedActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @House => m_Wrapper.m_UnitsSelected_House;
-        public InputActionMap Get() { return m_Wrapper.m_UnitsSelected; }
+        public NormalActions(@Controls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Pause => m_Wrapper.m_Normal_Pause;
+        public InputAction @Shift => m_Wrapper.m_Normal_Shift;
+        public InputAction @Chat => m_Wrapper.m_Normal_Chat;
+        public InputActionMap Get() { return m_Wrapper.m_Normal; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(UnitsSelectedActions set) { return set.Get(); }
-        public void SetCallbacks(IUnitsSelectedActions instance)
+        public static implicit operator InputActionMap(NormalActions set) { return set.Get(); }
+        public void SetCallbacks(INormalActions instance)
         {
-            if (m_Wrapper.m_UnitsSelectedActionsCallbackInterface != null)
+            if (m_Wrapper.m_NormalActionsCallbackInterface != null)
             {
-                @House.started -= m_Wrapper.m_UnitsSelectedActionsCallbackInterface.OnHouse;
-                @House.performed -= m_Wrapper.m_UnitsSelectedActionsCallbackInterface.OnHouse;
-                @House.canceled -= m_Wrapper.m_UnitsSelectedActionsCallbackInterface.OnHouse;
+                @Pause.started -= m_Wrapper.m_NormalActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_NormalActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_NormalActionsCallbackInterface.OnPause;
+                @Shift.started -= m_Wrapper.m_NormalActionsCallbackInterface.OnShift;
+                @Shift.performed -= m_Wrapper.m_NormalActionsCallbackInterface.OnShift;
+                @Shift.canceled -= m_Wrapper.m_NormalActionsCallbackInterface.OnShift;
+                @Chat.started -= m_Wrapper.m_NormalActionsCallbackInterface.OnChat;
+                @Chat.performed -= m_Wrapper.m_NormalActionsCallbackInterface.OnChat;
+                @Chat.canceled -= m_Wrapper.m_NormalActionsCallbackInterface.OnChat;
             }
-            m_Wrapper.m_UnitsSelectedActionsCallbackInterface = instance;
+            m_Wrapper.m_NormalActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
+                @Shift.started += instance.OnShift;
+                @Shift.performed += instance.OnShift;
+                @Shift.canceled += instance.OnShift;
+                @Chat.started += instance.OnChat;
+                @Chat.performed += instance.OnChat;
+                @Chat.canceled += instance.OnChat;
+            }
+        }
+    }
+    public NormalActions @Normal => new NormalActions(this);
+
+    // Selected
+    private readonly InputActionMap m_Selected;
+    private ISelectedActions m_SelectedActionsCallbackInterface;
+    private readonly InputAction m_Selected_House;
+    public struct SelectedActions
+    {
+        private @Controls m_Wrapper;
+        public SelectedActions(@Controls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @House => m_Wrapper.m_Selected_House;
+        public InputActionMap Get() { return m_Wrapper.m_Selected; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(SelectedActions set) { return set.Get(); }
+        public void SetCallbacks(ISelectedActions instance)
+        {
+            if (m_Wrapper.m_SelectedActionsCallbackInterface != null)
+            {
+                @House.started -= m_Wrapper.m_SelectedActionsCallbackInterface.OnHouse;
+                @House.performed -= m_Wrapper.m_SelectedActionsCallbackInterface.OnHouse;
+                @House.canceled -= m_Wrapper.m_SelectedActionsCallbackInterface.OnHouse;
+            }
+            m_Wrapper.m_SelectedActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @House.started += instance.OnHouse;
@@ -470,91 +515,62 @@ public class @Controls : IInputActionCollection, IDisposable
             }
         }
     }
-    public UnitsSelectedActions @UnitsSelected => new UnitsSelectedActions(this);
+    public SelectedActions @Selected => new SelectedActions(this);
 
-    // BuildingSelected
-    private readonly InputActionMap m_BuildingSelected;
-    private IBuildingSelectedActions m_BuildingSelectedActionsCallbackInterface;
-    private readonly InputAction m_BuildingSelected_Chat;
-    private readonly InputAction m_BuildingSelected_BuildVillager;
-    public struct BuildingSelectedActions
+    // Build
+    private readonly InputActionMap m_Build;
+    private IBuildActions m_BuildActionsCallbackInterface;
+    private readonly InputAction m_Build_Stop;
+    private readonly InputAction m_Build_Build;
+    public struct BuildActions
     {
         private @Controls m_Wrapper;
-        public BuildingSelectedActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Chat => m_Wrapper.m_BuildingSelected_Chat;
-        public InputAction @BuildVillager => m_Wrapper.m_BuildingSelected_BuildVillager;
-        public InputActionMap Get() { return m_Wrapper.m_BuildingSelected; }
+        public BuildActions(@Controls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Stop => m_Wrapper.m_Build_Stop;
+        public InputAction @Build => m_Wrapper.m_Build_Build;
+        public InputActionMap Get() { return m_Wrapper.m_Build; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(BuildingSelectedActions set) { return set.Get(); }
-        public void SetCallbacks(IBuildingSelectedActions instance)
+        public static implicit operator InputActionMap(BuildActions set) { return set.Get(); }
+        public void SetCallbacks(IBuildActions instance)
         {
-            if (m_Wrapper.m_BuildingSelectedActionsCallbackInterface != null)
+            if (m_Wrapper.m_BuildActionsCallbackInterface != null)
             {
-                @Chat.started -= m_Wrapper.m_BuildingSelectedActionsCallbackInterface.OnChat;
-                @Chat.performed -= m_Wrapper.m_BuildingSelectedActionsCallbackInterface.OnChat;
-                @Chat.canceled -= m_Wrapper.m_BuildingSelectedActionsCallbackInterface.OnChat;
-                @BuildVillager.started -= m_Wrapper.m_BuildingSelectedActionsCallbackInterface.OnBuildVillager;
-                @BuildVillager.performed -= m_Wrapper.m_BuildingSelectedActionsCallbackInterface.OnBuildVillager;
-                @BuildVillager.canceled -= m_Wrapper.m_BuildingSelectedActionsCallbackInterface.OnBuildVillager;
+                @Stop.started -= m_Wrapper.m_BuildActionsCallbackInterface.OnStop;
+                @Stop.performed -= m_Wrapper.m_BuildActionsCallbackInterface.OnStop;
+                @Stop.canceled -= m_Wrapper.m_BuildActionsCallbackInterface.OnStop;
+                @Build.started -= m_Wrapper.m_BuildActionsCallbackInterface.OnBuild;
+                @Build.performed -= m_Wrapper.m_BuildActionsCallbackInterface.OnBuild;
+                @Build.canceled -= m_Wrapper.m_BuildActionsCallbackInterface.OnBuild;
             }
-            m_Wrapper.m_BuildingSelectedActionsCallbackInterface = instance;
-            if (instance != null)
-            {
-                @Chat.started += instance.OnChat;
-                @Chat.performed += instance.OnChat;
-                @Chat.canceled += instance.OnChat;
-                @BuildVillager.started += instance.OnBuildVillager;
-                @BuildVillager.performed += instance.OnBuildVillager;
-                @BuildVillager.canceled += instance.OnBuildVillager;
-            }
-        }
-    }
-    public BuildingSelectedActions @BuildingSelected => new BuildingSelectedActions(this);
-
-    // BuildMode
-    private readonly InputActionMap m_BuildMode;
-    private IBuildModeActions m_BuildModeActionsCallbackInterface;
-    private readonly InputAction m_BuildMode_Stop;
-    public struct BuildModeActions
-    {
-        private @Controls m_Wrapper;
-        public BuildModeActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Stop => m_Wrapper.m_BuildMode_Stop;
-        public InputActionMap Get() { return m_Wrapper.m_BuildMode; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(BuildModeActions set) { return set.Get(); }
-        public void SetCallbacks(IBuildModeActions instance)
-        {
-            if (m_Wrapper.m_BuildModeActionsCallbackInterface != null)
-            {
-                @Stop.started -= m_Wrapper.m_BuildModeActionsCallbackInterface.OnStop;
-                @Stop.performed -= m_Wrapper.m_BuildModeActionsCallbackInterface.OnStop;
-                @Stop.canceled -= m_Wrapper.m_BuildModeActionsCallbackInterface.OnStop;
-            }
-            m_Wrapper.m_BuildModeActionsCallbackInterface = instance;
+            m_Wrapper.m_BuildActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @Stop.started += instance.OnStop;
                 @Stop.performed += instance.OnStop;
                 @Stop.canceled += instance.OnStop;
+                @Build.started += instance.OnBuild;
+                @Build.performed += instance.OnBuild;
+                @Build.canceled += instance.OnBuild;
             }
         }
     }
-    public BuildModeActions @BuildMode => new BuildModeActions(this);
+    public BuildActions @Build => new BuildActions(this);
 
     // Menu
     private readonly InputActionMap m_Menu;
     private IMenuActions m_MenuActionsCallbackInterface;
-    private readonly InputAction m_Menu_Newaction;
+    private readonly InputAction m_Menu_Quit;
+    private readonly InputAction m_Menu_Type;
+    private readonly InputAction m_Menu_Send;
     public struct MenuActions
     {
         private @Controls m_Wrapper;
         public MenuActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_Menu_Newaction;
+        public InputAction @Quit => m_Wrapper.m_Menu_Quit;
+        public InputAction @Type => m_Wrapper.m_Menu_Type;
+        public InputAction @Send => m_Wrapper.m_Menu_Send;
         public InputActionMap Get() { return m_Wrapper.m_Menu; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -564,16 +580,28 @@ public class @Controls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_MenuActionsCallbackInterface != null)
             {
-                @Newaction.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnNewaction;
-                @Newaction.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnNewaction;
-                @Newaction.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnNewaction;
+                @Quit.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnQuit;
+                @Quit.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnQuit;
+                @Quit.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnQuit;
+                @Type.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnType;
+                @Type.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnType;
+                @Type.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnType;
+                @Send.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnSend;
+                @Send.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnSend;
+                @Send.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnSend;
             }
             m_Wrapper.m_MenuActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
+                @Quit.started += instance.OnQuit;
+                @Quit.performed += instance.OnQuit;
+                @Quit.canceled += instance.OnQuit;
+                @Type.started += instance.OnType;
+                @Type.performed += instance.OnType;
+                @Type.canceled += instance.OnType;
+                @Send.started += instance.OnSend;
+                @Send.performed += instance.OnSend;
+                @Send.canceled += instance.OnSend;
             }
         }
     }
@@ -587,29 +615,30 @@ public class @Controls : IInputActionCollection, IDisposable
             return asset.controlSchemes[m_KeyboardMouseSchemeIndex];
         }
     }
-    public interface IPlayerActions
+    public interface ICameraActions
     {
         void OnMoveCamera(InputAction.CallbackContext context);
-        void OnPause(InputAction.CallbackContext context);
-        void OnChat(InputAction.CallbackContext context);
-        void OnShift(InputAction.CallbackContext context);
         void OnMouseScrollY(InputAction.CallbackContext context);
     }
-    public interface IUnitsSelectedActions
+    public interface INormalActions
+    {
+        void OnPause(InputAction.CallbackContext context);
+        void OnShift(InputAction.CallbackContext context);
+        void OnChat(InputAction.CallbackContext context);
+    }
+    public interface ISelectedActions
     {
         void OnHouse(InputAction.CallbackContext context);
     }
-    public interface IBuildingSelectedActions
-    {
-        void OnChat(InputAction.CallbackContext context);
-        void OnBuildVillager(InputAction.CallbackContext context);
-    }
-    public interface IBuildModeActions
+    public interface IBuildActions
     {
         void OnStop(InputAction.CallbackContext context);
+        void OnBuild(InputAction.CallbackContext context);
     }
     public interface IMenuActions
     {
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnQuit(InputAction.CallbackContext context);
+        void OnType(InputAction.CallbackContext context);
+        void OnSend(InputAction.CallbackContext context);
     }
 }

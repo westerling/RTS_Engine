@@ -82,7 +82,7 @@ public class Archer : Attack
         }
 
         var unitRange = Stats.GetAttributeAmount(AttributeType.Range);
-        var targetSize = Utils.DistanceToBuilding(Targeter.Target.Size);
+        var targetSize = Utils.GameObjectSize(Targeter.Target.Size);
 
         return (Targeter.Target.transform.position - transform.position).sqrMagnitude <=
              (unitRange + targetSize) * (unitRange + targetSize);

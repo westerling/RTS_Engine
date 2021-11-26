@@ -2,7 +2,7 @@
     "name": "Controls",
     "maps": [
         {
-            "name": "Player",
+            "name": "Camera",
             "id": "d1b94d21-7bbf-48e8-8a64-6404f7ddf49e",
             "actions": [
                 {
@@ -10,30 +10,6 @@
                     "type": "Value",
                     "id": "a24ab013-3640-4e07-b966-f7189e9896d8",
                     "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Pause",
-                    "type": "Button",
-                    "id": "cede1708-048d-4005-9108-a2cd30a78429",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Chat",
-                    "type": "Button",
-                    "id": "f5abbab8-55ff-46b6-ac81-56a37a55ad8c",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Shift",
-                    "type": "Button",
-                    "id": "08ecb5e6-b910-49e7-9187-1b909ff69a8a",
-                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 },
@@ -104,39 +80,6 @@
                 },
                 {
                     "name": "",
-                    "id": "c2895991-4a64-4bbb-8b39-6fdaf80501ab",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard & Mouse",
-                    "action": "Pause",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "0686128d-87a5-4111-8267-8cc2ebeca9de",
-                    "path": "<Keyboard>/enter",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard & Mouse",
-                    "action": "Chat",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c10019eb-bcdd-4e70-a781-203bbe3716aa",
-                    "path": "<Keyboard>/leftShift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard & Mouse",
-                    "action": "Shift",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "1f038465-8684-4bc9-aef2-ad523261081f",
                     "path": "<Mouse>/scroll/y",
                     "interactions": "",
@@ -149,7 +92,72 @@
             ]
         },
         {
-            "name": "UnitsSelected",
+            "name": "Normal",
+            "id": "a2449f98-a92b-43a8-a10c-05040fd796cf",
+            "actions": [
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "c44bb1ec-a463-4eaa-89f7-734c63617d92",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Shift",
+                    "type": "Button",
+                    "id": "eeae66d3-1264-4417-8a74-2159020a4ba0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Chat",
+                    "type": "Button",
+                    "id": "6d9c4813-8c4c-413a-a043-0255a4d1e3fe",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "67d17c90-bf86-42e6-afe8-537958dd9a27",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5e94dbc7-4a73-448d-81b5-b7d9802dcd31",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shift",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "85395b42-3516-4ab5-a49f-9ccccc0e107c",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Chat",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Selected",
             "id": "253c8656-3461-4144-912f-6b7a35063c8c",
             "actions": [
                 {
@@ -176,59 +184,21 @@
             ]
         },
         {
-            "name": "BuildingSelected",
-            "id": "5804008d-0040-4736-a1a4-2fc325e2451f",
-            "actions": [
-                {
-                    "name": "Chat",
-                    "type": "Button",
-                    "id": "574c01b8-405a-4802-a9ff-4b1f2a310010",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Build Villager",
-                    "type": "Button",
-                    "id": "58a2b78a-cb7f-40f3-ae94-8d512a831d16",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "a26230be-18c2-4544-9ff6-dc5349f132d5",
-                    "path": "<Keyboard>/enter",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard & Mouse",
-                    "action": "Chat",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "df36f000-f8af-498e-a9b3-dcb255a91e45",
-                    "path": "<Keyboard>/v",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard & Mouse",
-                    "action": "Build Villager",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "BuildMode",
+            "name": "Build",
             "id": "afe1c248-bd16-4da1-85fe-241062fa7aad",
             "actions": [
                 {
                     "name": "Stop",
                     "type": "Button",
                     "id": "3fa9b561-6a5c-456a-8d00-74e41c194d4e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Build",
+                    "type": "Button",
+                    "id": "275fb5d8-0011-4c87-aee3-d5c50034f9e7",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -245,6 +215,17 @@
                     "action": "Stop",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "91d8ac91-d502-491e-993e-0cc19af0b407",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Build",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -253,9 +234,25 @@
             "id": "9c2abbb2-e1f6-48bc-a8fa-b087cc31454c",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Quit",
                     "type": "Button",
                     "id": "bb9ddd0f-2ad8-4320-aef9-2c54a0585f53",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Type",
+                    "type": "Button",
+                    "id": "ece348d0-54a6-4c01-913e-2ee879790f6a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Send",
+                    "type": "Button",
+                    "id": "d4710b46-a025-410a-b590-a9947c2b6ef5",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -269,7 +266,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "New action",
+                    "action": "Quit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "dece3c37-f251-4bc1-bbe0-bc5b0aff2c3a",
+                    "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Type",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4eb8af91-91bf-4f1c-a9fe-dd050920f053",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Send",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

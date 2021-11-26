@@ -27,7 +27,6 @@ public class UnitMovement : NetworkBehaviour
     [SyncVar]
     private List<Vector3> m_MovementList = new List<Vector3>();
 
-    private const float normalStoppingRange = 2f;
     private float m_Timer = 1;
 
     [SerializeField]
@@ -108,9 +107,9 @@ public class UnitMovement : NetworkBehaviour
     }
 
     [Command]
-    public void CmdRally()
+    public void CmdGarrison()
     {
-        Rally();
+        Garrison();
     }
 
     [Command]
@@ -144,9 +143,13 @@ public class UnitMovement : NetworkBehaviour
     }
 
     [Server]
-    public void ServerMove(Vector3 position, bool autoMove = false)
+    public void ServerMove(Vector3 position, bool autoMove = false, bool resetTargets = true)
     {
-        m_Targeter.ClearTarget();
+        if (resetTargets)
+        {
+            m_Targeter.ClearTarget();
+        }
+
         ClearMovementList();
 
         if (!NavMesh.SamplePosition(position, out NavMeshHit hit, 1f, NavMesh.AllAreas) && !autoMove)
@@ -205,7 +208,7 @@ public class UnitMovement : NetworkBehaviour
 
         if ((target.transform.position - transform.position).sqrMagnitude > 2f * 2f)
         {
-            m_Agent.stoppingDistance = Utils.DistanceToBuilding(target.GetComponent<Building>().Size);
+            m_Agent.stoppingDistance = Utils.GameObjectSize(target.GetComponent<Building>().Size);
             Task = Task.Deliver;
             ServerMove(target.transform.position, true);
         }
@@ -224,7 +227,7 @@ public class UnitMovement : NetworkBehaviour
 
         if ((target.transform.position - transform.position).sqrMagnitude > 2f * 2f)
         {
-            m_Agent.stoppingDistance = normalStoppingRange;
+            m_Agent.stoppingDistance = Utils.GameObjectSize(target.GetComponent<Interactable>().Size);
             Task = Task.Collect;
             ServerMove(Utils.OffsetPoint(target.transform.position, 1), true);
         }
@@ -249,15 +252,14 @@ public class UnitMovement : NetworkBehaviour
 
         //if ((target.transform.position - transform.position).sqrMagnitude > 2f * 2f)
         //{
-            ClientDebug("Here");
-            m_Agent.stoppingDistance = Utils.DistanceToBuilding(target.GetComponent<Building>().Size);
+            m_Agent.stoppingDistance = Utils.GameObjectSize(target.GetComponent<Building>().Size);
             Task = Task.Build;
             ServerMove(target.transform.position, true);
         //}
     }
 
     [Server]
-    public void Attack()
+    public void Attack(bool resetTargets = false)
     {
         var target = m_Targeter.Target;
         if (target == null)
@@ -268,26 +270,29 @@ public class UnitMovement : NetworkBehaviour
 
         var stats = GetComponent<LocalStats>().Stats;
         var range = stats.GetAttributeAmount(AttributeType.Range);
-        var targetSize = Utils.DistanceToBuilding(target.Size);
+        var targetSize = Utils.GameObjectSize(target.Size);
 
         Task = Task.Attack;
+
+        var stoppDist = range + targetSize;
+        ClientDebug("dist: " + stoppDist);
         m_Agent.stoppingDistance = range + targetSize;
-        ServerMove(target.transform.position, true);
+        ServerMove(target.transform.position, true, resetTargets);
     }
 
     [Server]
-    public void Rally()
+    public void Garrison()
     {
-        var target = m_Unit.GarrisonBuilding;
+        var target = m_Unit.Targeter.Target;
 
         if (target == null)
         {
             return;
         }
 
-        var targetSize = Utils.DistanceToBuilding(target.Size);
+        var targetSize = Utils.GameObjectSize(target.Size);
 
-        Task = Task.Rally;
+        Task = Task.Garrison;
         m_Agent.stoppingDistance = targetSize;
         ServerMove(target.transform.position, true);
     }
@@ -296,7 +301,7 @@ public class UnitMovement : NetworkBehaviour
     private IEnumerator UpdateTargetPosition()
     {
         yield return new WaitUntil(() => m_Timer <= 0);
-        Attack();
+        Attack(true);
     }
 
     #endregion

@@ -12,27 +12,29 @@ public class Message : NetworkBehaviour
 
     public static event Action<string, Color> OnMessage;
 
-    private Controls m_Controls;
+    private const string InputChat = "Chat";
+    private const string InputSend = "Send";
 
     private void Start()
     {
-        m_Controls = new Controls();
-        m_Controls.Player.Chat.performed += GeneralControlsPerformed;
-        m_Controls.Enable();
+        InputManager.Current.Controls.actions[InputChat].performed += ChatInputPerformed;
+        InputManager.Current.Controls.actions[InputSend].performed += SendInputPerformed;
     }
 
-    private void GeneralControlsPerformed(InputAction.CallbackContext obj)
+    private void ChatInputPerformed(InputAction.CallbackContext obj)
     {
-        if (m_InputField.gameObject.activeInHierarchy)
-        {
-            Send(m_InputField.text);
-            m_InputField.DeactivateInputField();
-        }
-        else
-        {
-            EventSystem.current.SetSelectedGameObject(m_InputField.gameObject);
-            m_InputField.ActivateInputField();
-        }
+                EventSystem.current.SetSelectedGameObject(m_InputField.gameObject);
+        m_InputField.ActivateInputField();
+        InputManager.Current.SetContext(GameContext.Menu);
+
+        m_InputField.gameObject.SetActive(!m_InputField.gameObject.activeInHierarchy);
+    }
+
+    private void SendInputPerformed(InputAction.CallbackContext obj)
+    {
+        Send(m_InputField.text);
+        m_InputField.DeactivateInputField();
+        InputManager.Current.SetContext(GameContext.Normal);
 
         m_InputField.gameObject.SetActive(!m_InputField.gameObject.activeInHierarchy);
     }
@@ -71,6 +73,7 @@ public class Message : NetworkBehaviour
 
     private void OnDestroy()
     {
-        m_Controls.Player.Chat.performed -= GeneralControlsPerformed;
+        InputManager.Current.Controls.actions[InputChat].performed -= ChatInputPerformed;
+        InputManager.Current.Controls.actions[InputSend].performed -= SendInputPerformed;
     }
 }

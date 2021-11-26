@@ -72,7 +72,7 @@ public class DeliverResource : NetworkBehaviour
     private bool CanDeliver(Building building)
     {
         return (transform.position - this.transform.position).sqrMagnitude <=
-            (Utils.DistanceToBuilding(building.Size)) * (Utils.DistanceToBuilding(building.Size));
+            (Utils.GameObjectSize(building.Size)) * (Utils.GameObjectSize(building.Size));
     }
 
     private void ClientDebug(string text)

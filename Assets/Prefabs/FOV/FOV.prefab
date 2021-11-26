@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7136804976493157124}
   - component: {fileID: 8276203126578800806}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: FOV
   m_TagString: Untagged
   m_Icon: {fileID: 0}

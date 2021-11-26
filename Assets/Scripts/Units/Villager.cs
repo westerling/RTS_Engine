@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Villager : Unit, IBuild, ICollect, IDeliver
+public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
 {
     private float m_Timer = 1;
-    private float m_RotationSpeed = 20f;
+    private float m_RotationSpeed = 1f;
 
     [ServerCallback]
     private void Update()
@@ -15,6 +15,7 @@ public class Villager : Unit, IBuild, ICollect, IDeliver
         switch (UnitMovement.Task)
         {
             case Task.Attack:
+                StartCoroutine(Attack());
                 break;
             case Task.Build:
                 StartCoroutine(Build());
@@ -25,6 +26,9 @@ public class Villager : Unit, IBuild, ICollect, IDeliver
             case Task.Deliver:
                 StartCoroutine(Deliver());
                 break;
+            case Task.Garrison:
+                StartCoroutine(Garrison());
+                break;
         }
         
         m_Timer -= Time.deltaTime;
@@ -32,10 +36,27 @@ public class Villager : Unit, IBuild, ICollect, IDeliver
 
     #region tasks
 
+    public IEnumerator Garrison()
+    {
+        yield return new WaitUntil(() => m_Timer <= 0);
+        m_Timer = 1;
+
+        var target = Targeter.Target;
+
+        if (target.TryGetComponent(out Building building))
+        {
+            if (Utils.IsCloseEnough(target, transform.position))
+            {
+                if (building.CanGarrisonUnits())
+                {
+                    building.GatherUnit(this);
+                }
+            }
+        }
+    }
+
     public IEnumerator Collect()
     {
-        var stats = GetLocalStats();
-
         yield return new WaitUntil(() => m_Timer <= 0);
         m_Timer = 1;
 
@@ -54,7 +75,7 @@ public class Villager : Unit, IBuild, ICollect, IDeliver
                 yield break;
             }
 
-            if (!IsCloseEnough(target))
+            if (!Utils.IsCloseEnough(target, transform.position))
             {
                 yield break;
             }
@@ -72,16 +93,16 @@ public class Villager : Unit, IBuild, ICollect, IDeliver
             switch (resourceType)
             {
                 case Resource.Food:
-                    collectPerSecond = stats.GetAttributeAmount(AttributeType.Farmer);
+                    collectPerSecond = LocalStats.Stats.GetAttributeAmount(AttributeType.Farmer);
                     break;
                 case Resource.Gold:
-                    collectPerSecond = stats.GetAttributeAmount(AttributeType.GoldMiner);
+                    collectPerSecond = LocalStats.Stats.GetAttributeAmount(AttributeType.GoldMiner);
                     break;
                 case Resource.Stone:
-                    collectPerSecond = stats.GetAttributeAmount(AttributeType.StoneMiner);
+                    collectPerSecond = LocalStats.Stats.GetAttributeAmount(AttributeType.StoneMiner);
                     break;
                 case Resource.Wood:
-                    collectPerSecond = stats.GetAttributeAmount(AttributeType.Lumberjack);
+                    collectPerSecond = LocalStats.Stats.GetAttributeAmount(AttributeType.Lumberjack);
                     break;
             }
 
@@ -114,7 +135,7 @@ public class Villager : Unit, IBuild, ICollect, IDeliver
         if (deliveryPoint.TryGetComponent(out DropOff dropOff))
         {
 
-            if (!IsCloseEnough(dropOff))
+            if (!Utils.IsCloseEnough(dropOff, transform.position))
             {
                 yield break;
             }
@@ -125,7 +146,7 @@ public class Villager : Unit, IBuild, ICollect, IDeliver
         if (deliveryPoint.TryGetComponent(out TownCenter townCenter))
         {
 
-            if (!IsCloseEnough(townCenter))
+            if (!Utils.IsCloseEnough(townCenter, transform.position))
             {
                 yield break;
             }
@@ -150,7 +171,7 @@ public class Villager : Unit, IBuild, ICollect, IDeliver
 
         if (target.TryGetComponent(out Building building))
         {
-            if (!IsCloseEnough(building))
+            if (!Utils.IsCloseEnough(building, transform.position))
             {
                 yield break;
             }
@@ -176,7 +197,7 @@ public class Villager : Unit, IBuild, ICollect, IDeliver
                 }
             }
 
-            RotateTowardsTarget(target);
+            RotateTowardsTarget(target.transform.position);
 
             var amount = target.GetRepairAmountPerBuilder();
 
@@ -189,6 +210,38 @@ public class Villager : Unit, IBuild, ICollect, IDeliver
                 {
                     SetNewTarget();
                 }
+            }
+        }
+    }
+
+    public IEnumerator Attack()
+    {
+        yield return new WaitUntil(() => m_Timer <= 0);
+        m_Timer = LocalStats.Stats.GetAttributeAmount(AttributeType.RateOfFire);
+
+        var target = Targeter.Target;
+
+        if (target == null)
+        {
+            yield break;
+        }
+
+        if (!Utils.IsCloseEnough(target, transform.position, LocalStats.Stats.GetAttributeAmount(AttributeType.Range)))
+        {
+            ClientDebug("not close enough");
+            yield break;
+        }
+
+        RotateTowardsTarget(target.transform.position);
+
+        if (target.TryGetComponent(out Health health))
+        {
+            health.DealDamage((int)LocalStats.Stats.GetAttributeAmount(AttributeType.Attack), (int)AttackStyle.Melee);
+
+            if (target.TryGetComponent(out Targetable targetable))
+            {
+                ClientDebug("Fuck yeah");
+                targetable.Reaction(gameObject);
             }
         }
     }
@@ -223,21 +276,13 @@ public class Villager : Unit, IBuild, ICollect, IDeliver
         ResetBuilder();
     }
 
-    private void RotateTowardsTarget(Building target)
+    private void RotateTowardsTarget(Vector3 target)
     {
         var targetRotation =
-            Quaternion.LookRotation(target.transform.position - transform.position);
+            Quaternion.LookRotation(target - transform.position);
 
         transform.rotation = Quaternion.RotateTowards(
             transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
-    }
-
-    private bool IsCloseEnough(Interactable interactable)
-    {
-        var size = Utils.DistanceToBuilding(interactable.Size);
-
-        return (Builder.Target.transform.position - transform.position).sqrMagnitude <=
-            (size) * (size);
     }
 
     public void ResetBuilder()
@@ -252,5 +297,4 @@ public class Villager : Unit, IBuild, ICollect, IDeliver
         building.AddBuilder(unit);
     }
     #endregion
-
 }

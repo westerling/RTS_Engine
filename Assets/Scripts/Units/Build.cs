@@ -103,7 +103,7 @@ public class Build : NetworkBehaviour
     [Server]
     private bool IsCloseEnough()
     {
-        var size = Utils.DistanceToBuilding(m_Builder.Target.Size);
+        var size = Utils.GameObjectSize(m_Builder.Target.Size);
 
         return (m_Builder.Target.transform.position - transform.position).sqrMagnitude <=
             (size) * (size);

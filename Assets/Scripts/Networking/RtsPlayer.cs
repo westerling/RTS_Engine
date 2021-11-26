@@ -57,7 +57,7 @@ public class RtsPlayer : NetworkBehaviour
     
     public static event Action<bool> AuthorityOnPartyOwnerStateUpdated;
     public static event Action ClientOnInfoUpdated;
-    public static GameState GameState = GameState.Normal;
+    public static GameContext GameState = GameContext.Camera;
     
     private Faction m_Faction;
     private List<GameObjectIdentity> m_Researchables = new List<GameObjectIdentity>();
@@ -221,10 +221,8 @@ public class RtsPlayer : NetworkBehaviour
 
     public bool CanAffordBuilding(Building building)
     {
-        var stats = building.GetLocalStats();
-        var cost = stats.GetCost();
+        var cost = building.LocalStats.Stats.GetCost();
         var resources = GetResources();
-
 
         if (!Utils.CanAfford(resources, cost))
         {
@@ -450,8 +448,7 @@ public class RtsPlayer : NetworkBehaviour
 
         NetworkServer.Spawn(buildingInstance, connectionToClient);
 
-        var stats = buildingToPlace.GetLocalStats();
-        var cost = stats.GetCost();
+        var cost = buildingToPlace.LocalStats.Stats.GetCost();
 
         foreach (var resourceCostItem in cost)
         {
@@ -534,8 +531,7 @@ public class RtsPlayer : NetworkBehaviour
             return;
         }
 
-        var stats = building.GetLocalStats();
-        SetMaximumPopulation((int)stats.GetAttributeAmount(AttributeType.Population));
+        SetMaximumPopulation((int)building.LocalStats.Stats.GetAttributeAmount(AttributeType.Population));
     }
 
     private void ServerHandleConstructionStarted(Building building)
@@ -557,8 +553,7 @@ public class RtsPlayer : NetworkBehaviour
 
         DeployedBuildings.Remove(building);
 
-        var stats = building.GetLocalStats();
-        SetMaximumPopulation(-(int)stats.GetAttributeAmount(AttributeType.Population));
+        SetMaximumPopulation(-(int)building.LocalStats.Stats.GetAttributeAmount(AttributeType.Population));
     }
 
     #endregion
@@ -682,16 +677,14 @@ public class RtsPlayer : NetworkBehaviour
     {
         Constructions.Remove(building);
         DeployedBuildings.Add(building);
-        var stats = building.GetLocalStats();
-        CmdSetMaximumPopulation((int)stats.GetAttributeAmount(AttributeType.Population));
+        CmdSetMaximumPopulation((int)building.LocalStats.Stats.GetAttributeAmount(AttributeType.Population));
     }
 
     private void AuthorityHandleBuildingsDespawned(Building building)
     {
         DeployedBuildings.Remove(building);
 
-        var stats = building.GetLocalStats();
-        CmdSetMaximumPopulation(-(int)stats.GetAttributeAmount(AttributeType.Population));
+        CmdSetMaximumPopulation(-(int)building.LocalStats.Stats.GetAttributeAmount(AttributeType.Population));
     }
 
     private void AuthorityHandleUpgradeAdded(Upgrade upgrade)

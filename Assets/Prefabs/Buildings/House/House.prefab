@@ -351,6 +351,8 @@ MonoBehaviour:
   m_Size: 2
   m_Targeter: {fileID: 0}
   m_FieldOfView: {fileID: 6151729341605414487}
+  m_FieldOfViewCollider: {fileID: 0}
+  m_LocalStats: {fileID: 3504506436302796165}
   m_Health: {fileID: 2140595229544194780}
   m_BuildingPreview: {fileID: 3128475550081364578, guid: a9dc9ab00e290134ba5eea3ac2e64678, type: 3}
   m_Construction: {fileID: 7795536825237043152}
@@ -362,7 +364,6 @@ MonoBehaviour:
   m_DestructionStageTwo:
   - {fileID: 162161431007962216}
   m_CanRotate: 1
-  m_IsStartupBuilding: 0
 --- !u!114 &1765676319716578855
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,11 +5,14 @@ public class ActionButton
 {
     private Sprite m_Sprite;
     private Action m_ClickAction;
+    private Action m_HoverAction;
     private int m_Position;
+    private string m_Description;
     
-    public ActionButton(Sprite sprite, Action clickAction, int position)
+    public ActionButton(Sprite sprite, string description, Action clickAction, int position)
     {
         Sprite = sprite;
+        Description = description;
         ClickAction = clickAction;
         Position = position;
     }
@@ -30,6 +33,12 @@ public class ActionButton
     {
         get => m_ClickAction; 
         set => m_ClickAction = value; 
+    }
+
+    public string Description
+    {
+        get => m_Description;
+        set => m_Description = value;
     }
 
     public int Position

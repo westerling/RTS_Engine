@@ -71,7 +71,7 @@ public enum Task
     Attack = 3,
     Collect = 4,
     Deliver= 5,
-    Rally = 6
+    Garrison = 6
 }
 
 public enum StanceType
@@ -187,11 +187,11 @@ public enum Trend
     Bull = 6
 }
 
-public enum GameState
+public enum GameContext
 {
-    Normal = 0,
-    Buildmode = 1,
-    Garrison = 2,
+    Camera = 0,
+    Normal = 1,
     Selected = 3,
-    Menu = 4
+    Build = 4,
+    Menu = 5
 }

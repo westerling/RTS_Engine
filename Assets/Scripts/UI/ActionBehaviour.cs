@@ -50,4 +50,8 @@ public abstract class ActionBehaviour : MonoBehaviour
         get => m_Position; 
         set => m_Position = value; 
     }
+    protected void SetContext(GameContext context)
+    {
+        InputManager.Current.SetContext(context);
+    }
 }

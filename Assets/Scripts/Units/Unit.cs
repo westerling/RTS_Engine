@@ -16,11 +16,6 @@ public class Unit : Targetable
     [SerializeField]
     private Builder m_Builder = null;
 
-    [SerializeField]
-    private UnitRally m_UnitRally = null;
-
-    private Building m_GarrisonBuilding = null;
-
     private StanceType m_Stance = StanceType.Defensive;
 
     public static event Action<Unit> ServerOnUnitSpawned;
@@ -50,12 +45,6 @@ public class Unit : Targetable
         set { m_Stance = value; }
     }
 
-    public Building GarrisonBuilding
-    { 
-        get => m_GarrisonBuilding; 
-        set => m_GarrisonBuilding = value; 
-    }
-
     #region server
 
     public override void OnStartServer()
@@ -83,28 +72,6 @@ public class Unit : Targetable
         NetworkServer.Destroy(gameObject);
     }
 
-    [Command]
-    public void CmdSetGarrison(Building garrison)
-    {
-        GarrisonBuilding = garrison;
-    }
-
-    [Command]
-    public void CmdClearGarrison()
-    {
-        ClearGarrison();
-    }
-
-    [Server]
-    public void ClearGarrison()
-    {
-        if (GarrisonBuilding == null)
-        {
-            return;
-        }
-
-        GarrisonBuilding = null;
-    }
     #endregion
 
     #region client

@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
-using System;
 
 public abstract class PlaceBuildingBase : MonoBehaviour, IPointerClickHandler
 {
@@ -14,7 +13,9 @@ public abstract class PlaceBuildingBase : MonoBehaviour, IPointerClickHandler
     private Renderer m_BuildingRendererInstance;
     private BoxCollider m_BuildingCollider;
     private Controls m_Controls;
-   
+
+    private const string Exit = "Stop";
+    private const string Scroll = "MouseScrollY";
 
     public Camera MainCamera 
     { 
@@ -59,11 +60,9 @@ public abstract class PlaceBuildingBase : MonoBehaviour, IPointerClickHandler
 
         BuildingCollider = Building.GetComponent<BoxCollider>();
         BuildingRendererInstance = GetComponentInChildren<Renderer>();
-
-        Controls = new Controls();
-        Controls.Player.Pause.performed += GeneralControlsPerformed;
-        Controls.Player.MouseScrollY.performed += ScrollPerformed;
-        Controls.Enable();
+       
+        InputManager.Current.Controls.actions[Exit].performed += GeneralControlsPerformed;
+        InputManager.Current.Controls.actions[Scroll].performed += GeneralControlsPerformed;
     }
 
     private void ScrollPerformed(InputAction.CallbackContext obj)
@@ -101,7 +100,7 @@ public abstract class PlaceBuildingBase : MonoBehaviour, IPointerClickHandler
 
     private void OnDestroy()
     {
-        Controls.Player.Pause.performed -= GeneralControlsPerformed;
-        Controls.Player.MouseScrollY.performed -= ScrollPerformed;
+        InputManager.Current.Controls.actions[Exit].performed -= GeneralControlsPerformed;
+        InputManager.Current.Controls.actions[Scroll].performed -= ScrollPerformed;
     }
 }
