@@ -1,5 +1,4 @@
 ﻿using Mirror;
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -15,8 +14,6 @@ public class Interactable : GameObjectIdentity
     private EntitySize m_Size = EntitySize.Normal;
 
     private GameObject m_SelectionIndicator = null;
-
-
 
     public Transform AimAtPoint
     {

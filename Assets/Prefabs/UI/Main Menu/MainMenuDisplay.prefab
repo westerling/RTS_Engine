@@ -3802,16 +3802,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9092a757be98b704583047bdd4bc2e50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lobbyUI: {fileID: 85575777975873419}
-  startGameButton: {fileID: 85575777588711150}
-  playerNameTexts:
+  m_LobbyUI: {fileID: 85575777975873419}
+  m_StartGameButton: {fileID: 85575777588711150}
+  m_PlayerNameTexts:
   - {fileID: 85575777506406844}
   - {fileID: 85575777943748492}
   - {fileID: 85575777776830124}
   - {fileID: 85575777148850339}
-  mapText: {fileID: 6871346354715479796}
-  mapDropDown: {fileID: 4848006156737876640}
-  factionDropDown: {fileID: 6206078575926054648}
+  m_MapText: {fileID: 6871346354715479796}
+  m_MapDropDown: {fileID: 4848006156737876640}
+  m_FactionDropDown: {fileID: 6206078575926054648}
 --- !u!1 &1011734898585461283
 GameObject:
   m_ObjectHideFlags: 0

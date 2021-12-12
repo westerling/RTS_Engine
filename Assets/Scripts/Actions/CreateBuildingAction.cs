@@ -30,7 +30,7 @@ public class CreateBuildingAction : ActionBehaviour
             {
                 return;
             }
-            SetContext(GameContext.Camera);
+            SetContext(GameContext.Build);
             Instantiate(m_Building.BuildingPreview);
         };
     }

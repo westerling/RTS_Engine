@@ -1,33 +1,38 @@
-﻿using Mirror;
-using TMPro;
+﻿using TMPro;
+using Mirror;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class LobbyMenu : MonoBehaviour
+
+public class LobbyMenu : NetworkBehaviour
 {
     [SerializeField]
-    private GameObject lobbyUI = null;
+    private GameObject m_LobbyUI = null;
 
     [SerializeField]
-    private Button startGameButton = null;
+    private Button m_StartGameButton = null;
 
     [SerializeField]
-    private TMP_Text[] playerNameTexts = new TMP_Text[4];
+    private TMP_Text[] m_PlayerNameTexts = new TMP_Text[4];
 
     [SerializeField]
-    private TMP_Text mapText = null;
+    private TMP_Text m_MapText = null;
 
     [SerializeField]
-    private TMP_Dropdown mapDropDown = null;
+    private TMP_Dropdown m_MapDropDown = null;
 
     [SerializeField]
-    private TMP_Dropdown factionDropDown = null;
+    private TMP_Dropdown m_FactionDropDown = null;
 
-    private readonly int minPlayers = 1;
+    private readonly int m_MinPlayers = 1;
 
     private void Start()
     {
+        m_FactionDropDown.onValueChanged.AddListener(delegate {
+            DropdownValueChanged(m_FactionDropDown);
+        });
+
         RtsNetworkManager.ClientOnConnected += HandleClientConnected;
         RtsPlayer.AuthorityOnPartyOwnerStateUpdated += AuthorityHandlePartyOwnerStateUpdated;
         RtsPlayer.ClientOnInfoUpdated += ClientHandleInfoUpdated;
@@ -46,28 +51,28 @@ public class LobbyMenu : MonoBehaviour
 
         for (var i = 0; i < players.Count; i++)
         {
-            playerNameTexts[i].text = players[i].DisplayName;
-            playerNameTexts[i].color = players[i].TeamColor;
+            m_PlayerNameTexts[i].text = players[i].DisplayName;
+            m_PlayerNameTexts[i].color = players[i].TeamColor;
         }
 
-        for (var i = players.Count; i < playerNameTexts.Length; i++)
+        for (var i = players.Count; i < m_PlayerNameTexts.Length; i++)
         {
-            playerNameTexts[i].text = "Open...";
+            m_PlayerNameTexts[i].text = "Open...";
         }
 
-        startGameButton.interactable = players.Count >= minPlayers;
+        m_StartGameButton.interactable = players.Count >= m_MinPlayers;
     }
 
     private void HandleClientConnected()
     {
-        lobbyUI.SetActive(true);
+        m_LobbyUI.SetActive(true);
     }
 
     private void AuthorityHandlePartyOwnerStateUpdated(bool state)
     {
-        startGameButton.gameObject.SetActive(state);
-        mapDropDown.gameObject.SetActive(state);
-        mapText.gameObject.SetActive(state);
+        m_StartGameButton.gameObject.SetActive(state);
+        m_MapDropDown.gameObject.SetActive(state);
+        m_MapText.gameObject.SetActive(state);
     }
 
     public void StartGame()
@@ -76,11 +81,17 @@ public class LobbyMenu : MonoBehaviour
 
         for (int i = 0; i < players.Count; i++)
         {
-            var civ = (Faction)factionDropDown.value;
+            var civ = (Faction)m_FactionDropDown.value;
             players[i].SetFaction(civ);
         }
 
-        NetworkClient.connection.identity.GetComponent<RtsPlayer>().CmdStartGame(mapDropDown.value);
+        NetworkClient.connection.identity.GetComponent<RtsPlayer>().CmdStartGame(m_MapDropDown.value);
+    }
+
+    public void DropdownValueChanged(TMP_Dropdown change)
+    {
+        var player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
+        player.CmdSetFaction(change.value);
     }
 
     public void LeaveLobby()

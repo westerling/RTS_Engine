@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -7,6 +8,9 @@ public class GameMenuScript : NetworkBehaviour
 {
     [SerializeField]
     private GameObject m_MainMenu = null;
+
+    [SerializeField]
+    private List<GameObject> m_DisableOnMenu = new List<GameObject>();
 
     private const string Pause = "Pause";
     private const string Resume = "Resume";
@@ -21,12 +25,22 @@ public class GameMenuScript : NetworkBehaviour
     {
         InputManager.Current.SetContext(GameContext.Menu);
         m_MainMenu.SetActive(true);
+        ToggleOnMenu(false);
     }
 
     private void ResumePerformed(InputAction.CallbackContext obj)
     {
         InputManager.Current.SetContext(GameContext.Normal);
         m_MainMenu.SetActive(false);
+        ToggleOnMenu(true);
+    }
+
+    private void ToggleOnMenu(bool enabled)
+    {
+        foreach (var go in m_DisableOnMenu)
+        {
+            go.SetActive(enabled);
+        }
     }
 
     public void LeaveGame()
@@ -45,6 +59,11 @@ public class GameMenuScript : NetworkBehaviour
 
     private void OnDestroy()
     {
+        if (InputManager.Current == null)
+        {
+            return;
+        }
+
         InputManager.Current.Controls.actions[Pause].performed -= PausePerformed;
         InputManager.Current.Controls.actions[Resume].performed -= ResumePerformed;
     }

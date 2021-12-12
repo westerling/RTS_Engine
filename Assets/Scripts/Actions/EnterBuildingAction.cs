@@ -22,7 +22,6 @@ public class EnterBuildingAction : ActionBehaviour
     {
         return delegate ()
         {
-            SetContext(GameContext.Camera);
             m_IsSelected = true;   
         };
     }

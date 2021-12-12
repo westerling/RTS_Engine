@@ -1,6 +1,7 @@
 ﻿using Mirror;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -74,8 +75,8 @@ public class RtsNetworkManager : NetworkManager
         var player = conn.identity.GetComponent<RtsPlayer>();
 
         Players.Add(player);
-        player.SetTeamColor(teamColors[Players.Count-1]);
         player.SetDisplayName($"Player {Players.Count}");
+        player.SetTeamColor(teamColors[Players.Count - 1]);
         player.SetPartyOwner(Players.Count == 1);
     }
 

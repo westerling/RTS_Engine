@@ -38,7 +38,7 @@ public class CreateUnitAction : ActionBehaviour
             {
                 m_Player.CmdSetResources((int)resourceCostItem.Key, -resourceCostItem.Value);
             }
-            SetContext(GameContext.Camera);
+
             m_Spawner.CmdAddToQueue(Id);
         };
     }

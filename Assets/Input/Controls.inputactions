@@ -242,14 +242,6 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Type",
-                    "type": "Button",
-                    "id": "ece348d0-54a6-4c01-913e-2ee879790f6a",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
                     "name": "Send",
                     "type": "Button",
                     "id": "d4710b46-a025-410a-b590-a9947c2b6ef5",
@@ -267,17 +259,6 @@
                     "processors": "",
                     "groups": "Keyboard & Mouse",
                     "action": "Resume",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "dece3c37-f251-4bc1-bbe0-bc5b0aff2c3a",
-                    "path": "<Keyboard>/anyKey",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Type",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

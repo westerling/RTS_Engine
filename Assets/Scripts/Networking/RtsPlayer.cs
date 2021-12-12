@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
@@ -47,10 +48,16 @@ public class RtsPlayer : NetworkBehaviour
     [SyncVar(hook = nameof(ClientHandleDisplayNameUpdated))]
     private string m_DisplayName;
 
-    [SerializeField]
-    private List<int> myUpgrades = new List<int> {0};
+    [SyncVar(hook = nameof(ClientHandleColorUpdated))]
+    private Color m_TeamColor = new Color();
 
-    
+    [SerializeField]
+    [SyncVar(hook = nameof(ClientHandleFactionUpdated))]
+    private Faction m_Faction;
+
+    [SerializeField]
+    private List<int> m_MyUpgrades = new List<int> {0};
+
     public event Action<int, Resource> ClientOnResourcesUpdated;
     public event Action<int> ClientOnCurrentPopulationUpdated;
     public event Action<int> ClientOnMaximumPopulationUpdated;
@@ -59,12 +66,13 @@ public class RtsPlayer : NetworkBehaviour
     public static event Action ClientOnInfoUpdated;
     public static GameContext GameState = GameContext.Camera;
     
-    private Faction m_Faction;
     private List<GameObjectIdentity> m_Researchables = new List<GameObjectIdentity>();
     private List<Unit> m_DeployedUnits = new List<Unit>();
     private List<Building> m_DeployedBuildings = new List<Building>();
     private List<Building> m_Constructions = new List<Building>();
-    private Color m_TeamColor = new Color();
+
+    private const string InputChat = "Chat";
+    private const string InputSend = "Send";
 
     public int CurrentPopulation
     {
@@ -120,7 +128,7 @@ public class RtsPlayer : NetworkBehaviour
 
     public List<int> MyUpgrades
     {
-        get => myUpgrades;
+        get => m_MyUpgrades;
     }
 
     public bool IsPartyOwner
@@ -143,7 +151,7 @@ public class RtsPlayer : NetworkBehaviour
     [Server]
     public void AddUpgrade(int upgradeId)
     {
-        myUpgrades.Add(upgradeId);
+        m_MyUpgrades.Add(upgradeId);
     }
 
     public GameObject GetGameobjectFromId(int id)
@@ -261,6 +269,11 @@ public class RtsPlayer : NetworkBehaviour
         return true;
     }
 
+    public void CreateMessage(string message, Color color, float duration)
+    {
+        ChatPanel.Current.AddMessageToBoard(message, color, duration);
+    }
+
     #region server
 
     public override void OnStartServer()
@@ -328,7 +341,7 @@ public class RtsPlayer : NetworkBehaviour
     [Server]
     public void SetDisplayName(string displayName)
     {
-        this.m_DisplayName = displayName;
+        DisplayName = displayName;
     }
 
     [Server]
@@ -341,6 +354,11 @@ public class RtsPlayer : NetworkBehaviour
     public void SetTeamColor(Color newTeamColor)
     {
         TeamColor = newTeamColor;
+    }
+
+    public void CmdSetFaction(int  faction)
+    {
+        SetFaction((Faction)faction);
     }
 
     [Server]
@@ -465,7 +483,7 @@ public class RtsPlayer : NetworkBehaviour
             return;
         }
 
-        myUpgrades.Add(upgrade.Id);
+        m_MyUpgrades.Add(upgrade.Id);
 
         UpgradeCheck(upgrade);
     }
@@ -605,6 +623,8 @@ public class RtsPlayer : NetworkBehaviour
         Building.AuthorityOnConstructionStarted += AuthorityHandleConstructionStarted;
         Building.AuthorityOnBuildingCompleted += AuthorityHandleBuildingCompleted;
         Building.AuthorityOnBuildingDespawned += AuthorityHandleBuildingsDespawned;
+
+
     }
 
     public override void OnStartClient()
@@ -688,10 +708,20 @@ public class RtsPlayer : NetworkBehaviour
 
     private void AuthorityHandleUpgradeAdded(Upgrade upgrade)
     {
-        myUpgrades.Add(upgrade.Id);
+        m_MyUpgrades.Add(upgrade.Id);
     }
 
     private void ClientHandleDisplayNameUpdated(string oldDisplayName, string newDisplayName)
+    {
+        ClientOnInfoUpdated?.Invoke();
+    }
+
+    private void ClientHandleColorUpdated(Color oldColor, Color newColor)
+    {
+        ClientOnInfoUpdated?.Invoke();
+    }
+
+    private void ClientHandleFactionUpdated(Faction oldFaction, Faction newFaction)
     {
         ClientOnInfoUpdated?.Invoke();
     }

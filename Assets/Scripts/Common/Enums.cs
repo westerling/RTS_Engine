@@ -193,5 +193,6 @@ public enum GameContext
     Normal = 1,
     Selected = 3,
     Build = 4,
-    Menu = 5
+    Menu = 5,
+    Garrison = 6
 }

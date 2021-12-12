@@ -139,7 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 29953
+    m_Bits: 292097
   m_CursorLayerMask:
     serializedVersion: 2
     m_Bits: 25600

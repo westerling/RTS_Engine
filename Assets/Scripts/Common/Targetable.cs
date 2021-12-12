@@ -1,6 +1,8 @@
 ﻿using Mirror;
 using UnityEngine;
 
+[RequireComponent(typeof(Health))]
+[RequireComponent(typeof(LocalStats))]
 public abstract class Targetable : Interactable
 {
     [SerializeField]
@@ -14,6 +16,9 @@ public abstract class Targetable : Interactable
 
     [SerializeField]
     private LocalStats m_LocalStats;
+
+    [SerializeField]
+    private Health m_Health = null;
 
     private float m_FieldOfViewDistance = 10;
     private bool m_Pacifist = false;
@@ -46,6 +51,12 @@ public abstract class Targetable : Interactable
     public bool Pacifist
     {
         get => m_Pacifist;
+    }
+
+    public Health Health
+    {
+        get => m_Health;
+        set => m_Health = value;
     }
 
     #region server

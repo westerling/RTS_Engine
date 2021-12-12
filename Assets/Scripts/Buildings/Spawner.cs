@@ -98,17 +98,18 @@ public class Spawner : NetworkBehaviour
                 return;
             }
 
-
             var spawnInstance = Instantiate(objectToSpawn, SpawnPoint.position, SpawnPoint.rotation);
             var unitMovement = spawnInstance.GetComponent<UnitMovement>();
 
             NetworkServer.Spawn(spawnInstance, connectionToClient);
             unitMovement.ServerMove(RallyPoint);
+            player.CreateMessage("New Unit", Color.green, 2f);
         }
         else if (objectToSpawn.TryGetComponent(out Upgrade upgrade))
         {
             var spawnInstance = Instantiate(objectToSpawn, SpawnPoint.position, SpawnPoint.rotation);
             NetworkServer.Spawn(spawnInstance, connectionToClient);
+            player.CreateMessage("New Upgrade", Color.green, 2f);
         }
 
         SpawnQue.RemoveAt(0);

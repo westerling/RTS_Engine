@@ -1,17 +1,21 @@
 ﻿using Mirror;
 using UnityEngine;
 
-public class Targeter : BaseUnitClickAction
+public abstract class TargeterTest : NetworkBehaviour
 {
-    private Targetable m_Target;
+    private Interactable m_Target;
 
-    public Targetable Target
+    public Interactable Target
     {
         get { return m_Target; }
         set { m_Target = value; }
     }
 
-    #region server
+    public abstract void UpdateStats();
+
+    public abstract void FindNewTarget(Task task);
+
+    public abstract bool PossibleTask(Task task);
 
     [Command]
     public void CmdSetTarget(GameObject targetGameObject)
@@ -19,7 +23,7 @@ public class Targeter : BaseUnitClickAction
         SetTarget(targetGameObject);
     }
 
-    [Server]  
+    [Server]
     public void SetTarget(GameObject targetGameObject)
     {
         if (!targetGameObject.TryGetComponent(out Targetable target))
@@ -37,20 +41,8 @@ public class Targeter : BaseUnitClickAction
     }
 
     [Server]
-    public override void ClearTarget()
+    public void ClearTarget()
     {
         Target = null;
-    }
-
-    public override void UpdateStats()
-    {
-        return;
-    }
-    #endregion
-
-    [ClientRpc]
-    public void ClientDebug(string message)
-    {
-        Debug.Log(message);
     }
 }

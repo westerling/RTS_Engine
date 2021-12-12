@@ -5,9 +5,6 @@ using System;
 public class Unit : Targetable
 {
     [SerializeField]
-    private Health m_Health = null;
-
-    [SerializeField]
     private UnitMovement m_UnitMovement = null;
 
     [SerializeField]
@@ -50,7 +47,7 @@ public class Unit : Targetable
     public override void OnStartServer()
     {
         ServerOnUnitSpawned?.Invoke(this);
-        m_Health.ServerOnDie += ServerHandleDie;
+        Health.ServerOnDie += ServerHandleDie;
         Upgrade.ServerOnUpgradeAdded += ServerHandleUpgradeAdded;
 
         if (hasAuthority)
@@ -63,7 +60,7 @@ public class Unit : Targetable
     {
         ServerOnUnitDespawned?.Invoke(this);
         SetFOVAvailability(false);
-        m_Health.ServerOnDie -= ServerHandleDie;
+        Health.ServerOnDie -= ServerHandleDie;
     }
 
     [Server]

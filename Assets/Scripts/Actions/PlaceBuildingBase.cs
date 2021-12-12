@@ -95,7 +95,8 @@ public abstract class PlaceBuildingBase : MonoBehaviour, IPointerClickHandler
 
     public virtual void GeneralControlsPerformed(InputAction.CallbackContext obj)
     {
-        Destroy(this.gameObject);
+        InputManager.Current.SetContext(GameContext.Normal);
+        Destroy(gameObject);
     }
 
     private void OnDestroy()
