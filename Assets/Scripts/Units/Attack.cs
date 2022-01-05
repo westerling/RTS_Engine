@@ -2,34 +2,34 @@
 
 public abstract class Attack : NetworkBehaviour
 {
-    private Stats m_Stats;
-    private Targeter m_Targeter;
+    //private Stats m_Stats;
+    //private Targeter m_Targeter;
 
-    public Stats Stats 
-    {
-        get => m_Stats;
-        set => m_Stats = value; 
-    }
+    //public Stats Stats 
+    //{
+    //    get => m_Stats;
+    //    set => m_Stats = value; 
+    //}
     
-    public Targeter Targeter 
-    {
-        get => m_Targeter; 
-        set => m_Targeter = value; 
-    }
+    //public Targeter Targeter 
+    //{
+    //    get => m_Targeter; 
+    //    set => m_Targeter = value; 
+    //}
 
-    private void Start()
-    {
-        var localStats = GetComponent<LocalStats>();
-        localStats.StatsAltered += HandleAlteredStats;
-        Stats = localStats.Stats;
-        Targeter = GetComponent<Targeter>();
+    //private void Start()
+    //{
+    //    var localStats = GetComponent<LocalStats>();
+    //    localStats.StatsAltered += HandleAlteredStats;
+    //    Stats = localStats.Stats;
+    //    Targeter = GetComponent<Targeter>();
 
-    }
+    //}
 
-    private void HandleAlteredStats(Stats stats)
-    {
-        Stats = stats;
-    }
+    //private void HandleAlteredStats(Stats stats)
+    //{
+    //    Stats = stats;
+    //}
 
-    public abstract bool IsCloseEnoughToTarget();
+    //public abstract bool IsCloseEnoughToTarget();
 }

@@ -68,7 +68,7 @@ public class CommandGiver : MonoBehaviour
 
     private void UnitSelected(RaycastHit hit)
     {
-        if (hit.collider.TryGetComponent(out Targetable target))
+        if (hit.collider.TryGetComponent(out InteractableGameEntity target))
         {
             if (!target.hasAuthority)
             {
@@ -129,7 +129,7 @@ public class CommandGiver : MonoBehaviour
     
     private void BuildingSelected(RaycastHit hit)
     {
-        if (hit.collider.TryGetComponent(out Targetable target))
+        if (hit.collider.TryGetComponent(out InteractableGameEntity target))
         {
             if (!target.hasAuthority)
             {
@@ -144,16 +144,11 @@ public class CommandGiver : MonoBehaviour
 
     private void ResetTargets()
     {
-        var unitList = m_SelectionHandler.Selected.Select(go => go.GetComponent<Targetable>()).ToList();
+        var unitList = m_SelectionHandler.Selected.Select(go => go.GetComponent<InteractableGameEntity>()).ToList();
 
         foreach (var go in unitList)
         {
             go.Targeter?.CmdClearTarget();
-            if (go.TryGetComponent(out Unit unit))
-            {
-                unit.Builder?.CmdClearTarget();
-                unit.Collector?.CmdClearTarget();
-            }
         }
     }
 
@@ -219,9 +214,9 @@ public class CommandGiver : MonoBehaviour
         }
     }
 
-    private void TryTarget(Targetable target)
+    private void TryTarget(InteractableGameEntity target)
     {
-        var selectedList = m_SelectionHandler.Selected.Select(go => go.GetComponent<Targetable>()).ToList();
+        var selectedList = m_SelectionHandler.Selected.Select(go => go.GetComponent<InteractableGameEntity>()).ToList();
 
         foreach (var go in selectedList)
         {
@@ -248,16 +243,16 @@ public class CommandGiver : MonoBehaviour
 
         foreach (Unit unit in unitList)
         {
-            var collector = unit.Collector;
+            var targeter = unit.Targeter;
 
-            if (collector == null)
+            if (targeter == null)
             {
                 return;
             }
             var closestDropoff = FindClosestDropoff(resource.Resource);
 
-            collector.CmdSetTarget(resource.gameObject);
-            collector.CmdSetDropOff(closestDropoff);
+            targeter.CmdSetTarget(resource.gameObject);
+            targeter.CmdSetDropOff(closestDropoff);
 
             unit.UnitMovement.CmdCollect();
         }
@@ -270,14 +265,14 @@ public class CommandGiver : MonoBehaviour
 
         foreach (Unit unit in unitList)
         {
-            var collector = unit.Collector;
+            var targeter = unit.Targeter;
 
-            if (collector == null)
+            if (targeter == null)
             {
                 return;
             }
 
-            collector.CmdSetDropOff(dropOff.gameObject);
+            targeter.CmdSetTarget(dropOff.gameObject);
 
             unit.UnitMovement.CmdDeliver();
         }
@@ -290,16 +285,16 @@ public class CommandGiver : MonoBehaviour
 
         foreach (Unit unit in unitList)
         {
-            var collector = unit.Collector;
+            var targeter = unit.Targeter;
 
-            if (collector == null)
+            if (targeter == null)
             {
                 return;
             }
 
             unit.UnitMovement.CmdSetTask((int)Task.Deliver);
             unit.UnitMovement.CmdMove(townCenter.gameObject.transform.position);
-            collector.CmdSetDropOff(townCenter.gameObject);
+            targeter.CmdSetTarget(townCenter.gameObject);
         }
         m_CursorManager.Flashtarget(townCenter.gameObject);
     }
@@ -311,15 +306,15 @@ public class CommandGiver : MonoBehaviour
 
         foreach (Unit unit in unitList)
         {
-            var builder = unit.Builder;
+            var targeter = unit.Targeter;
 
-            if (builder == null)
+            if (targeter == null)
             {
                 return;
             }
 
             anyBuilder = true;
-            builder.CmdSetTarget(building);
+            targeter.CmdSetTarget(building.gameObject);
             unit.UnitMovement.CmdSetTask((int)Task.Build);
             unit.UnitMovement.CmdBuild();  
         }
@@ -404,7 +399,7 @@ public class CommandGiver : MonoBehaviour
 
         if (m_SelectionHandler.SelectedContainsTargeter())
         {
-            if (hit.collider.TryGetComponent(out Targetable target))
+            if (hit.collider.TryGetComponent(out InteractableGameEntity target))
             {
                 if (!target.hasAuthority)
                 {

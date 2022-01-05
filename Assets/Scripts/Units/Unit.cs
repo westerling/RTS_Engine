@@ -2,16 +2,12 @@
 using Mirror;
 using System;
 
-public class Unit : Targetable
+public class Unit : InteractableGameEntity
 {
     [SerializeField]
     private UnitMovement m_UnitMovement = null;
 
-    [SerializeField]
-    private Collector m_Collector = null;
-
-    [SerializeField]
-    private Builder m_Builder = null;
+    private float m_RotationSpeed = 1f;
 
     private StanceType m_Stance = StanceType.Defensive;
 
@@ -24,16 +20,6 @@ public class Unit : Targetable
     public UnitMovement UnitMovement
     {
         get { return m_UnitMovement; }
-    }
-
-    public Collector Collector
-    {
-        get { return m_Collector; }
-    }
-
-    public Builder Builder
-    {
-        get { return m_Builder; }
     }
 
     public StanceType Stance
@@ -75,17 +61,19 @@ public class Unit : Targetable
 
     public override void OnStartAuthority()
     {
+        base.OnStartAuthority();
+
         AuthorityOnUnitSpawned?.Invoke(this);
         SetFOVAvailability(true);
         Upgrade.AuthorityOnUpgradeAdded += AuthorityHandleUpgradeAdded;
     }
 
-    private void AuthorityHandleUpgradeAdded(Upgrade upgrade)
+    public virtual void AuthorityHandleUpgradeAdded(Upgrade upgrade)
     {
 
     }
 
-    private void ServerHandleUpgradeAdded(Upgrade obj)
+    public virtual void ServerHandleUpgradeAdded(Upgrade obj)
     {
 
     }
@@ -99,6 +87,15 @@ public class Unit : Targetable
 
         SetFOVAvailability(false);
         AuthorityOnUnitDespawned?.Invoke(this);
+    }
+
+    protected void RotateTowardsTarget(Vector3 target)
+    {
+        var targetRotation =
+            Quaternion.LookRotation(target - transform.position);
+
+        transform.rotation = Quaternion.RotateTowards(
+            transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
     }
 
     public override void Reaction(GameObject sender)

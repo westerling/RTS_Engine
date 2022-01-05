@@ -1,11 +1,11 @@
 ﻿using Mirror;
 using UnityEngine;
 
-public class DropOff : Building
+public class DropOff : Building, IDropOff
 {
     [SerializeField]
     private Resource m_Resource;
-
+    
     public Resource Resource
     {
         get { return m_Resource; }

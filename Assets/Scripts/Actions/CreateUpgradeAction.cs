@@ -1,31 +1,28 @@
-﻿using Mirror;
-using UnityEngine;
-using System;
+﻿using System;
 
 public class CreateUpgradeAction : ActionBehaviour
 {    
-    [SerializeField]
     private Upgrade m_Upgrade = null;
-
     private Spawner m_Spawner = null;
     private RtsPlayer m_Player;
 
-    private void Start()
+    public CreateUpgradeAction(RtsPlayer player, Upgrade upgrade, Spawner spawner, int position)
     {
-        m_Player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
-        m_Spawner = GetComponent<Spawner>();
+        m_Player = player;
+        m_Upgrade = upgrade;
+        m_Spawner = spawner;
 
-        PriorUpgrades = m_Upgrade.RequiredUpgrades;
-        Icon = m_Upgrade.Icon;
-        Id = m_Upgrade.Id;
-        Name = m_Upgrade.Name;
-        Description = m_Upgrade.Description;
+        Position = position;
+        PriorUpgrades = upgrade.RequiredUpgrades;
+        Icon = upgrade.Icon;
+        Id = upgrade.Id;
+        Name = upgrade.Name;
+        Description = upgrade.Description;
     }
 
     public override Action GetClickAction()
     {
         return delegate () {
-            //var stats = m_StatsManager.GetUpgradeStats(Id);
             var stats = m_Upgrade.GetComponent<LocalStats>().Stats;
             var resources = m_Player.GetResources();
 

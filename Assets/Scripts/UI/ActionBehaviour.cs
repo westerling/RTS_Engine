@@ -6,11 +6,9 @@ public abstract class ActionBehaviour : MonoBehaviour
 {
     public abstract Action GetClickAction();
 
-    [SerializeField]
-    private int m_Position;
-
     private List<int> m_PriorUpgrades = new List<int>();
     private Sprite m_Icon;
+    private int m_Position;
     private int m_Id = -1;
     private string m_EntityName;
     private string m_Description;

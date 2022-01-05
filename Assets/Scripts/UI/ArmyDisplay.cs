@@ -7,14 +7,18 @@ public class ArmyDisplay : MonoBehaviour
     public static ArmyDisplay Current;
 
     [SerializeField]
-    private List<Button> m_Buttons = new List<Button>();
-
-    [SerializeField]
     private GameObject m_ArmyPanel = null;
 
     [SerializeField]
     private SelectionHandler m_SelectionHandler = null;
 
+    [SerializeField]
+    private GameObject m_ButtonPrefab = null;
+
+    [SerializeField]
+    private Transform m_ParentTransform;
+
+    private List<GameObject> m_Buttons = new List<GameObject>();
     private List<Unit> m_UnitList = new List<Unit>();
 
 
@@ -32,38 +36,46 @@ public class ArmyDisplay : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < m_Buttons.Count; i++)
-        {
-            var index = i;
-            m_Buttons[index].onClick.AddListener(delegate ()
-            {
-                OnButtonClick(index);
-            }
-            );
-        }
         ClearButtons();
     }
 
     public void ClearButtons()
     {
-        foreach (var button in m_Buttons)
+        for (var i = m_Buttons.Count - 1; i >= 0; i--)
         {
-            button.gameObject.SetActive(false);
-            button.GetComponent<HealthDisplay>().RemoveListeners();
+            m_Buttons[i].GetComponent<HealthDisplay>().RemoveListeners();
+            Destroy(m_Buttons[i].gameObject);
+            m_Buttons.RemoveAt(i);
         }
-        m_UnitList.Clear();
+
+        for (var i = m_UnitList.Count - 1; i >= 0; i--)
+        {
+
+            m_UnitList.RemoveAt(i);
+        }
+
         m_ArmyPanel.SetActive(false);
     }
 
-    public void AddButton(Unit unit)
+    public void AddButtons(Unit[] unitList)
     {
-        var index = m_UnitList.Count;
-        m_Buttons[index].gameObject.SetActive(true);
-        m_Buttons[index].GetComponent<Image>().sprite = unit.Icon;
-        m_Buttons[index].GetComponent<HealthDisplay>().Health = unit.GetComponent<Health>();
-        m_Buttons[index].GetComponent<HealthDisplay>().SetupListeners();
+        for (var i = 0; i < unitList.Length; i++)
+        {
+            var go = Instantiate(m_ButtonPrefab, m_ParentTransform);
+            
+            go.name = unitList[i].Name + "_Button";
+            go.GetComponent<Image>().sprite = unitList[i].Icon;
+            go.GetComponent<HealthDisplay>().SetupListeners();
 
-        m_UnitList.Add(unit);
+            var button = go.GetComponent<Button>();
+            var n = i;
+
+            button.onClick.AddListener(() => OnButtonClick(n));
+
+            m_UnitList.Add(unitList[i]);
+            m_Buttons.Add(go);
+        }
+
         m_ArmyPanel.SetActive(true);
     }
 

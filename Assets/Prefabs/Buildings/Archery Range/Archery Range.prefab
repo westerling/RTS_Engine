@@ -215,8 +215,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 8, y: 3, z: 5}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!208 &3176061529906635542
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -279,6 +279,10 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   m_SpawnPoint: {fileID: 1947108729880634004}
+  m_Units:
+  - m_Position: 4
+    m_Object: {fileID: 3008740218697937497, guid: 69119fdb8b1a5ca43a00eff53293b591, type: 3}
+  m_Upgrades: []
 --- !u!114 &4741190181223067789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -304,6 +308,7 @@ MonoBehaviour:
   m_Size: 3
   m_Targeter: {fileID: 0}
   m_FieldOfView: {fileID: 2489880077466839888}
+  m_LocalStats: {fileID: 4915678159356355415}
   m_Health: {fileID: 2140595229544194780}
   m_BuildingPreview: {fileID: 3128475550081364578, guid: a1c0d6849bbfd3b4098fe49c69941538, type: 3}
   m_Construction: {fileID: 3630511121189281428}
@@ -370,8 +375,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c77c55cf2ad19114ebf33a02656249a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Position: 0
-  m_Unit: {fileID: 5625393431626882855, guid: 69119fdb8b1a5ca43a00eff53293b591, type: 3}
 --- !u!1 &8166035767102512558
 GameObject:
   m_ObjectHideFlags: 0

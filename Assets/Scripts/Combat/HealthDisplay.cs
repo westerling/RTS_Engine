@@ -1,12 +1,10 @@
-﻿using UnityEngine.UI;
+﻿using Mirror;
 using UnityEngine;
-using Mirror;
+using UnityEngine.UI;
 
 public class HealthDisplay : NetworkBehaviour
 {
-    [SerializeField]
-    private Image healthBarImage = null;
-
+    private Image m_HealthBarImage = null;
     private Health m_Health = null;
 
     public Health Health
@@ -17,9 +15,22 @@ public class HealthDisplay : NetworkBehaviour
 
     private void Awake()
     {
+        var symbolsManager = NetworkClient.connection.identity.GetComponent<SymbolsManager>();
+        var healthBar = Instantiate(symbolsManager.HealthBar, transform);
+        healthBar.transform.position = SetHeighth();
+
+        m_HealthBarImage = healthBar.GetComponent<HealthBar>().HealthBarImage;
         m_Health = GetComponent<Health>();
 
+
         SetupListeners();
+    }
+
+    private Vector3 SetHeighth()
+    {
+        //var height = GetComponent<Collider>().bounds.size.y;
+
+        return new Vector3(transform.position.x, transform.position.y + 4, transform.position.z);
     }
 
     private void OnDestroy()
@@ -55,6 +66,6 @@ public class HealthDisplay : NetworkBehaviour
     [ClientRpc]
     private void RpcHandleHealthChanged(int currentHealth, int maxHealth)
     {
-        healthBarImage.fillAmount = (float)currentHealth / maxHealth;
+        m_HealthBarImage.fillAmount = (float)currentHealth / maxHealth;
     }
 }

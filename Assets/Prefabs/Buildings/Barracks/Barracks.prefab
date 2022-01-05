@@ -249,6 +249,10 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   m_SpawnPoint: {fileID: 1947108729880634004}
+  m_Units:
+  - m_Position: 3
+    m_Object: {fileID: 6216821878503164428, guid: d62b307f9b473464b828d70b104a51f1, type: 3}
+  m_Upgrades: []
 --- !u!114 &4741190181223067789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,6 +279,7 @@ MonoBehaviour:
   m_Size: 3
   m_Targeter: {fileID: 0}
   m_FieldOfView: {fileID: 1428279524773624818}
+  m_LocalStats: {fileID: 0}
   m_Health: {fileID: 2140595229544194780}
   m_BuildingPreview: {fileID: 3128475550081364578, guid: a6f6813e21baf4e41ba6313aad1c0888, type: 3}
   m_Construction: {fileID: 4770769714693818099}
@@ -284,7 +289,6 @@ MonoBehaviour:
   m_DestructionStageOne: []
   m_DestructionStageTwo: []
   m_CanRotate: 0
-  m_IsStartupBuilding: 0
 --- !u!114 &3783630038247267299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,8 +345,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c77c55cf2ad19114ebf33a02656249a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Position: 0
-  m_Unit: {fileID: 5625393431626882855, guid: d62b307f9b473464b828d70b104a51f1, type: 3}
 --- !u!1 &4565621393463079485
 GameObject:
   m_ObjectHideFlags: 0

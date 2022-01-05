@@ -16,6 +16,9 @@ public class SelectionHandler : MonoBehaviour
     [SerializeField]
     private List<GameObject> m_Selected = new List<GameObject>();
 
+    [SerializeField]
+    private List<Sprite> m_Sprites = new List<Sprite>();
+
     private Vector2 startPosition;
     private RtsPlayer player;
     private Camera mainCamera;
@@ -134,7 +137,10 @@ public class SelectionHandler : MonoBehaviour
         {
             if (unit.TryGetComponent(out Targeter targeter))
             {
-                selectedList.Add(targeter.gameObject);
+                if (targeter.Attacker)
+                {
+                    selectedList.Add(unit.gameObject);
+                }
             }
         }
 
@@ -147,9 +153,12 @@ public class SelectionHandler : MonoBehaviour
 
         foreach (var unit in Selected)
         {
-            if (unit.TryGetComponent(out Builder builder))
+            if (unit.TryGetComponent(out Targeter targeter))
             {
-                selectedList.Add(builder.gameObject);
+                if (targeter.Builder)
+                {
+                    selectedList.Add(unit.gameObject);
+                }
             }
         }
 
@@ -162,9 +171,12 @@ public class SelectionHandler : MonoBehaviour
 
         foreach (var unit in Selected)
         {
-            if (unit.TryGetComponent(out Collector collector))
+            if (unit.TryGetComponent(out Targeter targeter))
             {
-                selectedList.Add(collector.gameObject);
+                if (targeter.Collector)
+                {
+                    selectedList.Add(unit.gameObject);
+                }
             }
         }
 
@@ -323,11 +335,15 @@ public class SelectionHandler : MonoBehaviour
                 }
             }
 
-            var unitBehaviours = selected.GetComponents<ActionBehaviour>();
-            
-            AddBehaviours(unitBehaviours);
-            
-
+            if (selected.TryGetComponent(out IBuilder builder))
+            {
+                CreateUnitBehaviours(builder.Buildings);
+            }
+            if (selected.TryGetComponent(out Spawner spawner))
+            {
+                CreateBuildingBehaviours(spawner.Units, spawner);
+                CreateBuildingBehaviours(spawner.Upgrades, spawner);
+            }
             return;
         }
 
@@ -335,25 +351,33 @@ public class SelectionHandler : MonoBehaviour
         {
             if (Utils.UnitsAreSameType(selectedList))
             {
-                var unitBehaviours = Selected[0].gameObject.GetComponents<ActionBehaviour>();
-                AddBehaviours(unitBehaviours);
+                if (Selected[0].gameObject.TryGetComponent(out IBuilder builder))
+                {
+                    CreateUnitBehaviours(builder.Buildings);
+                }
             }
 
-            foreach (var unit in Selected)
+            var unitList = new List<Unit>();
+
+            foreach (var go in Selected)
             {
-                AddArmyInformation(unit.gameObject.GetComponent<Unit>());
+                if (go.TryGetComponent(out Unit unit))
+                {
+                    unitList.Add(unit);
+                }
             }
-            return;
+
+            ArmyDisplay.Current.AddButtons(unitList.ToArray());
         }
-
-
-        var behaviours = Selected.Select(go => go.GetComponent<Unit>()).FirstOrDefault().gameObject.GetComponents<ActionBehaviour>();
-
-        AddBehaviours(behaviours);
     }
 
     private void AddBehaviours(ActionBehaviour[] behaviours)
     {
+        if (behaviours.Length <= 0)
+        {
+            return;
+        }
+
         var priorUpgrades = player.MyUpgrades;
         var buttonList = new List<ActionButton>();
 
@@ -381,13 +405,55 @@ public class SelectionHandler : MonoBehaviour
                 buttonList.Add(new ActionButton(behaviour.Icon, behaviour.Description, behaviour.GetClickAction(), behaviour.Position));
             }
         }
+
         ActionsDisplay.Current.FillButtons(buttonList);
         ActionsDisplay.Current.ResetPanels();
     }
 
-    private void AddArmyInformation(Unit unit)
+    private void CreateUnitBehaviours(CreateEntity[] entities)
     {
-        ArmyDisplay.Current.AddButton(unit);
+        var actionBehaviours = new List<ActionBehaviour>();
+
+        foreach (var entity in entities)
+        {
+            if (entity.Object.TryGetComponent(out Building building))
+            {
+                actionBehaviours.Add(new CreateBuildingAction(player, building, entity.Position));
+            }
+        }
+
+        if (actionBehaviours.Where(behaviour => behaviour.Position > 14).Any())
+        {
+            actionBehaviours.Add(new SwitchPanelsAction(m_Sprites[0], 14));
+            actionBehaviours.Add(new SwitchPanelsAction(m_Sprites[0], 29));
+        }
+
+        AddBehaviours(actionBehaviours.ToArray());
+    }
+
+    private void CreateBuildingBehaviours(CreateEntity[] entities, Spawner spawner)
+    {
+        var actionBehaviours = new List<ActionBehaviour>();
+
+        foreach (var entity in entities)
+        {
+            if (entity.Object.TryGetComponent(out Unit unit))
+            {
+                actionBehaviours.Add(new CreateUnitAction(player, unit, spawner, entity.Position));
+            }
+            if (entity.Object.TryGetComponent(out Upgrade upgrade))
+            {
+                actionBehaviours.Add(new CreateUpgradeAction(player, upgrade, spawner, entity.Position));
+            }
+        }
+
+        if (actionBehaviours.Where(behaviour => behaviour.Position > 14).Any())
+        {
+            actionBehaviours.Add(new SwitchPanelsAction(m_Sprites[0], 15));
+            actionBehaviours.Add(new SwitchPanelsAction(m_Sprites[0], 30));
+        }
+
+        AddBehaviours(actionBehaviours.ToArray());
     }
 
     private void AddSingleEntityInformation(GameObject go)

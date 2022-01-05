@@ -49,7 +49,7 @@ public class UnitProjectile : NetworkBehaviour
                 health.DealDamage((int)DamageToDeal, (int)AttackStyle.Pierce);
             }
 
-            if (other.TryGetComponent(out Targetable targetable))
+            if (other.TryGetComponent(out InteractableGameEntity targetable))
             {
                 targetable.Reaction(Sender);
             }

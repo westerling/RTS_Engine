@@ -1,25 +1,23 @@
-﻿using Mirror;
-using UnityEngine;
-using System;
+﻿using System;
 
 public class CreateUnitAction : ActionBehaviour
 {
-    [SerializeField]
     private Unit m_Unit = null;
-    
     private Spawner m_Spawner = null;
     private RtsPlayer m_Player;
 
-    private void Start()
+    public CreateUnitAction(RtsPlayer player, Unit unit, Spawner spawner, int position)
     {
-        m_Player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
-        m_Spawner = GetComponent<Spawner>();
+        m_Player = player;
+        m_Unit = unit;
+        m_Spawner = spawner;
 
-        PriorUpgrades = m_Unit.RequiredUpgrades;
-        Icon = m_Unit.Icon;
-        Id = m_Unit.Id;
-        Name = m_Unit.Name;
-        Description = m_Unit.Description;
+        Position = position;
+        PriorUpgrades = unit.RequiredUpgrades;
+        Icon = unit.Icon;
+        Id = unit.Id;
+        Name = unit.Name;
+        Description = unit.Description;
     }
 
     public override Action GetClickAction()

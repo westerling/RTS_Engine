@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class TargetFinder
 {
-    public static Targetable FindNewBuilding(RtsPlayer player, Transform transform)
+    public static InteractableGameEntity FindNewBuilding(RtsPlayer player, Transform transform)
     {
         var constructions = player.Constructions;
 
@@ -29,38 +29,59 @@ public static class TargetFinder
         return closestConstruction;
     }
 
-    public static Targetable FindNewEnemyUnit(Transform transform, float range)
+    public static InteractableGameEntity FindNewEnemyUnit(Transform transform, float range)
     {
-        var unitArray = GameObject.FindGameObjectsWithTag("Unit");
-        var unitList = new List<Targetable>();
+        var unitArray = GameObjectArray("Unit");
 
-        foreach (var unit in unitArray)
+        if (unitArray.Length > 0)
         {
-            if (unit.TryGetComponent(out Targetable targetable))
+            var unitList = GetClosestEntity(transform, range, unitArray);
+
+            unitList.Sort((go1, go2) => Vector3.Distance(transform.position, go1.transform.position).CompareTo(Vector3.Distance(transform.position, go2.transform.position)));
+
+            return unitList[0];
+        }
+        else
+        {
+            var buildingArray = GameObjectArray("Building");
+
+            if (buildingArray.Length > 0)
+            {
+                var buildingList = GetClosestEntity(transform, range, buildingArray);
+
+                buildingList.Sort((go1, go2) => Vector3.Distance(transform.position, go1.transform.position).CompareTo(Vector3.Distance(transform.position, go2.transform.position)));
+
+                return buildingList[0];
+            }
+        }
+
+        return null;
+    }
+
+    private static List<InteractableGameEntity> GetClosestEntity(Transform transform, float range, GameObject[] gameObjectArray)
+    {
+        var entityList = new List<InteractableGameEntity>();
+
+        foreach (var go in gameObjectArray)
+        {
+            if (go.TryGetComponent(out InteractableGameEntity targetable))
             {
                 if (!targetable.hasAuthority)
                 {
-                    if (Utils.IsCloseEnough(unit.GetComponent<Interactable>(), transform.position, range))
+                    if (Utils.IsCloseEnough(go.GetComponent<Interactable>(), transform.position, range))
                     {
-                        unitList.Add(targetable);
+                        entityList.Add(targetable);
                     }
                 }
             }
         }
 
-        if (unitList.Count == 0)
-        {
-            return null;
-        }
-
-        unitList.Sort((go1, go2) => Vector3.Distance(transform.position, go1.transform.position).CompareTo(Vector3.Distance(transform.position, go2.transform.position)));
-
-        return unitList[0];
+        return entityList;
     }
 
     public static Collectable FindNewResource(Transform transform, Resource currentResource)
     {
-        var resourceArray = GameObject.FindGameObjectsWithTag("Resource");
+        var resourceArray = GameObjectArray("Resource");
         var resourceList = new List<Collectable>();
 
         foreach (var go in resourceArray)
@@ -84,5 +105,63 @@ public static class TargetFinder
         return resourceList[0];
     }
 
-    public static 
+    public static InteractableGameEntity FindClosestDropoff(RtsPlayer player, Transform transform, Resource resource)
+    {
+        var dropOffList = new List<InteractableGameEntity>();
+
+        foreach (var building in player.DeployedBuildings)
+        {
+            if (!building.hasAuthority)
+            {
+                continue;
+            }
+
+            if (!building.BuildingIsCompleted)
+            {
+                continue;
+            }
+
+            if (building.TryGetComponent(out DropOff dropOff))
+            {
+                if (dropOff.Resource == resource)
+                {
+                    dropOffList.Add(dropOff);
+                    continue;
+                }
+            }
+            if (building.TryGetComponent(out TownCenter townCenter))
+            {
+                dropOffList.Add(townCenter);
+            }
+        }
+
+        if (dropOffList.Count == 0)
+        {
+            return null;
+        }
+
+        return GetClosestFromList(transform, dropOffList);
+    }
+
+    private static InteractableGameEntity GetClosestFromList(Transform transform, List<InteractableGameEntity> interactableList)
+    {
+        InteractableGameEntity closest = null;
+        var minDist = Mathf.Infinity;
+
+        foreach (var interactable in interactableList)
+        {
+            var dist = Vector3.Distance(interactable.transform.position, transform.position);
+            if (dist < minDist)
+            {
+                closest = interactable;
+                minDist = dist;
+            }
+        }
+        return closest;
+    }
+
+    private static GameObject[] GameObjectArray(string tag)
+    {
+        return GameObject.FindGameObjectsWithTag(tag);
+    }
 }

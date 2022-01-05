@@ -60,7 +60,8 @@ public enum EntityType
     Warship,
     Caravan,
     Upgrade,
-    Resource
+    Resource,
+    Mob
 }
 
 public enum Task

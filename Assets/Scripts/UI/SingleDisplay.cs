@@ -51,8 +51,7 @@ public class SingleDisplay : NetworkBehaviour
     private Image m_CompletionBar = null;
 
     private GameObject m_SelectedGameObject = null;
-    private Health m_Health = null;
-    private Collector m_Collector = null;
+
     private float progressImageVelocity;
 
     private void Awake()
@@ -87,26 +86,31 @@ public class SingleDisplay : NetworkBehaviour
         {
             b.gameObject.SetActive(false);
         }
+
+        if (m_SelectedGameObject == null)
+        {
+            return;
+        }
+
+        if(m_SelectedGameObject.TryGetComponent(out Health health))
+        {
+            health.EventHealthChanged -= RpcHandleHealthChanged;
+        }
+
+        if (m_SelectedGameObject.TryGetComponent(out ICollector collector))
+        {
+            collector.ResourceCollected -= HandleResourceCollected;
+        }
+
         m_SelectedGameObject = null;
         m_SinglePanel.SetActive(false);
-
-        if (m_Health == null)
-        {
-            return;
-        }
-
-        m_Health.EventHealthChanged -= RpcHandleHealthChanged;
-        
-        if (m_Collector is null)
-        {
-            return;
-        }
-        m_Collector.ResourceCollected -= HandleResourceCollected;
     }
 
     public void AddEntity(GameObject go)
     {
         m_SinglePanel.SetActive(true);
+        m_SelectedGameObject = go;
+
         if (go.TryGetComponent(out Building building))
         {
             UpdateBuildingInfo(building);
@@ -124,7 +128,11 @@ public class SingleDisplay : NetworkBehaviour
     private void UpdateBuildingInfo(Building building)
     {
         SetupBasicInfo(building.Icon, building.Name, building.GetComponent<Health>());
-        SetupHealth(building.GetComponent<Health>());
+        
+        if (building.TryGetComponent(out Health health))
+        {
+            health.EventHealthChanged += RpcHandleHealthChanged;
+        }
 
         if (building.TryGetComponent(out Spawner unitSpawner))
         {
@@ -148,39 +156,45 @@ public class SingleDisplay : NetworkBehaviour
     private void UpdateUnitInfo(Unit unit)
     {
         SetupBasicInfo(unit.Icon, unit.Name, unit.GetComponent<Health>());
-        SetupHealth(unit.GetComponent<Health>());
 
-        if (unit.TryGetComponent(out Collector collector))
+        if (unit.TryGetComponent(out Health health))
         {
-            SetupCollector(collector);
+            health.EventHealthChanged += RpcHandleHealthChanged;
         }
 
-        switch (unit.UnitMovement.Task)
+        if (unit.TryGetComponent(out ICollector collector))
         {
-            case Task.Collect:
-            case Task.Deliver:
-                m_ResourcePanel.SetActive(true);
-                UpdateResourceAmountText(unit.Collector.CarryingAmount);
-                switch (unit.Collector.Resource)
-                {
-                    case Resource.Food:
-                        m_NameText.text = "Forager";
-                        break;
-                    case Resource.Wood:
-                        m_NameText.text = "Lumberjack";
-                        break;
-                    case Resource.Stone:
-                        m_NameText.text = "Stone Miner";
-                        break;
-                    case Resource.Gold:
-                        m_NameText.text = "GoldMiner";
-                        break;
-                }
-                break;
-            default:
-                m_ResourcePanel.SetActive(false);
-                break;
+            collector.ResourceCollected += HandleResourceCollected;
+
+            switch (unit.UnitMovement.Task)
+            {
+                case Task.Collect:
+                case Task.Deliver:
+                    m_ResourcePanel.SetActive(true);
+                    UpdateResourceAmountText(collector.CarryingAmount);
+                    switch (collector.CurrentResource)
+                    {
+                        case Resource.Food:
+                            m_NameText.text = "Forager";
+                            break;
+                        case Resource.Wood:
+                            m_NameText.text = "Lumberjack";
+                            break;
+                        case Resource.Stone:
+                            m_NameText.text = "Stone Miner";
+                            break;
+                        case Resource.Gold:
+                            m_NameText.text = "GoldMiner";
+                            break;
+                    }
+                    break;
+            }
         }
+        else
+        {
+            m_ResourcePanel.SetActive(false);
+        }
+
         return;
     }
 
@@ -220,20 +234,6 @@ public class SingleDisplay : NetworkBehaviour
         m_Icon.sprite = icon;
         m_NameText.text = name;
         SetupHealth(health.CurrentHealth, health.MaxHealth);
-    }
-
-    private void SetupHealth(Health health)
-    {
-        m_Health = health;
-
-        health.EventHealthChanged += RpcHandleHealthChanged;
-    }
-
-    public void SetupCollector(Collector collector)
-    {
-        m_Collector = collector;
-
-        collector.ResourceCollected += HandleResourceCollected;
     }
 
     private void OnButtonClick(int index)

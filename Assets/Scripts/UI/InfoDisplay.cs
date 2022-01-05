@@ -61,22 +61,25 @@ public class InfoDisplay : NetworkBehaviour
         {
             case Task.Collect:
             case Task.Deliver:
-                m_ResourcePanel.SetActive(true);
-                m_ResourceAmountText.text = unit.Collector.CarryingAmount.ToString();
-                switch (unit.Collector.Resource)
+                if (unit.TryGetComponent(out ICollector collector))
                 {
-                    case Resource.Food:
-                        nameText.text = "Forager";
-                        break;
-                    case Resource.Wood:
-                        nameText.text = "Lumberjack";
-                        break;
-                    case Resource.Stone:
-                        nameText.text = "Stone Miner";
-                        break;
-                    case Resource.Gold:
-                        nameText.text = "GoldMiner";
-                        break;
+                    m_ResourcePanel.SetActive(true);
+                    m_ResourceAmountText.text = collector.CarryingAmount.ToString();
+                    switch (collector.CurrentResource)
+                    {
+                        case Resource.Food:
+                            nameText.text = "Forager";
+                            break;
+                        case Resource.Wood:
+                            nameText.text = "Lumberjack";
+                            break;
+                        case Resource.Stone:
+                            nameText.text = "Stone Miner";
+                            break;
+                        case Resource.Gold:
+                            nameText.text = "GoldMiner";
+                            break;
+                    }
                 }
                 break;
             default:

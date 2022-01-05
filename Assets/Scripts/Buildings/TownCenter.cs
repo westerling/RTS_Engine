@@ -1,12 +1,19 @@
 ﻿using Mirror;
-using UnityEngine;
 
-public class TownCenter : Building
+public class TownCenter : Building, IDropOff
 {
-    [Server]
-    public void Deliver(Resource resource, int amount)
+    private Resource m_Resource;
+
+    public Resource Resource 
     {
-        Player.SetResources((int)resource, amount);
+        get => m_Resource;
+        set => m_Resource = value;
+    }
+
+    [Server]
+    public void Deliver(int amount)
+    {
+        RpcDeliver(amount);
     }
 
     public override void OnStartAuthority()
@@ -20,4 +27,12 @@ public class TownCenter : Building
         base.OnStartServer();
         Health.SetHealth((int)LocalStats.Stats.GetAttributeAmount(AttributeType.HitPoints));
     }
+
+    #region Client
+    [ClientRpc]
+    public void RpcDeliver(int amount)
+    {
+        Player.CmdSetResources((int)Resource, amount);
+    }
+    #endregion
 }

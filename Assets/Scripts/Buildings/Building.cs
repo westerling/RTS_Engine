@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public class Building : Targetable
+public class Building : InteractableGameEntity
 {
     [SerializeField]
     private GameObject m_BuildingPreview;
@@ -29,7 +29,6 @@ public class Building : Targetable
 
     private List<Unit> m_Builders = new List<Unit>();
     private List<Unit> m_GarrisonUnits = new List<Unit>();
-    private RtsPlayer m_Player;
     private float m_BuildTimer = 0;
 
     public static event Action<Building> ServerOnConstructionStarted;
@@ -39,13 +38,7 @@ public class Building : Targetable
     public static event Action<Building> AuthorityOnConstructionStarted;
     public static event Action<Building> AuthorityOnBuildingCompleted;
     public static event Action<Building> AuthorityOnBuildingDespawned;
-
-    protected RtsPlayer Player
-    {
-        get => m_Player;
-        set => m_Player = value;
-    }
-
+    
     public bool BuildingIsCompleted
     {
         get => m_BuildingIsCompleted;
@@ -131,8 +124,6 @@ public class Building : Targetable
 
         GameOverHandler.ServerOnGameOver += ServerHandleGameOver;
         Health.EventHealthChanged += RpcHandleHealthChanged;
-
-        Player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
     }
 
     public override void OnStopServer()
@@ -167,6 +158,8 @@ public class Building : Targetable
     #region client
     public override void OnStartAuthority()
     {
+        base.OnStartAuthority();
+
         AuthorityOnConstructionStarted?.Invoke(this);
     }
 

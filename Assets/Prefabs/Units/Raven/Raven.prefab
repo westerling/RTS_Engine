@@ -239,11 +239,11 @@ GameObject:
   - component: {fileID: 5625393431626882853}
   - component: {fileID: 5625393431626882852}
   - component: {fileID: 5625393431626882855}
-  - component: {fileID: 7561474724332139977}
   - component: {fileID: 5625393431626882850}
   - component: {fileID: 5625393431626882861}
   - component: {fileID: 5625393431626882860}
   - component: {fileID: 4113998848718615834}
+  - component: {fileID: 504251478582317588}
   m_Layer: 10
   m_Name: Raven
   m_TagString: Untagged
@@ -352,10 +352,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  m_Agent: {fileID: 0}
+  m_Agent: {fileID: 5625393431626882853}
+  m_Unit: {fileID: 0}
   m_Targeter: {fileID: 0}
-  m_Collector: {fileID: 0}
-  m_Builder: {fileID: 0}
   m_Collider: {fileID: 0}
   m_Task: 0
 --- !u!114 &5625393431626882855
@@ -381,26 +380,12 @@ MonoBehaviour:
   m_AimAtPoint: {fileID: 0}
   m_Domain: 0
   m_Size: 0
-  m_Targeter: {fileID: 7561474724332139977}
+  m_Targeter: {fileID: 0}
   m_FieldOfView: {fileID: 0}
+  m_FieldOfViewCollider: {fileID: 0}
+  m_LocalStats: {fileID: 0}
   m_Health: {fileID: 5625393431626882850}
   m_UnitMovement: {fileID: 5625393431626882852}
-  m_Collector: {fileID: 0}
-  m_Builder: {fileID: 0}
---- !u!114 &7561474724332139977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5625393431626882863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ea6778d99562fa4d8017f3129eb71d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
 --- !u!114 &5625393431626882850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,6 +458,25 @@ MonoBehaviour:
       m_AttributeType: 20
     - m_Amount: 25
       m_AttributeType: 22
+--- !u!114 &504251478582317588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5625393431626882863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aaa9fd95434854448cf2ae4afcf5037, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  m_Attacker: 0
+  m_Collector: 0
+  m_Builder: 0
+  m_Target: {fileID: 0}
+  m_DropOff: {fileID: 0}
 --- !u!1001 &5625393429568382747
 PrefabInstance:
   m_ObjectHideFlags: 0

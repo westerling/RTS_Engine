@@ -5,7 +5,6 @@ using UnityEngine;
 public class Swordman : Unit, IGarrison, IAttack
 {
     private float m_Timer = 1;
-    private float m_RotationSpeed = 100f;
 
     [ServerCallback]
     private void Update()
@@ -18,6 +17,9 @@ public class Swordman : Unit, IGarrison, IAttack
                 break;
             case Task.Garrison:
                 StartCoroutine(Garrison());
+                break;
+            case Task.Idle:
+                StopAllCoroutines();
                 break;
         }
 
@@ -54,11 +56,13 @@ public class Swordman : Unit, IGarrison, IAttack
 
         if (target == null)
         {
+            ClientDebug("Target null");
             yield break;
         }
 
         if (!Utils.IsCloseEnough(target, transform.position, LocalStats.Stats.GetAttributeAmount(AttributeType.Range)))
         {
+            ClientDebug("Too far");
             yield break;
         }
 
@@ -66,9 +70,10 @@ public class Swordman : Unit, IGarrison, IAttack
 
         if (target.TryGetComponent(out Health health))
         {
+            ClientDebug("Attack: " + LocalStats.Stats.GetAttributeAmount(AttributeType.Attack));
             health.DealDamage((int)LocalStats.Stats.GetAttributeAmount(AttributeType.Attack), (int)AttackStyle.Melee);
 
-            if (target.TryGetComponent(out Targetable targetable))
+            if (target.TryGetComponent(out InteractableGameEntity targetable))
             {
                 targetable.Reaction(gameObject);
             }
@@ -77,12 +82,14 @@ public class Swordman : Unit, IGarrison, IAttack
 
     #endregion
 
-    private void RotateTowardsTarget(Vector3 target)
+    public void FindNewEnemy()
     {
-        var targetRotation =
-            Quaternion.LookRotation(target - transform.position);
+        if (Targeter.FindNewTarget(Task.Attack, LocalStats.Stats.GetAttributeAmount(AttributeType.LineOfSight)))
+        {
+            UnitMovement.Stop();
+            return;
+        }
 
-        transform.rotation = Quaternion.RotateTowards(
-            transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
+        UnitMovement.Attack();
     }
 }

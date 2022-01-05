@@ -3,26 +3,17 @@ using UnityEngine;
 
 public class EnterBuildingAction : ActionBehaviour
 {
-    [SerializeField]
-    private Sprite m_Sprite;
-
-    [SerializeField]
-    private SelectionHandler m_SelectionHandler = null;
-
-    private UnitMovement m_UnitMovement = null;
-    private bool m_IsSelected = false;
-
-    public bool IsSelected
+    public EnterBuildingAction(Sprite sprite, int position)
     {
-        get => m_IsSelected;
-        set => m_IsSelected = value;
+        Icon = sprite;
+        Position = position;
     }
 
     public override Action GetClickAction()
     {
         return delegate ()
         {
-            m_IsSelected = true;   
+            InputManager.Current.SetContext(GameContext.Garrison);
         };
     }
 }

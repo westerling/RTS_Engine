@@ -1,8 +1,8 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 using UnityEngine.AI;
-using Mirror;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UnitMovement : NetworkBehaviour
 {
@@ -10,16 +10,7 @@ public class UnitMovement : NetworkBehaviour
     private NavMeshAgent m_Agent = null;
 
     [SerializeField]
-    private Unit m_Unit = null;
-
-    [SerializeField]
     private Targeter m_Targeter = null;
-
-    [SerializeField]
-    private Collector m_Collector = null;
-
-    [SerializeField]
-    private Builder m_Builder = null;
 
     [SerializeField]
     private Collider m_Collider = null;
@@ -36,7 +27,7 @@ public class UnitMovement : NetworkBehaviour
     public Task Task
     {
         get => m_Task;
-        set => m_Task = value;
+        set => m_Task = value; 
     }
 
     public List<Vector3> MovementList
@@ -143,13 +134,8 @@ public class UnitMovement : NetworkBehaviour
     }
 
     [Server]
-    public void ServerMove(Vector3 position, bool autoMove = false, bool resetTargets = true)
+    public void ServerMove(Vector3 position, bool autoMove = false)
     {
-        if (resetTargets)
-        {
-            m_Targeter.ClearTarget();
-        }
-
         ClearMovementList();
 
         if (!NavMesh.SamplePosition(position, out NavMeshHit hit, 1f, NavMesh.AllAreas) && !autoMove)
@@ -197,9 +183,16 @@ public class UnitMovement : NetworkBehaviour
     }
 
     [Server]
+    public void Stop()
+    {
+        Task = Task.Idle;
+        m_Targeter.ClearTarget();
+    }
+
+    [Server]
     public void Deliver()
     {
-        var target = m_Collector.DeliveryPoint;
+        var target = m_Targeter.DropOff;
         if (target == null)
         {
             Task = Task.Idle;
@@ -217,7 +210,7 @@ public class UnitMovement : NetworkBehaviour
     [Server]
     public void Collect()
     {
-        var target = m_Collector.Target;
+        var target = m_Targeter.Target;
 
         if (target == null)
         {
@@ -236,7 +229,7 @@ public class UnitMovement : NetworkBehaviour
     [Server]
     public void Build()
     {
-        var target = m_Builder.Target;
+        var target = m_Targeter.Target;
 
         if (target == null)
         {
@@ -246,20 +239,17 @@ public class UnitMovement : NetworkBehaviour
 
         if (target.GetComponent<Health>().HasFullHealth())
         {
-            m_Builder.CmdClearTarget();
+            m_Targeter.CmdClearTarget();
             Task = Task.Idle;
         }
 
-        //if ((target.transform.position - transform.position).sqrMagnitude > 2f * 2f)
-        //{
-            m_Agent.stoppingDistance = Utils.GameObjectSize(target.GetComponent<Building>().Size);
-            Task = Task.Build;
-            ServerMove(target.transform.position, true);
-        //}
+        m_Agent.stoppingDistance = Utils.GameObjectSize(target.GetComponent<Building>().Size);
+        Task = Task.Build;
+        ServerMove(target.transform.position, true);
     }
 
     [Server]
-    public void Attack(bool resetTargets = false)
+    public void Attack()
     {
         var target = m_Targeter.Target;
         if (target == null)
@@ -274,16 +264,14 @@ public class UnitMovement : NetworkBehaviour
 
         Task = Task.Attack;
 
-        var stoppDist = range + targetSize;
-        ClientDebug("dist: " + stoppDist);
         m_Agent.stoppingDistance = range + targetSize;
-        ServerMove(target.transform.position, true, resetTargets);
+        ServerMove(target.transform.position, true);
     }
 
     [Server]
     public void Garrison()
     {
-        var target = m_Unit.Targeter.Target;
+        var target = m_Targeter.Target;
 
         if (target == null)
         {
@@ -301,7 +289,8 @@ public class UnitMovement : NetworkBehaviour
     private IEnumerator UpdateTargetPosition()
     {
         yield return new WaitUntil(() => m_Timer <= 0);
-        Attack(true);
+        
+        Attack();
     }
 
     #endregion

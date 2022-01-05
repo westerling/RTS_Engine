@@ -7,6 +7,12 @@ public class Spawner : NetworkBehaviour
     [SerializeField]
     private Transform m_SpawnPoint;
 
+    [SerializeField]
+    private CreateEntity[] m_Units;
+
+    [SerializeField]
+    private CreateEntity[] m_Upgrades;
+
     [SyncVar]
     private float m_ResearchTimer;
 
@@ -64,6 +70,16 @@ public class Spawner : NetworkBehaviour
     {
         get { return m_SpawnTime; }
         set { m_SpawnTime = value; }
+    }
+
+    public CreateEntity[] Upgrades
+    {
+        get => m_Upgrades;
+    }    
+    
+    public CreateEntity[] Units
+    {
+        get => m_Units;
     }
 
     #region server

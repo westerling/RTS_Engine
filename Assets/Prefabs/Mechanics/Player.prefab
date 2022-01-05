@@ -255,6 +255,7 @@ GameObject:
   - component: {fileID: 3077743320984597565}
   - component: {fileID: 2551487352683436195}
   - component: {fileID: 526081898847001329}
+  - component: {fileID: 7830540977571842238}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -340,7 +341,7 @@ MonoBehaviour:
   syncInterval: 0.1
   m_BuildingBlockLayer:
     serializedVersion: 2
-    m_Bits: 57360
+    m_Bits: 24592
   m_MainCameraTransform: {fileID: 4168616200082811779}
   m_Buildings:
   - {fileID: 4741190181223067789, guid: c9bfe6e2e84d1a9408c01fad5f137261, type: 3}
@@ -352,7 +353,7 @@ MonoBehaviour:
   - {fileID: 7998316973431361161, guid: 0d1e2cc5fcf2e4c40b39a2ea4c9dddac, type: 3}
   - {fileID: 4741190181223067789, guid: d9a4016577fbfc54b807a40285facd9f, type: 3}
   m_Units:
-  - {fileID: 5625393431626882855, guid: 69119fdb8b1a5ca43a00eff53293b591, type: 3}
+  - {fileID: 3008740218697937497, guid: 69119fdb8b1a5ca43a00eff53293b591, type: 3}
   - {fileID: 5625393431626882855, guid: e81f24a90b6159445994344ef216aeed, type: 3}
   - {fileID: 5625393431626882855, guid: b2a4f751ad407744aa5213d37f7983a5, type: 3}
   - {fileID: 6216821878503164428, guid: d62b307f9b473464b828d70b104a51f1, type: 3}
@@ -427,6 +428,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Controls: {fileID: 7921546310649256167}
+--- !u!114 &7830540977571842238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5443206140980447054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6728783fec79a434788c8806f1f91baf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HealthBar: {fileID: 958369871018399528, guid: e81489d06644678448ea8a909d815a81, type: 3}
 --- !u!1 &5822657093591046434
 GameObject:
   m_ObjectHideFlags: 0

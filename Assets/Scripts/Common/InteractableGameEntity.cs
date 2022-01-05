@@ -3,16 +3,13 @@ using UnityEngine;
 
 [RequireComponent(typeof(Health))]
 [RequireComponent(typeof(LocalStats))]
-public abstract class Targetable : Interactable
+public abstract class InteractableGameEntity : Interactable
 {
     [SerializeField]
     private Targeter m_Targeter = null;
 
     [SerializeField]
     private GameObject m_FieldOfView;
-
-    [SerializeField]
-    private Collider m_FieldOfViewCollider = null;
 
     [SerializeField]
     private LocalStats m_LocalStats;
@@ -23,12 +20,14 @@ public abstract class Targetable : Interactable
     private float m_FieldOfViewDistance = 10;
     private bool m_Pacifist = false;
 
+    private RtsPlayer m_Player;
+
     public abstract void Reaction(GameObject sender);
 
-    public Targeter Targeter
-    {
-        get => m_Targeter;
-        set => m_Targeter = value;
+    public Targeter Targeter 
+    { 
+        get => m_Targeter; 
+        set => m_Targeter = value; 
     }
 
     public LocalStats LocalStats
@@ -59,6 +58,25 @@ public abstract class Targetable : Interactable
         set => m_Health = value;
     }
 
+    public RtsPlayer Player 
+    { 
+        get => m_Player;
+        set => m_Player = value;
+    }
+
+    #region client
+
+    public override void OnStartAuthority()
+    {
+        Player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
+
+        var size = LocalStats.Stats.GetAttributeAmount(AttributeType.LineOfSight);
+
+        FieldOfView.transform.localScale += new Vector3(size, 0, size);
+    }
+    
+    #endregion
+
     #region server
 
     [Command]
@@ -67,7 +85,6 @@ public abstract class Targetable : Interactable
         ServerSetFov(enabled);
     }
 
-    [Server]
     public void ServerSetFov(bool enabled)
     {
         FieldOfView?.SetActive(enabled);
@@ -82,7 +99,7 @@ public abstract class Targetable : Interactable
     {
         Debug.Log("Hit");
 
-        if (other.TryGetComponent(out Targetable targetable))
+        if (other.TryGetComponent(out InteractableGameEntity targetable))
         {
             if (targetable.hasAuthority)
             {
@@ -97,7 +114,7 @@ public abstract class Targetable : Interactable
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.TryGetComponent(out Targetable targetable))
+        if (other.TryGetComponent(out InteractableGameEntity targetable))
         {
             if (targetable.hasAuthority)
             {

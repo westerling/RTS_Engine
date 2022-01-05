@@ -3,12 +3,10 @@ using UnityEngine;
 
 public class SwitchPanelsAction : ActionBehaviour
 {
-    [SerializeField]
-    private Sprite m_Sprite;
-
-    private void Start()
+    public SwitchPanelsAction(Sprite sprite, int position)
     {
-        Icon = m_Sprite;
+        Position = position;
+        Icon = sprite;
         Name = "Switch";
         Description = "Switch Page";
     }

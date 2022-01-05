@@ -3,4 +3,6 @@
 public interface IAttack 
 {
     IEnumerator Attack();
+
+    void FindNewEnemy();
 }

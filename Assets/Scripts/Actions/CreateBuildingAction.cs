@@ -1,25 +1,25 @@
-﻿using Mirror;
-using UnityEngine;
-using System;
+﻿using System;
 
 [Serializable]
 public class CreateBuildingAction : ActionBehaviour
 {
-    [SerializeField]
-    private Building m_Building = null;
 
+    private Building m_Building = null;
     private RtsPlayer m_Player;
 
-    private void Start()
+    public CreateBuildingAction(RtsPlayer player, Building building, int position)
     {
-        m_Player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
+        m_Player = player;
+        m_Building = building;
 
-        PriorUpgrades = m_Building.RequiredUpgrades;
-        Icon = m_Building.Icon;
-        Id = m_Building.Id;
-        Name = m_Building.Name;
-        Description = m_Building.Description;
+        Position = position;
+        PriorUpgrades = building.RequiredUpgrades;
+        Icon = building.Icon;
+        Id = building.Id;
+        Name = building.Name;
+        Description = building.Description;
     }
+
 
     public override Action GetClickAction()
     {

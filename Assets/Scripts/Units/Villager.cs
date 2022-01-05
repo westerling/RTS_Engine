@@ -1,17 +1,41 @@
 ﻿using Mirror;
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using System.Collections;
 
-public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
+public class Villager : Unit, IBuilder, ICollector, IDeliver, IGarrison, IAttack
 {
-    private float m_Timer = 1;
-    private float m_RotationSpeed = 1f;
+    [SerializeField]
+    private CreateEntity[] m_Buildings;
 
+    private float m_Timer = 1;
+    private int m_CarryingAmount;
+
+    private Resource m_CurrentResource;
+
+    public event Action<int> ResourceCollected;
+
+    public CreateEntity[] Buildings
+    {
+        get => m_Buildings;
+        set => m_Buildings = value;
+    }
+
+    public Resource CurrentResource
+    {
+        get => m_CurrentResource; 
+        set => m_CurrentResource = value;
+    }
+    
+    public int CarryingAmount 
+    { 
+        get => m_CarryingAmount; 
+        set => m_CarryingAmount = value;
+    }
+    
     [ServerCallback]
     private void Update()
     {
-
         switch (UnitMovement.Task)
         {
             case Task.Attack:
@@ -29,6 +53,9 @@ public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
             case Task.Garrison:
                 StartCoroutine(Garrison());
                 break;
+            case Task.Idle:
+                StopAllCoroutines();
+                break;
         }
         
         m_Timer -= Time.deltaTime;
@@ -36,6 +63,7 @@ public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
 
     #region tasks
 
+    [Server]
     public IEnumerator Garrison()
     {
         yield return new WaitUntil(() => m_Timer <= 0);
@@ -55,12 +83,13 @@ public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
         }
     }
 
+    [Server]
     public IEnumerator Collect()
     {
         yield return new WaitUntil(() => m_Timer <= 0);
         m_Timer = 1;
 
-        var target = Collector.Target;
+        var target = Targeter.Target;
 
         if (target == null)
         {
@@ -69,7 +98,7 @@ public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
 
         if (target.TryGetComponent(out Collectable collectable))
         {
-            if (Collector.CarryingAmountIsFull())
+            if (CarryingAmountIsFull())
             {
                 UnitMovement.Deliver();
                 yield break;
@@ -86,7 +115,7 @@ public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
                 yield break;
             }
 
-            var resourceType = target.Resource;
+            var resourceType = collectable.Resource;
 
             var collectPerSecond = 1f;
 
@@ -108,7 +137,7 @@ public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
 
             m_Timer = 1f / collectPerSecond;
 
-            Collector.AddResource(resourceType);
+            AddResource(resourceType);
 
             collectable.GatherResources(1);
 
@@ -116,56 +145,47 @@ public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
                 Quaternion.LookRotation(target.transform.position - transform.position);
 
             transform.rotation = Quaternion.RotateTowards(
-                transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
+                transform.rotation, targetRotation, 1f * Time.deltaTime);
         }
     }
 
+    [Server]
     public IEnumerator Deliver()
     {
         yield return new WaitUntil(() => m_Timer <= 0);
         m_Timer = 1;
 
-        var deliveryPoint = Collector.DeliveryPoint;
+        var interactable = Targeter.DropOff;
 
-        if (deliveryPoint == null)
+        if (interactable == null)
         {
             yield break;
         }
 
-        if (deliveryPoint.TryGetComponent(out DropOff dropOff))
+        if (interactable.TryGetComponent(out IDropOff dropOff))
         {
 
-            if (!Utils.IsCloseEnough(dropOff, transform.position))
+            if (!Utils.IsCloseEnough(interactable, transform.position))
             {
                 yield break;
             }
 
-            dropOff.Deliver(Collector.CarryingAmount);
-            ResetCollector();
-        }
-        if (deliveryPoint.TryGetComponent(out TownCenter townCenter))
-        {
-
-            if (!Utils.IsCloseEnough(townCenter, transform.position))
-            {
-                yield break;
-            }
-
-            townCenter.Deliver(Collector.Resource, Collector.CarryingAmount);
+            dropOff.Deliver(CarryingAmount);
             ResetCollector();
         }
     }
 
+    [Server]
     public IEnumerator Build()
     {
         yield return new WaitUntil(() => m_Timer <= 0);
         m_Timer = 1;
 
-        var target = Builder.Target;
+        var target = Targeter.Target;
 
         if (target == null)
         {
-            SetNewTarget();
+            FindNewBuilding();
             yield break;
         }
 
@@ -185,21 +205,20 @@ public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
 
             if (building.BuildingIsCompleted)
             {
-                var player = NetworkClient.connection.identity.GetComponent<RtsPlayer>();
                 var cost = building.GetCostForRepairing();
 
-                if (Utils.CanAfford(player.GetResources(), cost))
+                if (Utils.CanAfford(Player.GetResources(), cost))
                 {
                     foreach (var resource in cost)
                     {
-                        player.CmdSetResources((int)resource.Key, -resource.Value);
+                        Player.CmdSetResources((int)resource.Key, -resource.Value);
                     }
                 }
             }
 
             RotateTowardsTarget(target.transform.position);
 
-            var amount = target.GetRepairAmountPerBuilder();
+            var amount = building.GetRepairAmountPerBuilder();
 
             if (target.TryGetComponent(out Health health))
             {
@@ -208,12 +227,13 @@ public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
 
                 if (health.HasFullHealth())
                 {
-                    SetNewTarget();
+                    FindNewBuilding();
                 }
             }
         }
     }
 
+    [Server]
     public IEnumerator Attack()
     {
         yield return new WaitUntil(() => m_Timer <= 0);
@@ -223,12 +243,12 @@ public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
 
         if (target == null)
         {
+            FindNewEnemy();
             yield break;
         }
 
         if (!Utils.IsCloseEnough(target, transform.position, LocalStats.Stats.GetAttributeAmount(AttributeType.Range)))
         {
-            ClientDebug("not close enough");
             yield break;
         }
 
@@ -238,9 +258,8 @@ public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
         {
             health.DealDamage((int)LocalStats.Stats.GetAttributeAmount(AttributeType.Attack), (int)AttackStyle.Melee);
 
-            if (target.TryGetComponent(out Targetable targetable))
+            if (target.TryGetComponent(out InteractableGameEntity targetable))
             {
-                ClientDebug("Fuck yeah");
                 targetable.Reaction(gameObject);
             }
         }
@@ -250,51 +269,73 @@ public class Villager : Unit, IBuild, ICollect, IDeliver, IGarrison, IAttack
 
     public void ResetCollector()
     {
-        Collector.CarryingAmount = 0;
+        CarryingAmount = 0;
         UnitMovement.Collect();
     }
 
     public void FindNewResource(Resource currentResource)
     {
-        var resourceArray = GameObject.FindGameObjectsWithTag("Resource");
-        var resourceList = new List<GameObject>();
-
-        foreach (var resource in resourceArray)
+        if (Targeter.FindNewTarget(Task.Collect, currentResource))
         {
-            if (resource.GetComponent<Collectable>().Resource == currentResource)
-            {
-                resourceList.Add(resource);
-            }
+            UnitMovement.Stop();
+            return;
         }
 
-        resourceList.Sort((go1, go2) => Vector3.Distance(transform.position, go1.transform.position).CompareTo(Vector3.Distance(transform.position, go2.transform.position)));
+        UnitMovement.Collect();
     }
 
-    public void SetNewTarget()
+    public void FindNewBuilding()
     {
-        Builder.FindNewTarget();
-        ResetBuilder();
-    }
+        if (Targeter.FindNewTarget(Task.Build))
+        {
+            UnitMovement.Stop();
+            return;
+        }
 
-    private void RotateTowardsTarget(Vector3 target)
-    {
-        var targetRotation =
-            Quaternion.LookRotation(target - transform.position);
-
-        transform.rotation = Quaternion.RotateTowards(
-            transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
-    }
-
-    public void ResetBuilder()
-    {
         UnitMovement.Build();
     }
+
+    public void FindNewEnemy()
+    {
+        if (Targeter.FindNewTarget(Task.Attack, LocalStats.Stats.GetAttributeAmount(AttributeType.LineOfSight)))
+        {
+            UnitMovement.Stop();
+            return;
+        }
+
+        UnitMovement.Attack();
+    }
+
+    public override void AuthorityHandleUpgradeAdded(Upgrade upgrade)
+    {
+        base.AuthorityHandleUpgradeAdded(upgrade);
+    }
+
 
     #region Client
     [ClientRpc]
     public void RpcAddBuilder(Building building, Unit unit)
     {
         building.AddBuilder(unit);
+    }
+
+    public bool CarryingAmountIsFull()
+    {
+        return CarryingAmount >= (int)LocalStats.Stats.GetAttributeAmount(AttributeType.CarryCapacity);
+    }
+
+    public void AddResource(Resource resource)
+    {
+        if (resource == CurrentResource)
+        {
+            CarryingAmount++;
+        }
+        else
+        {
+            CarryingAmount = 1;
+        }
+
+        CurrentResource = resource;
     }
     #endregion
 }

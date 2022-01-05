@@ -365,12 +365,11 @@ GameObject:
   - component: {fileID: 5625393431626882853}
   - component: {fileID: 5625393431626882852}
   - component: {fileID: 6216821878503164428}
-  - component: {fileID: 5625393431626882849}
   - component: {fileID: 5625393431626882850}
   - component: {fileID: 5625393431626882861}
   - component: {fileID: 5625393431626882860}
-  - component: {fileID: -8213659595757276869}
   - component: {fileID: 1964583543101722852}
+  - component: {fileID: 2880876654824023484}
   m_Layer: 10
   m_Name: Swordsman
   m_TagString: Untagged
@@ -482,11 +481,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   m_Agent: {fileID: 5625393431626882853}
-  m_Unit: {fileID: 0}
-  m_Targeter: {fileID: 5625393431626882849}
-  m_Collector: {fileID: 0}
-  m_Builder: {fileID: 0}
-  m_Collider: {fileID: 0}
+  m_Targeter: {fileID: 2880876654824023484}
+  m_Collider: {fileID: 5625393431626882906}
   m_Task: 0
 --- !u!114 &6216821878503164428
 MonoBehaviour:
@@ -511,28 +507,11 @@ MonoBehaviour:
   m_AimAtPoint: {fileID: 5625393429823358727}
   m_Domain: 0
   m_Size: 0
-  m_Targeter: {fileID: 5625393431626882849}
+  m_Targeter: {fileID: 2880876654824023484}
   m_FieldOfView: {fileID: 1191439191515404161}
-  m_FieldOfViewCollider: {fileID: 4038385679532373371}
   m_LocalStats: {fileID: 1964583543101722852}
   m_Health: {fileID: 5625393431626882850}
   m_UnitMovement: {fileID: 5625393431626882852}
-  m_Collector: {fileID: 0}
-  m_Builder: {fileID: 0}
---- !u!114 &5625393431626882849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5625393431626882863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ea6778d99562fa4d8017f3129eb71d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
 --- !u!114 &5625393431626882850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -581,20 +560,6 @@ MonoBehaviour:
   colorRenderers:
   - {fileID: 5625393429516528530}
   - {fileID: 5625393431119421790}
---- !u!114 &-8213659595757276869
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5625393431626882863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56f85b58f02075b4ebfdcf98698addc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
 --- !u!114 &1964583543101722852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -611,7 +576,7 @@ MonoBehaviour:
     m_Attributes:
     - m_Amount: 30
       m_AttributeType: 1
-    - m_Amount: 1
+    - m_Amount: 10
       m_AttributeType: 0
     - m_Amount: 2
       m_AttributeType: 6
@@ -631,6 +596,25 @@ MonoBehaviour:
       m_AttributeType: 24
     - m_Amount: 45
       m_AttributeType: 21
+--- !u!114 &2880876654824023484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5625393431626882863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aaa9fd95434854448cf2ae4afcf5037, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  m_Attacker: 1
+  m_Collector: 0
+  m_Builder: 0
+  m_Target: {fileID: 0}
+  m_DropOff: {fileID: 0}
 --- !u!1001 &5391301910399147485
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -696,11 +680,6 @@ GameObject:
 --- !u!4 &3015941521311827673 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7136804976493157124, guid: f2d21e0112a4d1a48b1c03b1ee6ebabc, type: 3}
-  m_PrefabInstance: {fileID: 5391301910399147485}
-  m_PrefabAsset: {fileID: 0}
---- !u!136 &4038385679532373371 stripped
-CapsuleCollider:
-  m_CorrespondingSourceObject: {fileID: 8276203126578800806, guid: f2d21e0112a4d1a48b1c03b1ee6ebabc, type: 3}
   m_PrefabInstance: {fileID: 5391301910399147485}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5625393429568382747

@@ -11,7 +11,6 @@ public class BowMan : Unit, IGarrison, IAttack
     private Transform m_ProjectileSpawnPoint = null;
 
     private float m_Timer = 1;
-    private float m_RotationSpeed = 20f;
 
     [ServerCallback]
     private void Update()
@@ -25,6 +24,9 @@ public class BowMan : Unit, IGarrison, IAttack
             case Task.Garrison:
                 StartCoroutine(Garrison());
                 break;
+            case Task.Idle:
+                StopAllCoroutines();
+                break;
         }
 
         m_Timer -= Time.deltaTime;
@@ -32,6 +34,7 @@ public class BowMan : Unit, IGarrison, IAttack
 
     #region tasks
 
+    [Server]
     public IEnumerator Garrison()
     {
         yield return new WaitUntil(() => m_Timer <= 0);
@@ -51,6 +54,7 @@ public class BowMan : Unit, IGarrison, IAttack
         }
     }
 
+    [Server]
     public IEnumerator Attack()
     {
         yield return new WaitUntil(() => m_Timer <= 0);
@@ -60,11 +64,14 @@ public class BowMan : Unit, IGarrison, IAttack
 
         if (target == null)
         {
+            FindNewEnemy();
+            ClientDebug("Target null");
             yield break;
         }
 
         if (!(Utils.IsCloseEnough(target,transform.position, LocalStats.Stats.GetAttributeAmount(AttributeType.Range))))
         {
+            ClientDebug("Too far");
             yield break;
         }
 
@@ -75,20 +82,26 @@ public class BowMan : Unit, IGarrison, IAttack
 
         var projectileInstance = Instantiate(m_Projectile, m_ProjectileSpawnPoint.position, projectileRotation);
 
-        m_Projectile.GetComponent<UnitProjectile>().DamageToDeal = LocalStats.Stats.GetAttributeAmount(AttributeType.Attack);
-        m_Projectile.GetComponent<UnitProjectile>().Sender = gameObject;
+        var unitProjectile = m_Projectile.GetComponent<UnitProjectile>();
+
+        unitProjectile.DamageToDeal = LocalStats.Stats.GetAttributeAmount(AttributeType.Attack);
+        unitProjectile.Sender = gameObject;
 
         NetworkServer.Spawn(projectileInstance, connectionToClient);
+
+        ClientDebug("Shoot the fucker");
     }
 
     #endregion
 
-    private void RotateTowardsTarget(Vector3 target)
+    public void FindNewEnemy()
     {
-        var targetRotation =
-            Quaternion.LookRotation(target - transform.position);
+        if (Targeter.FindNewTarget(Task.Attack, LocalStats.Stats.GetAttributeAmount(AttributeType.LineOfSight)))
+        {
+            UnitMovement.Stop();
+            return;
+        }
 
-        transform.rotation = Quaternion.RotateTowards(
-            transform.rotation, targetRotation, m_RotationSpeed * Time.deltaTime);
+        UnitMovement.Attack();
     }
 }
