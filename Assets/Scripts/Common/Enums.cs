@@ -99,6 +99,7 @@ public enum AttributeType
     Population,
     Farmer,
     Forager,
+    Sheppard,
     GoldMiner,
     Hunter,
     Lumberjack,

@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using Mirror;
+using UnityEngine;
 
-public class Collectable : Interactable
+public class Collectable : Interactable, IResource
 {
     [SerializeField]
     private Resource m_Resource;
 
     [SerializeField]
-    private bool isInfinite = false;
+    private bool m_IsInfinite = false;
 
     [SerializeField]
     private int m_Quantity = 100;
@@ -19,6 +20,17 @@ public class Collectable : Interactable
         get => m_Resource;
     }
 
+    public int Quantity
+    {
+        get => m_Quantity;
+        set => m_Quantity = value;
+    }
+
+    public bool IsInfinite
+    {
+        get => m_IsInfinite;
+    }
+
     public int CurrentGatherers
     {
         get => m_CurrentGatherers;
@@ -29,16 +41,12 @@ public class Collectable : Interactable
         get => m_MaxGatherers;    
     }
 
-    public int Quantity
+    public bool CanGather
     {
-        get => m_Quantity;
+        get { return IsInfinite || Quantity > 0; }
     }
 
-    public bool CanGather()
-    {
-        return isInfinite || Quantity > 0;
-    }
-
+    [Server]
     public bool GatherResources(int gatherAmount)
     {
         if (gatherAmount > m_Quantity)

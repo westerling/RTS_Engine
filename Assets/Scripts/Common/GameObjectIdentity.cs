@@ -52,6 +52,11 @@ public class GameObjectIdentity : NetworkBehaviour
         get { return m_RequiredUpgrades; }
     }
 
+    protected void DestroyThisOnServer()
+    {
+        NetworkServer.Destroy(gameObject);
+    }
+
     [ClientRpc]
     public void ClientDebug(string message)
     {

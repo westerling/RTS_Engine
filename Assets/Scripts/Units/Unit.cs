@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using Mirror;
 using System;
+using Mirror;
 
 public class Unit : InteractableGameEntity
 {
@@ -32,27 +32,24 @@ public class Unit : InteractableGameEntity
 
     public override void OnStartServer()
     {
-        ServerOnUnitSpawned?.Invoke(this);
-        Health.ServerOnDie += ServerHandleDie;
-        Upgrade.ServerOnUpgradeAdded += ServerHandleUpgradeAdded;
-
-        if (hasAuthority)
+        if (!hasAuthority)
         {
-            SetFOVAvailability(true);
+            return;
         }
+            base.OnStartServer();
+
+        ServerOnUnitSpawned?.Invoke(this);
+        Upgrade.ServerOnUpgradeAdded += ServerHandleUpgradeAdded;
+        SetFOVAvailability(true);
+        
     }
 
     public override void OnStopServer()
     {
-        ServerOnUnitDespawned?.Invoke(this);
-        SetFOVAvailability(false);
-        Health.ServerOnDie -= ServerHandleDie;
-    }
+        base.OnStopServer();
 
-    [Server]
-    private void ServerHandleDie()
-    {
-        NetworkServer.Destroy(gameObject);
+        //ServerOnUnitDespawned?.Invoke(this);
+        //SetFOVAvailability(false);
     }
 
     #endregion
@@ -132,6 +129,14 @@ public class Unit : InteractableGameEntity
             UnitMovement.SetTask((int)Task.Attack);
             UnitMovement.Attack();
         }
+    }
+
+    public override void ServerHandleDie()
+    {
+        ServerOnUnitDespawned?.Invoke(this);
+        SetFOVAvailability(false);
+
+        DestroyThisOnServer();
     }
 
     #endregion

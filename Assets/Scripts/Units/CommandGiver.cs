@@ -72,6 +72,13 @@ public class CommandGiver : MonoBehaviour
         {
             if (!target.hasAuthority)
             {
+                if (target.TryGetComponent(out Health health))
+                {
+                    if (health.CurrentHealth <= 0)
+                    {
+                        TryCollect(target);
+                    }
+                }
                 TryTarget(target);
                 return;
             }
@@ -117,7 +124,7 @@ public class CommandGiver : MonoBehaviour
             }
         }
 
-        if (hit.collider.TryGetComponent(out Collectable resource))
+        if (hit.collider.TryGetComponent(out IResource resource))
         {
             TryCollect(resource);
             return;
@@ -237,7 +244,7 @@ public class CommandGiver : MonoBehaviour
         m_CursorManager.Flashtarget(target.gameObject);
     }
 
-    private void TryCollect(Collectable resource)
+    private void TryCollect(IResource resource)
     {
         var unitList = m_SelectionHandler.Selected.Select(go => go.GetComponent<Unit>()).ToList();
 

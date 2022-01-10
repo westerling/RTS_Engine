@@ -22,13 +22,12 @@ public class HealthDisplay : NetworkBehaviour
         m_HealthBarImage = healthBar.GetComponent<HealthBar>().HealthBarImage;
         m_Health = GetComponent<Health>();
 
-
         SetupListeners();
     }
 
     private Vector3 SetHeighth()
     {
-        //var height = GetComponent<Collider>().bounds.size.y;
+        var height = GetComponent<Collider>().bounds.size.y;
 
         return new Vector3(transform.position.x, transform.position.y + 4, transform.position.z);
     }

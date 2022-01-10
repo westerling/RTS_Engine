@@ -56,13 +56,11 @@ public class Swordman : Unit, IGarrison, IAttack
 
         if (target == null)
         {
-            ClientDebug("Target null");
             yield break;
         }
 
         if (!Utils.IsCloseEnough(target, transform.position, LocalStats.Stats.GetAttributeAmount(AttributeType.Range)))
         {
-            ClientDebug("Too far");
             yield break;
         }
 
@@ -70,12 +68,15 @@ public class Swordman : Unit, IGarrison, IAttack
 
         if (target.TryGetComponent(out Health health))
         {
-            ClientDebug("Attack: " + LocalStats.Stats.GetAttributeAmount(AttributeType.Attack));
             health.DealDamage((int)LocalStats.Stats.GetAttributeAmount(AttributeType.Attack), (int)AttackStyle.Melee);
 
             if (target.TryGetComponent(out InteractableGameEntity targetable))
             {
                 targetable.Reaction(gameObject);
+            }
+            if (target.TryGetComponent(out Interactable interactable))
+            {
+                interactable.RpcStartHitParticles(transform);
             }
         }
     }

@@ -96,7 +96,7 @@ public class Villager : Unit, IBuilder, ICollector, IDeliver, IGarrison, IAttack
             yield break;
         }
 
-        if (target.TryGetComponent(out Collectable collectable))
+        if (target.TryGetComponent(out IResource resource))
         {
             if (CarryingAmountIsFull())
             {
@@ -109,20 +109,39 @@ public class Villager : Unit, IBuilder, ICollector, IDeliver, IGarrison, IAttack
                 yield break;
             }
 
-            if (!collectable.CanGather())
+            if (!resource.CanGather)
             {
-                FindNewResource(collectable.Resource);
+                FindNewResource(resource.Resource);
                 yield break;
             }
 
-            var resourceType = collectable.Resource;
+            var resourceType = resource.Resource;
 
             var collectPerSecond = 1f;
 
             switch (resourceType)
             {
                 case Resource.Food:
-                    collectPerSecond = LocalStats.Stats.GetAttributeAmount(AttributeType.Farmer);
+                    if (TryGetComponent(out IFoodResource foodResource))
+                    {
+                        switch (foodResource.FoodType)
+                        {
+                            case FoodType.Farm:
+                                collectPerSecond = LocalStats.Stats.GetAttributeAmount(AttributeType.Farmer);
+                                break;
+                            case FoodType.Forage:
+                                collectPerSecond = LocalStats.Stats.GetAttributeAmount(AttributeType.Forager);
+                                break;
+                            case FoodType.Wild:
+                                collectPerSecond = LocalStats.Stats.GetAttributeAmount(AttributeType.Hunter);
+                                break;
+                            case FoodType.Domested:
+                                collectPerSecond = LocalStats.Stats.GetAttributeAmount(AttributeType.Sheppard);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                     break;
                 case Resource.Gold:
                     collectPerSecond = LocalStats.Stats.GetAttributeAmount(AttributeType.GoldMiner);
@@ -139,13 +158,18 @@ public class Villager : Unit, IBuilder, ICollector, IDeliver, IGarrison, IAttack
 
             AddResource(resourceType);
 
-            collectable.GatherResources(1);
+            resource.GatherResources(1);
 
             var targetRotation =
                 Quaternion.LookRotation(target.transform.position - transform.position);
 
             transform.rotation = Quaternion.RotateTowards(
                 transform.rotation, targetRotation, 1f * Time.deltaTime);
+
+            if (target.TryGetComponent(out Interactable interactable))
+            {
+                interactable.RpcStartHitParticles(transform);
+            }
         }
     }
 
@@ -257,6 +281,15 @@ public class Villager : Unit, IBuilder, ICollector, IDeliver, IGarrison, IAttack
         if (target.TryGetComponent(out Health health))
         {
             health.DealDamage((int)LocalStats.Stats.GetAttributeAmount(AttributeType.Attack), (int)AttackStyle.Melee);
+
+            if (health.CurrentHealth <= 0)
+            {
+                if (target.TryGetComponent(out IResource resource))
+                {
+                    UnitMovement.Collect();
+                    Targeter.SetTarget(target.gameObject);
+                }
+            }
 
             if (target.TryGetComponent(out InteractableGameEntity targetable))
             {

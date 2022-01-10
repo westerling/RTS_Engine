@@ -101,11 +101,12 @@ MonoBehaviour:
   m_EntityName: Tree
   m_Description: This is a tree.
   m_RequiredUpgrades: 
-  m_AimAtPoint: {fileID: 0}
+  m_AimAtPoint: {fileID: 7288979849431563083}
   m_Domain: 0
   m_Size: 1
+  m_HitEffect: {fileID: 7872507731347193340, guid: 3ab7386b5127fc74ea78cd7a58390a24, type: 3}
   m_Resource: 0
-  isInfinite: 0
+  m_IsInfinite: 0
   m_Quantity: 100
 --- !u!1001 &6527221208028211226
 PrefabInstance:

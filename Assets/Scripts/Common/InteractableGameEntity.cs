@@ -24,6 +24,8 @@ public abstract class InteractableGameEntity : Interactable
 
     public abstract void Reaction(GameObject sender);
 
+    public abstract void ServerHandleDie();
+
     public Targeter Targeter 
     { 
         get => m_Targeter; 
@@ -74,10 +76,20 @@ public abstract class InteractableGameEntity : Interactable
 
         FieldOfView.transform.localScale += new Vector3(size, 0, size);
     }
-    
+
     #endregion
 
     #region server
+
+    public override void OnStartServer()
+    {
+        Health.ServerOnDie += ServerHandleDie;
+    }
+
+    public override void OnStopServer()
+    {
+        Health.ServerOnDie -= ServerHandleDie;
+    }
 
     [Command]
     public void CmdSetFOVAvailability(bool enabled)
@@ -97,8 +109,6 @@ public abstract class InteractableGameEntity : Interactable
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Hit");
-
         if (other.TryGetComponent(out InteractableGameEntity targetable))
         {
             if (targetable.hasAuthority)

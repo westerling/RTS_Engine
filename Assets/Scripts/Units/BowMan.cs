@@ -88,8 +88,6 @@ public class BowMan : Unit, IGarrison, IAttack
         unitProjectile.Sender = gameObject;
 
         NetworkServer.Spawn(projectileInstance, connectionToClient);
-
-        ClientDebug("Shoot the fucker");
     }
 
     #endregion

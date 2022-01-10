@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 2479201374444680531}
   - component: {fileID: 2479201374444680535}
   - component: {fileID: 2479201374444680530}
-  - component: {fileID: 2479201374444680525}
+  - component: {fileID: 3618229026604353965}
   - component: {fileID: 6870355439499933793}
   m_Layer: 10
   m_Name: Pig
@@ -82,7 +82,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 1, z: 1}
+  m_Size: {x: 1, y: 1, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!195 &2479201374444680529
 NavMeshAgent:
@@ -170,13 +170,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Stats:
     m_Attributes:
-    - m_Amount: 50
+    - m_Amount: 5
       m_AttributeType: 1
     - m_Amount: 1
       m_AttributeType: 2
     - m_Amount: 1
       m_AttributeType: 7
---- !u!114 &2479201374444680525
+--- !u!114 &3618229026604353965
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -185,7 +185,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2479201374444680527}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45f8adb20963e0e46adeec1e1cb8a212, type: 3}
+  m_Script: {fileID: 11500000, guid: c93441d0bb0f64b419347076a96deddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
@@ -199,11 +199,17 @@ MonoBehaviour:
   m_AimAtPoint: {fileID: 2479201374022062880}
   m_Domain: 0
   m_Size: 1
+  m_HitEffect: {fileID: 7872507731347193340, guid: f43d8fceefa4a2a4896990ee6f381c97, type: 3}
   m_Targeter: {fileID: 0}
   m_FieldOfView: {fileID: 8664630634219221399}
   m_LocalStats: {fileID: 2479201374444680530}
   m_Health: {fileID: 2479201374444680531}
   m_UnitMovement: {fileID: 2479201374444680535}
+  m_FoodType: 0
+  m_IsInfinite: 0
+  m_Quantity: 100
+  m_DisableOnDeath:
+  - {fileID: 0}
 --- !u!114 &6870355439499933793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,7 +224,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  m_HealthBar: {fileID: 958369871018399528, guid: e81489d06644678448ea8a909d815a81, type: 3}
 --- !u!1 &2479201375006512141
 GameObject:
   m_ObjectHideFlags: 0
@@ -247,7 +252,7 @@ Transform:
   m_GameObject: {fileID: 2479201375006512141}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 2}
   m_Children: []
   m_Father: {fileID: 2479201374444680524}
   m_RootOrder: 0

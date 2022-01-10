@@ -43,7 +43,7 @@ public class ArmyDisplay : MonoBehaviour
     {
         for (var i = m_Buttons.Count - 1; i >= 0; i--)
         {
-            m_Buttons[i].GetComponent<HealthDisplay>().RemoveListeners();
+            m_Buttons[i].GetComponent<UIHealthDisplay>().RemoveListeners();
             Destroy(m_Buttons[i].gameObject);
             m_Buttons.RemoveAt(i);
         }
@@ -65,7 +65,7 @@ public class ArmyDisplay : MonoBehaviour
             
             go.name = unitList[i].Name + "_Button";
             go.GetComponent<Image>().sprite = unitList[i].Icon;
-            go.GetComponent<HealthDisplay>().SetupListeners();
+            go.GetComponent<UIHealthDisplay>().SetupListeners();
 
             var button = go.GetComponent<Button>();
             var n = i;

@@ -13,6 +13,9 @@ public class Interactable : GameObjectIdentity
     [SerializeField]
     private EntitySize m_Size = EntitySize.Normal;
 
+    [SerializeField]
+    private ParticleSystem m_HitEffect;
+
     private GameObject m_SelectionIndicator = null;
 
     public Transform AimAtPoint
@@ -28,6 +31,11 @@ public class Interactable : GameObjectIdentity
     public EntitySize Size 
     {
         get => m_Size; 
+    }
+
+    public ParticleSystem HitEffect 
+    {
+        get => m_HitEffect; 
     }
 
     [Client]
@@ -90,5 +98,24 @@ public class Interactable : GameObjectIdentity
         }
 
         RemoveSelectionIndicator();
+    }
+
+    [ClientRpc]
+    public void RpcStartHitParticles(Transform lookAtPoint)
+    {
+        StartCoroutine(HitCoroutine(lookAtPoint));
+    }
+
+    private IEnumerator HitCoroutine(Transform lookAtPoint)
+    {
+        var hitEffect = Instantiate(m_HitEffect);
+        hitEffect.transform.LookAt(lookAtPoint);
+        hitEffect.transform.SetParent(transform);
+        hitEffect.transform.position = transform.position;
+
+        hitEffect.Play();
+        yield return new WaitForSeconds(m_HitEffect.main.duration);
+        hitEffect.Stop();
+        Destroy(hitEffect);
     }
 }

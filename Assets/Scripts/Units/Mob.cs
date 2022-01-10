@@ -25,27 +25,41 @@ public class Mob : InteractableGameEntity
 
     private void Flee()
     {
-        
+        StopAllCoroutines();
+        Move(10);
     }
 
     [ServerCallback]
     private void Update()
     {
-        StartCoroutine(Move());
+        StartCoroutine(WaitForMove());
         m_Timer -= Time.deltaTime;
     }
 
     [Server]
-    public IEnumerator Move()
+    private IEnumerator WaitForMove()
     {
         yield return new WaitUntil(() => m_Timer <= 0);
+        Move(5);
 
-        var randTie = Random.Range(1, 10);
+        
+    }
 
-        m_Timer = randTie;
+    [Server]
+    private void Move(int distance)
+    {
+        var idleTime = Random.Range(1, 10);
+        var randomDistance = Random.Range((distance / 2), distance);
 
-        var newPos = Utils.OffsetPoint(transform.position, 5);
+        m_Timer = idleTime;
+
+        var newPos = Utils.OffsetPoint(transform.position, distance);
 
         m_UnitMovement.ServerMove(newPos);
+    }
+
+    public override void ServerHandleDie()
+    {
+        DestroyThisOnServer();
     }
 }

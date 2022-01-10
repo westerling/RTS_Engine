@@ -506,16 +506,6 @@ public class RtsPlayer : NetworkBehaviour
 
     private void ServerHandleUnitsSpawned(Unit unit)
     {
-        if (unit.connectionToClient.connectionId != connectionToClient.connectionId)
-        {
-            return;
-        }
-    
-        if (!hasAuthority)
-        {
-            return;
-        }
-
         DeployedUnits.Add(unit);
         SetCurrentPopulation(1);
     }    
@@ -675,13 +665,12 @@ public class RtsPlayer : NetworkBehaviour
     private void AuthorityHandleUnitSpawned(Unit unit)
     {
         DeployedUnits.Add(unit);
-        CmdSetCurrentPopulation(1);
+        //CmdSetCurrentPopulation(1);
     }
 
     private void AuthorityHandleUnitDespawned(Unit unit)
     {
         DeployedUnits.Remove(unit);
-        CmdSetCurrentPopulation(-1);
     }
 
     private void AuthorityHandleConstructionStarted(Building building)

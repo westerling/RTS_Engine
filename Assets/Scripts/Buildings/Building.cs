@@ -118,7 +118,12 @@ public class Building : InteractableGameEntity
 
     public override void OnStartServer()
     {
-        Health.ServerOnDie += ServerHandleDie;
+        if (!hasAuthority)
+        {
+            return;
+        }
+
+        base.OnStartServer();
 
         ServerOnConstructionStarted?.Invoke(this);
 
@@ -128,9 +133,11 @@ public class Building : InteractableGameEntity
 
     public override void OnStopServer()
     {
-        Health.ServerOnDie -= ServerHandleDie;
+        base.OnStopServer();
+
         ServerOnBuildingDespawned?.Invoke(this);
 
+        GameOverHandler.ServerOnGameOver -= ServerHandleGameOver;
         GameOverHandler.ServerOnGameOver -= ServerHandleGameOver;
         Health.EventHealthChanged -= RpcHandleHealthChanged;
     }
@@ -147,17 +154,16 @@ public class Building : InteractableGameEntity
         enabled = false;
     }
 
-    [Server]
-    private void ServerHandleDie()
-    {
-        NetworkServer.Destroy(gameObject);
-    }
-
     #endregion
 
     #region client
     public override void OnStartAuthority()
     {
+        if (!hasAuthority)
+        {
+            return;
+        }
+
         base.OnStartAuthority();
 
         AuthorityOnConstructionStarted?.Invoke(this);
@@ -295,6 +301,11 @@ public class Building : InteractableGameEntity
 
     public override void Reaction(GameObject sender)
     {
+    }
+
+    public override void ServerHandleDie()
+    {
+        DestroyThisOnServer();
     }
     #endregion
 }

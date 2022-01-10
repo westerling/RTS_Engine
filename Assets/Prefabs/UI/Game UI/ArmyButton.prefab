@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5484577140578825106}
   - component: {fileID: 2109672298527028635}
   - component: {fileID: 2972994206927380225}
-  - component: {fileID: 6074246409273470728}
+  - component: {fileID: -7601773313241091135}
   m_Layer: 0
   m_Name: ArmyButton
   m_TagString: Untagged
@@ -138,7 +138,7 @@ MonoBehaviour:
   serverOnly: 0
   m_AssetId: 
   hasSpawned: 0
---- !u!114 &6074246409273470728
+--- !u!114 &-7601773313241091135
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 221674559081166734}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74a537ecc7d20824e9060d2d1d47942c, type: 3}
+  m_Script: {fileID: 11500000, guid: 7241aab51ff6dc242ae32c80f8ce060d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 7937192388264392597}
   - component: {fileID: 402837389146965942}
   m_Layer: 0
-  m_Name: Fill
+  m_Name: HealthForeground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 8909825382398497905}
   - component: {fileID: 3188616180930430048}
   m_Layer: 0
-  m_Name: Background
+  m_Name: HealthBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
