@@ -19,6 +19,9 @@ public class PlaceWall : PlaceBuildingBase
     private List<GameObject> m_Towers = new List<GameObject>();
     private List<GameObject> m_DisableColliderList = new List<GameObject>();
 
+    private bool m_SkipFirst = false;
+    private bool m_SkipEnd = false;
+
     private void RemoveAllWallParts()
     {
         foreach (var piece in m_WallParts)
@@ -35,7 +38,7 @@ public class PlaceWall : PlaceBuildingBase
     {
         var color = Player.CanPlaceBuilding(wallPiece.GetComponent<BoxCollider>(), wallPiece.transform.position) ? Color.green : Color.red;
 
-        BuildingRendererInstance.material.SetColor("_BaseColor", color);
+        BuildingRendererInstance.material.SetColor("_Color", color);
     }
 
     private void UpdateWall()
@@ -121,39 +124,42 @@ public class PlaceWall : PlaceBuildingBase
         }
 
         var ray = MainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        var skipFirst = false;
-        var SkipEnd = false;
 
         if (m_Clicks == 0)
         {
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Globals.WallPlacementLayerMask))
             {
-                if (hit.collider.TryGetComponent(out Building building))
+                if (hit.collider.TryGetComponent(out IConnectable connectable))
                 {
-                    m_FirstPosition = building.transform.position;
-                    m_DisableColliderList.Add(building.gameObject);
+                    m_SkipFirst = true;
+                    m_FirstPosition = connectable.gameObject.transform.position;
+                    m_DisableColliderList.Add(connectable.gameObject);
+                    m_Clicks++;
                 }
-                else
+                else if (Player.CanPlaceBuilding(m_DummyTower.GetComponent<BoxCollider>(), hit.point))
                 {
                     m_FirstPosition = hit.point;
                     var go = Instantiate(m_DummyTower, hit.point, Quaternion.identity);
                     m_Towers.Add(go);
+                    m_Clicks++;
                 }
-              
-                m_Clicks++;
+            }
+            else
+            {
+                return;
             }
         }
         else if (m_Clicks == 1)
         {
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Globals.WallPlacementLayerMask))
             {
-                if (hit.collider.TryGetComponent(out Building building))
+                if (hit.collider.TryGetComponent(out IConnectable connectable))
                 {
-                    SkipEnd = true;
-                    m_SecondPosition = building.transform.position;
-                    m_DisableColliderList.Add(building.gameObject);
+                    m_SkipEnd = true;
+                    m_SecondPosition = connectable.gameObject.transform.position;
+                    m_DisableColliderList.Add(connectable.gameObject);
                 }
-                else
+                else if (Player.CanPlaceBuilding(m_DummyTower.GetComponent<BoxCollider>(), hit.point))
                 {
                     m_SecondPosition = hit.point;
                 }
@@ -166,6 +172,8 @@ public class PlaceWall : PlaceBuildingBase
                     {
                         canPlace = false;
                     }
+
+                    m_DisableColliderList.Add(piece);
                 }
 
                 if (!canPlace)
@@ -173,33 +181,37 @@ public class PlaceWall : PlaceBuildingBase
                     return;
                 }
 
-                AlterCollider(m_DisableColliderList, false);
+                AlterColliders(false);
 
                 foreach (var piece in m_WallParts)
                 {
-                    Player.CmdTryPlaceBuilding(m_WallPart.Id, piece.transform.position, piece.transform.rotation);
+                    Player.CmdTryPlaceBuilding(m_WallPart.Id, piece.transform.position, piece.transform.rotation, true);
                 }
 
-                if (!skipFirst)
+                if (!m_SkipFirst)
                 {
-                    Player.CmdTryPlaceBuilding(Building.Id, m_FirstPosition, Building.transform.rotation);
+                    Player.CmdTryPlaceBuilding(Building.Id, m_FirstPosition, Building.transform.rotation, true);
                 }
 
-                if (!SkipEnd)
+                if (!m_SkipEnd)
                 {
-                    Player.CmdTryPlaceBuilding(Building.Id, m_SecondPosition, Building.transform.rotation);
+                    Player.CmdTryPlaceBuilding(Building.Id, m_SecondPosition, Building.transform.rotation, true);
                 }
 
-                AlterCollider(m_DisableColliderList, true);
+                AlterColliders(true);
+            }
+            else
+            {
+                return;
             }
 
             RemoveAll();
         }
     }
 
-    private void AlterCollider(List<GameObject> alterColliderList, bool enabled)
+    private void AlterColliders(bool enabled)
     {
-        foreach (var go in alterColliderList)
+        foreach (var go in m_DisableColliderList)
         {
             go.GetComponent<Collider>().enabled = enabled;
         }

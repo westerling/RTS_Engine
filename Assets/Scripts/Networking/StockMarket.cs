@@ -1,13 +1,9 @@
 ﻿using Mirror;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class StockMarket : NetworkBehaviour
 {
-    private int m_TotalEconomy = 0;
-
     private int m_Fee = 30;
 
     private int m_WoodPrice = 100;
@@ -88,6 +84,5 @@ public class StockMarket : NetworkBehaviour
 
     private void UpdateFund(int value, Trend trend)
     {
-        System.Random rnd = new System.Random();
     }
 }

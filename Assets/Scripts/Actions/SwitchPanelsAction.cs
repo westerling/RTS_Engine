@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class SwitchPanelsAction : ActionBehaviour
 {
-    public SwitchPanelsAction(Sprite sprite, int position)
+    public SwitchPanelsAction(int pos)
     {
-        Position = position;
-        Icon = sprite;
+        Position = pos;
+        Icon = Resources.Load<Sprite>("Sprites/Modifiers_LevelUp");
         Name = "Switch";
         Description = "Switch Page";
     }

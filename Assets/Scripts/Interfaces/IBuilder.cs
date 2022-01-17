@@ -9,4 +9,6 @@ public interface IBuilder
     void RpcAddBuilder(Building building, Unit unit);
 
     void FindNewBuilding();
+
+    void AddSwitchPanelsAction();
 }

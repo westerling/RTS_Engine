@@ -2,6 +2,7 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public class Villager : Unit, IBuilder, ICollector, IDeliver, IGarrison, IAttack
 {
@@ -29,10 +30,14 @@ public class Villager : Unit, IBuilder, ICollector, IDeliver, IGarrison, IAttack
     
     public int CarryingAmount 
     { 
-        get => m_CarryingAmount; 
-        set => m_CarryingAmount = value;
+        get => m_CarryingAmount;
+        set
+        {
+            m_CarryingAmount = value;
+            ResourceCollected?.Invoke(value);
+        }
     }
-    
+
     [ServerCallback]
     private void Update()
     {
@@ -54,6 +59,7 @@ public class Villager : Unit, IBuilder, ICollector, IDeliver, IGarrison, IAttack
                 StartCoroutine(Garrison());
                 break;
             case Task.Idle:
+            case Task.Move:
                 StopAllCoroutines();
                 break;
         }
@@ -217,6 +223,7 @@ public class Villager : Unit, IBuilder, ICollector, IDeliver, IGarrison, IAttack
         {
             if (!Utils.IsCloseEnough(building, transform.position))
             {
+                ClientDebug("too long");
                 yield break;
             }
 
@@ -352,6 +359,12 @@ public class Villager : Unit, IBuilder, ICollector, IDeliver, IGarrison, IAttack
         building.AddBuilder(unit);
     }
 
+    public override void AddBehaviours()
+    {
+        base.AddBehaviours();
+        AddSwitchPanelsAction();
+    }
+
     public bool CarryingAmountIsFull()
     {
         return CarryingAmount >= (int)LocalStats.Stats.GetAttributeAmount(AttributeType.CarryCapacity);
@@ -370,5 +383,15 @@ public class Villager : Unit, IBuilder, ICollector, IDeliver, IGarrison, IAttack
 
         CurrentResource = resource;
     }
+
+    public void AddSwitchPanelsAction()
+    {
+        if (Buildings.Where(x => x.Position > 14).Any())
+        {
+            ActionBehaviours.Add(new SwitchPanelsAction(14));
+            ActionBehaviours.Add(new SwitchPanelsAction(29));
+        }
+    }
+
     #endregion
 }

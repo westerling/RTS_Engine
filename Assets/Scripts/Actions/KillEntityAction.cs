@@ -3,12 +3,18 @@ using UnityEngine;
 
 public class KillEntityAction : ActionBehaviour
 {
-    [SerializeField]
-    private Sprite m_Sprite;
+    private Health m_Health;
 
-    private void Start()
+    public Health Health 
     {
-        Icon = m_Sprite;
+        get => m_Health; 
+        set => m_Health = value; 
+    }
+
+    public KillEntityAction(int position)
+    {
+        Position = position;
+        Icon = Resources.Load<Sprite>("Sprites/Elements_Death");
         Name = "Kill";
         Description = "Kill this unit";
     }
@@ -17,7 +23,7 @@ public class KillEntityAction : ActionBehaviour
     {
         return delegate () 
         {
-            GetComponent<Health>().CmdSetHealth(0);
+            Health.CmdSetHealth(0);
         };
     }
 }

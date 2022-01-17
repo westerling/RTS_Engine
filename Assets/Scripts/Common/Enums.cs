@@ -23,6 +23,7 @@ public enum Domain
 
 public enum SelectedEntity
 {
+    Villager,
     Unit,
     Army,
     Building,

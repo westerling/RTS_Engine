@@ -1,6 +1,6 @@
 ﻿using Mirror;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
@@ -15,9 +15,6 @@ public class SelectionHandler : MonoBehaviour
 
     [SerializeField]
     private List<GameObject> m_Selected = new List<GameObject>();
-
-    [SerializeField]
-    private List<Sprite> m_Sprites = new List<Sprite>();
 
     private Vector2 startPosition;
     private RtsPlayer player;
@@ -47,20 +44,21 @@ public class SelectionHandler : MonoBehaviour
 
     private void Update()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame && 
+        if (Mouse.current.leftButton.wasPressedThisFrame &&
             !EventSystem.current.IsPointerOverGameObject())
         {
             StartSelectionArea();
         }
-        else if (Mouse.current.leftButton.wasReleasedThisFrame &&
-            !EventSystem.current.IsPointerOverGameObject())
+        else if (Mouse.current.leftButton.wasReleasedThisFrame)
         {
             ClearSelectionArea();
-            OrderList();
-            AddNewUI();
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                OrderList();
+                AddNewUI();
+            }          
         }
-        else if (Mouse.current.leftButton.isPressed &&
-            !EventSystem.current.IsPointerOverGameObject())
+        else if (Mouse.current.leftButton.isPressed)
         {
             UpdateSelectionArea();
         }
@@ -71,43 +69,6 @@ public class SelectionHandler : MonoBehaviour
         ClearAndDeselect();
         SelectUnit(unit);
         AddNewUI();
-    }
-
-    public SelectedEntity CurrentSelectedEntity()
-    {
-        if (Selected.Count <= 0)
-        {
-            return SelectedEntity.None;
-        }
-
-        if (Selected[0].TryGetComponent(out Unit unit))
-        {
-            return SelectedEntity.Unit;
-        }
-
-        if (Selected[0].TryGetComponent(out Collectable collectable))
-        {
-            return SelectedEntity.Resource;
-        }
-
-        if (Selected[0].TryGetComponent(out Building building))
-        {
-            return SelectedEntity.Building;
-        }
-
-        return SelectedEntity.None;
-    }
-
-    public bool UnitsAreSameType()
-    {
-        var selectedList = Selected.Select(go => go.GetComponent<Unit>()).ToList();
-
-        if (Utils.UnitsAreSameType(selectedList))
-        {
-            return true;
-        }
-
-        return false;
     }
 
     public EntityType SelectedEntityType()
@@ -122,25 +83,15 @@ public class SelectionHandler : MonoBehaviour
         return EntityType.Mixed;
     }
 
-    public bool SelectedContainsUnit(EntityType type)
-    {
-        var selectedList = Selected.Select(go => go.GetComponent<Unit>().EntityType).ToList();
-
-        return selectedList.Contains(type);
-    }
-
-    public bool SelectedContainsTargeter()
+    public bool SelectedContainsAttacker()
     {
         var selectedList = new List<GameObject>();
 
         foreach (var unit in Selected)
         {
-            if (unit.TryGetComponent(out Targeter targeter))
+            if (unit.TryGetComponent(out IAttack _))
             {
-                if (targeter.Attacker)
-                {
-                    selectedList.Add(unit.gameObject);
-                }
+                selectedList.Add(unit.gameObject);
             }
         }
 
@@ -153,12 +104,9 @@ public class SelectionHandler : MonoBehaviour
 
         foreach (var unit in Selected)
         {
-            if (unit.TryGetComponent(out Targeter targeter))
+            if (unit.TryGetComponent(out IBuilder _))
             {
-                if (targeter.Builder)
-                {
-                    selectedList.Add(unit.gameObject);
-                }
+                selectedList.Add(unit.gameObject);
             }
         }
 
@@ -171,12 +119,24 @@ public class SelectionHandler : MonoBehaviour
 
         foreach (var unit in Selected)
         {
-            if (unit.TryGetComponent(out Targeter targeter))
+            if (unit.TryGetComponent(out ICollector _))
             {
-                if (targeter.Collector)
-                {
-                    selectedList.Add(unit.gameObject);
-                }
+                selectedList.Add(unit.gameObject);
+            }
+        }
+
+        return selectedList.Count > 0;
+    }
+
+    public bool SelectedContainsSpawner()
+    {
+        var selectedList = new List<GameObject>();
+
+        foreach (var unit in Selected)
+        {
+            if (unit.TryGetComponent(out Spawner _))
+            {
+                selectedList.Add(unit.gameObject);
             }
         }
 
@@ -301,9 +261,12 @@ public class SelectionHandler : MonoBehaviour
 
     private void OrderList()
     {
-        if (CurrentSelectedEntity() == SelectedEntity.Unit)
+        if (Selected.Count > 0)
         {
-            Selected.OrderBy(o => o.GetComponent<GameObjectIdentity>().EntityType).ToList();
+            if (Selected[0].TryGetComponent(out Unit unit))
+            {
+                Selected.OrderBy(o => o.GetComponent<GameObjectIdentity>().EntityType).ToList();
+            }
         }
     }
 
@@ -317,6 +280,8 @@ public class SelectionHandler : MonoBehaviour
         {
             return;
         }
+
+        var behaviourList = new List<ActionBehaviour>();
 
         if (selectedList.Count == 1)
         {
@@ -335,25 +300,37 @@ public class SelectionHandler : MonoBehaviour
                 }
             }
 
-            if (selected.TryGetComponent(out IBuilder builder))
+            if (selected.TryGetComponent(out InteractableGameEntity go))
             {
-                CreateUnitBehaviours(builder.Buildings);
+                behaviourList.AddRange(go.ActionBehaviours);
             }
-            if (selected.TryGetComponent(out Spawner spawner))
+
+            if (selected.TryGetComponent(out Unit unit))
             {
-                CreateBuildingBehaviours(spawner.Units, spawner);
-                CreateBuildingBehaviours(spawner.Upgrades, spawner);
+                if (selected.TryGetComponent(out IBuilder builder))
+                {
+                    behaviourList.AddRange(AddCreateBuildingBehaviours(builder.Buildings));
+                }
             }
+            if (selected.TryGetComponent(out Building building))
+            {
+                if (selected.TryGetComponent(out Spawner spawner))
+                {
+                    behaviourList.AddRange(AddCreateUnitsBehaviour(spawner.Units, spawner));
+                    behaviourList.AddRange(AddCreateUnitsBehaviour(spawner.Upgrades, spawner));
+                }
+            }
+            AddBehaviours(behaviourList.ToArray());
             return;
         }
 
-        if (selectedList.Count > 0)
+        if (selectedList.Count > 1)
         {
             if (Utils.UnitsAreSameType(selectedList))
             {
                 if (Selected[0].gameObject.TryGetComponent(out IBuilder builder))
                 {
-                    CreateUnitBehaviours(builder.Buildings);
+                    behaviourList.AddRange(AddCreateBuildingBehaviours(builder.Buildings));
                 }
             }
 
@@ -367,6 +344,7 @@ public class SelectionHandler : MonoBehaviour
                 }
             }
 
+            AddBehaviours(behaviourList.ToArray());
             ArmyDisplay.Current.AddButtons(unitList.ToArray());
         }
     }
@@ -410,7 +388,7 @@ public class SelectionHandler : MonoBehaviour
         ActionsDisplay.Current.ResetPanels();
     }
 
-    private void CreateUnitBehaviours(CreateEntity[] entities)
+    private List<ActionBehaviour> AddCreateBuildingBehaviours(CreateEntity[] entities)
     {
         var actionBehaviours = new List<ActionBehaviour>();
 
@@ -422,16 +400,11 @@ public class SelectionHandler : MonoBehaviour
             }
         }
 
-        if (actionBehaviours.Where(behaviour => behaviour.Position > 14).Any())
-        {
-            actionBehaviours.Add(new SwitchPanelsAction(m_Sprites[0], 14));
-            actionBehaviours.Add(new SwitchPanelsAction(m_Sprites[0], 29));
-        }
-
-        AddBehaviours(actionBehaviours.ToArray());
+        return actionBehaviours;
+        //AddBehaviours(actionBehaviours.ToArray());
     }
 
-    private void CreateBuildingBehaviours(CreateEntity[] entities, Spawner spawner)
+    private List<ActionBehaviour> AddCreateUnitsBehaviour(CreateEntity[] entities, Spawner spawner)
     {
         var actionBehaviours = new List<ActionBehaviour>();
 
@@ -447,13 +420,8 @@ public class SelectionHandler : MonoBehaviour
             }
         }
 
-        if (actionBehaviours.Where(behaviour => behaviour.Position > 14).Any())
-        {
-            actionBehaviours.Add(new SwitchPanelsAction(m_Sprites[0], 15));
-            actionBehaviours.Add(new SwitchPanelsAction(m_Sprites[0], 30));
-        }
-
-        AddBehaviours(actionBehaviours.ToArray());
+        return actionBehaviours;
+        //AddBehaviours(actionBehaviours.ToArray());
     }
 
     private void AddSingleEntityInformation(GameObject go)

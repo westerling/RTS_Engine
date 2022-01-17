@@ -44,14 +44,6 @@ public class Unit : InteractableGameEntity
         
     }
 
-    public override void OnStopServer()
-    {
-        base.OnStopServer();
-
-        //ServerOnUnitDespawned?.Invoke(this);
-        //SetFOVAvailability(false);
-    }
-
     #endregion
 
     #region client
@@ -63,6 +55,11 @@ public class Unit : InteractableGameEntity
         AuthorityOnUnitSpawned?.Invoke(this);
         SetFOVAvailability(true);
         Upgrade.AuthorityOnUpgradeAdded += AuthorityHandleUpgradeAdded;
+    }
+
+    public override void AddBehaviours()
+    {
+        AddKillEntityAction();
     }
 
     public virtual void AuthorityHandleUpgradeAdded(Upgrade upgrade)

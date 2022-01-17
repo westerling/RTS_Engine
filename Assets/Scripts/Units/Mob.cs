@@ -62,4 +62,9 @@ public class Mob : InteractableGameEntity
     {
         DestroyThisOnServer();
     }
+
+    public override void AddBehaviours()
+    {
+        return;
+    }
 }

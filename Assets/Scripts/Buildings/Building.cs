@@ -29,7 +29,6 @@ public class Building : InteractableGameEntity
 
     private List<Unit> m_Builders = new List<Unit>();
     private List<Unit> m_GarrisonUnits = new List<Unit>();
-    private float m_BuildTimer = 0;
 
     public static event Action<Building> ServerOnConstructionStarted;
     public static event Action<Building> ServerOnBuildingCompleted;
@@ -179,6 +178,11 @@ public class Building : InteractableGameEntity
         AuthorityOnBuildingDespawned?.Invoke(this);
     }
 
+    public override void AddBehaviours()
+    {
+        AddKillEntityAction();
+    }
+
     private void HandleBuildingStateUpdated(bool oldState, bool newState)
     {
         HandleEnabledComponents(newState);
@@ -191,13 +195,6 @@ public class Building : InteractableGameEntity
         foreach (var go in EnableOnBuild)
         {
             go.SetActive(newState);
-        }
-
-        var scriptsToEnable = GetComponents<ActionBehaviour>();
-
-        foreach (var script in scriptsToEnable)
-        {
-            script.enabled = newState;
         }
 
         m_Construction.SetActive(!newState);

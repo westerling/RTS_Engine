@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Health))]
@@ -19,12 +20,15 @@ public abstract class InteractableGameEntity : Interactable
 
     private float m_FieldOfViewDistance = 10;
     private bool m_Pacifist = false;
+    private List<ActionBehaviour> m_ActionBehaviours = new List<ActionBehaviour>();
 
     private RtsPlayer m_Player;
 
     public abstract void Reaction(GameObject sender);
 
     public abstract void ServerHandleDie();
+
+    public abstract void AddBehaviours();
 
     public Targeter Targeter 
     { 
@@ -65,6 +69,11 @@ public abstract class InteractableGameEntity : Interactable
         get => m_Player;
         set => m_Player = value;
     }
+    public List<ActionBehaviour> ActionBehaviours 
+    {
+        get => m_ActionBehaviours; 
+        set => m_ActionBehaviours = value;
+    }
 
     #region client
 
@@ -75,6 +84,8 @@ public abstract class InteractableGameEntity : Interactable
         var size = LocalStats.Stats.GetAttributeAmount(AttributeType.LineOfSight);
 
         FieldOfView.transform.localScale += new Vector3(size, 0, size);
+
+        AddBehaviours();
     }
 
     #endregion
@@ -107,7 +118,7 @@ public abstract class InteractableGameEntity : Interactable
         FieldOfView?.SetActive(enabled);
     }
 
-    private void OnTriggerEnter(Collider other)
+    public virtual void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out InteractableGameEntity targetable))
         {
@@ -148,4 +159,9 @@ public abstract class InteractableGameEntity : Interactable
     }
 
     #endregion
+
+    protected void AddKillEntityAction()
+    {
+
+    }
 }

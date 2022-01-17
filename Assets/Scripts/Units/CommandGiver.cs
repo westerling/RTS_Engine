@@ -53,100 +53,112 @@ public class CommandGiver : MonoBehaviour
 
         ResetTargets();
 
-        switch (m_SelectionHandler.CurrentSelectedEntity())
+        if (m_SelectionHandler.SelectedContainsAttacker())
         {
-            case SelectedEntity.Unit:
-                UnitSelected(hit);
-                break;
-            case SelectedEntity.Building:
-                BuildingSelected(hit);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void UnitSelected(RaycastHit hit)
-    {
-        if (hit.collider.TryGetComponent(out InteractableGameEntity target))
-        {
-            if (!target.hasAuthority)
+            if (Attacker(hit))
             {
-                if (target.TryGetComponent(out Health health))
-                {
-                    if (health.CurrentHealth <= 0)
-                    {
-                        TryCollect(target);
-                    }
-                }
-                TryTarget(target);
+                return;
+            }
+        }
+        
+        if (m_SelectionHandler.SelectedContainsBuilder())
+        {
+            if (Builder(hit))
+            {
+                return;
+            }
+        }
+        
+        if (m_SelectionHandler.SelectedContainsCollector())
+        {
+            if (Collector(hit))
+            {
                 return;
             }
         }
 
-        if (hit.collider.TryGetComponent(out Building building))
+        if (m_SelectionHandler.SelectedContainsSpawner())
         {
-            if (building.hasAuthority)
+            if (Spawner(hit))
             {
-                var isRallying = false;
-
-                if (isRallying)
-                {
-                    TryGarrison(building);
-                }
-
-                if (building.TryGetComponent(out Health health))
-                {
-                    if (!health.HasFullHealth())
-                    {
-                        TryBuild(building);
-                        return;
-                    }
-                }
-
-                if (building.TryGetComponent(out DropOff dropOff))
-                {
-                    if (dropOff.GetComponent<Building>().BuildingIsCompleted)
-                    {
-                        TryDeliver(dropOff);
-                        return;
-                    }
-
-                }
-                else if (building.TryGetComponent(out TownCenter townCenter))
-                {
-                    if (townCenter.GetComponent<Building>().BuildingIsCompleted)
-                    {
-                        TryDeliver(townCenter);
-                        return;
-                    }
-                }
+                return;
             }
-        }
-
-        if (hit.collider.TryGetComponent(out IResource resource))
-        {
-            TryCollect(resource);
-            return;
         }
 
         TryMove(hit.point);
-        m_CursorManager.SetCommandCursor(hit.point);
     }
-    
-    private void BuildingSelected(RaycastHit hit)
+
+    private bool Attacker(RaycastHit hit)
     {
         if (hit.collider.TryGetComponent(out InteractableGameEntity target))
         {
             if (!target.hasAuthority)
             {
-                TryTarget(target);
-                return;
+                if (target.TryGetComponent(out Health targetHealth))
+                {
+                    if (targetHealth.CurrentHealth > 0)
+                    {
+                        TryAttack(target);
+                        return true;
+                    }
+                }
             }
         }
+        return false;
+    }
 
+    private bool Builder(RaycastHit hit)
+    {
+        if (hit.collider.TryGetComponent(out Building building))
+        {
+            if (building.hasAuthority && !building.BuildingIsCompleted)
+            {
+                TryBuild(building);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool Collector(RaycastHit hit)
+    {
+        if (hit.collider.TryGetComponent(out IDropOff dropOff))
+        {
+            if (dropOff.gameObject.TryGetComponent(out GameObjectIdentity go))
+            {
+                if (go.hasAuthority)
+                {
+                    TryDeliver(dropOff);
+                    return true;
+                }
+            }
+        }
+        if (hit.collider.TryGetComponent(out IResource resource))
+        {
+            if (resource.gameObject.TryGetComponent(out ResourceMob mob))
+            {
+                if (mob.TryGetComponent(out Health mobHealth))
+                {
+                    if (mobHealth.CurrentHealth <= 0)
+                    {
+                        TryCollect(resource);
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                TryCollect(resource);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool Spawner(RaycastHit hit)
+    {
         TrySetRallyPoint(hit.point);
-        m_CursorManager.SetCommandCursor(hit.point);
+        return true;
     }
 
     private void ResetTargets()
@@ -168,6 +180,7 @@ public class CommandGiver : MonoBehaviour
             if (building.TryGetComponent(out Spawner spawner))
             {
                 spawner.CmdSetRallyPoint(point);
+                m_CursorManager.SetCommandCursor(point);
             }
         }
     }
@@ -184,6 +197,7 @@ public class CommandGiver : MonoBehaviour
         {
             MoveSingleUnit(unitList[0], point);
         }
+        m_CursorManager.SetCommandCursor(point);
     }
 
     private void MoveArmy(List<Unit> unitList, Vector3 point)
@@ -202,6 +216,7 @@ public class CommandGiver : MonoBehaviour
             else
             {
                 unitList[i].UnitMovement.CmdMove(formation.GetComponent<Formation>().Transforms[i].position);
+                unitList[i].UnitMovement.CmdSetTask((int)Task.Move);
             }
             
         }
@@ -221,7 +236,7 @@ public class CommandGiver : MonoBehaviour
         }
     }
 
-    private void TryTarget(InteractableGameEntity target)
+    private void TryAttack(InteractableGameEntity target)
     {
         var selectedList = m_SelectionHandler.Selected.Select(go => go.GetComponent<InteractableGameEntity>()).ToList();
 
@@ -266,7 +281,7 @@ public class CommandGiver : MonoBehaviour
         m_CursorManager.Flashtarget(resource.gameObject);
     }
 
-    private void TryDeliver(DropOff dropOff)
+    private void TryDeliver(IDropOff dropOff)
     {
         var unitList = m_SelectionHandler.Selected.Select(go => go.GetComponent<Unit>()).ToList();
 
@@ -279,31 +294,12 @@ public class CommandGiver : MonoBehaviour
                 return;
             }
 
-            targeter.CmdSetTarget(dropOff.gameObject);
+            targeter.CmdSetDropOff(dropOff.gameObject);
 
             unit.UnitMovement.CmdDeliver();
+
         }
         m_CursorManager.Flashtarget(dropOff.gameObject);
-    }
-
-    private void TryDeliver(TownCenter townCenter)
-    {
-        var unitList = m_SelectionHandler.Selected.Select(go => go.GetComponent<Unit>()).ToList();
-
-        foreach (Unit unit in unitList)
-        {
-            var targeter = unit.Targeter;
-
-            if (targeter == null)
-            {
-                return;
-            }
-
-            unit.UnitMovement.CmdSetTask((int)Task.Deliver);
-            unit.UnitMovement.CmdMove(townCenter.gameObject.transform.position);
-            targeter.CmdSetTarget(townCenter.gameObject);
-        }
-        m_CursorManager.Flashtarget(townCenter.gameObject);
     }
 
     private void TryBuild(Building building)
@@ -404,13 +400,19 @@ public class CommandGiver : MonoBehaviour
             return;
         }
 
-        if (m_SelectionHandler.SelectedContainsTargeter())
+        if (m_SelectionHandler.SelectedContainsAttacker())
         {
             if (hit.collider.TryGetComponent(out InteractableGameEntity target))
             {
                 if (!target.hasAuthority)
                 {
-                    m_CursorManager.SetCursorStyle(CursorType.Attack);
+                    if (target.TryGetComponent(out Health targetHealth))
+                    {
+                        if (targetHealth.CurrentHealth > 0)
+                        {
+                            m_CursorManager.SetCursorStyle(CursorType.Attack);
+                        }
+                    }              
                     return;
                 }
             }
@@ -436,7 +438,7 @@ public class CommandGiver : MonoBehaviour
 
         if (m_SelectionHandler.SelectedContainsCollector())
         {
-            if (hit.collider.TryGetComponent(out Collectable resource))
+            if (hit.collider.TryGetComponent(out IResource resource))
             {
                 switch (resource.Resource)
                 {

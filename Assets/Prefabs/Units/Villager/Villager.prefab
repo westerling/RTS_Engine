@@ -432,9 +432,9 @@ MonoBehaviour:
     - m_Amount: 10
       m_AttributeType: 19
     - m_Amount: 1
-      m_AttributeType: 20
+      m_AttributeType: 21
     - m_Amount: 50
-      m_AttributeType: 22
+      m_AttributeType: 23
 --- !u!114 &-2944482102068684238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,6 +474,8 @@ MonoBehaviour:
     m_Object: {fileID: 4741190181223067789, guid: c9bfe6e2e84d1a9408c01fad5f137261, type: 3}
   - m_Position: 16
     m_Object: {fileID: 7998316973431361161, guid: 0d1e2cc5fcf2e4c40b39a2ea4c9dddac, type: 3}
+  - m_Position: 17
+    m_Object: {fileID: 2587173785946230288, guid: 6b106debfae4008479944259879f6213, type: 3}
 --- !u!114 &5625393431626882850
 MonoBehaviour:
   m_ObjectHideFlags: 0

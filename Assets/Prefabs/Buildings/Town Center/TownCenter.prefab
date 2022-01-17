@@ -51,8 +51,6 @@ GameObject:
   - component: {fileID: -460078944814654638}
   - component: {fileID: 5238609639109403790}
   - component: {fileID: 3555989225426376962}
-  - component: {fileID: -4641286794093473818}
-  - component: {fileID: 4754746237925384742}
   m_Layer: 13
   m_Name: TownCenter
   m_TagString: Untagged
@@ -240,6 +238,7 @@ MonoBehaviour:
   m_AimAtPoint: {fileID: 6624683912560136601}
   m_Domain: 0
   m_Size: 4
+  m_HitEffect: {fileID: 0}
   m_Targeter: {fileID: 0}
   m_FieldOfView: {fileID: 6420818954496999874}
   m_LocalStats: {fileID: 5238609639109403790}
@@ -308,30 +307,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
---- !u!114 &-4641286794093473818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4309669020891701889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c77c55cf2ad19114ebf33a02656249a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4754746237925384742
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4309669020891701889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31b346b92cd6f7c4eaa1a74a5e4a30b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4948351167599653903
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,11 +593,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed2d871c08f11fc4fbf57e1fa1a6e05b, type: 3}
---- !u!23 &2794518419853759546 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 2745481381254554060, guid: ed2d871c08f11fc4fbf57e1fa1a6e05b, type: 3}
-  m_PrefabInstance: {fileID: 59100361789224438}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2018460188088115745 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2076992512534878167, guid: ed2d871c08f11fc4fbf57e1fa1a6e05b, type: 3}
@@ -631,6 +601,11 @@ GameObject:
 --- !u!4 &6011115046565553000 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6033189893088253598, guid: ed2d871c08f11fc4fbf57e1fa1a6e05b, type: 3}
+  m_PrefabInstance: {fileID: 59100361789224438}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &2794518419853759546 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2745481381254554060, guid: ed2d871c08f11fc4fbf57e1fa1a6e05b, type: 3}
   m_PrefabInstance: {fileID: 59100361789224438}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5666642942414245637

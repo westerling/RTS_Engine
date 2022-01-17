@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-public abstract class ActionBehaviour : MonoBehaviour
+public abstract class ActionBehaviour
 {
     public abstract Action GetClickAction();
 

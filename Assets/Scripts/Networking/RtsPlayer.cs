@@ -426,7 +426,7 @@ public class RtsPlayer : NetworkBehaviour
     }
 
     [Command]
-    public void CmdTryPlaceBuilding(int buildingId, Vector3 point, Quaternion rotation)
+    public void CmdTryPlaceBuilding(int buildingId, Vector3 point, Quaternion rotation, bool forceBuild)
     {
         Building buildingToPlace = null;
 
@@ -451,7 +451,7 @@ public class RtsPlayer : NetworkBehaviour
 
         var collider = buildingToPlace.GetComponent<BoxCollider>();
 
-        if (!CanPlaceBuilding(collider, point))
+        if (!CanPlaceBuilding(collider, point) && !forceBuild)
         {
             return;
         }

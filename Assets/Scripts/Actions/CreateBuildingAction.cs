@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 [Serializable]
 public class CreateBuildingAction : ActionBehaviour
@@ -31,7 +32,7 @@ public class CreateBuildingAction : ActionBehaviour
                 return;
             }
             SetContext(GameContext.Build);
-            Instantiate(m_Building.BuildingPreview);
+            GameObject.Instantiate(m_Building.BuildingPreview);
         };
     }
 }

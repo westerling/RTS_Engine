@@ -62,7 +62,7 @@ public abstract class PlaceBuildingBase : MonoBehaviour, IPointerClickHandler
         BuildingRendererInstance = GetComponentInChildren<Renderer>();
        
         InputManager.Current.Controls.actions[Exit].performed += GeneralControlsPerformed;
-        InputManager.Current.Controls.actions[Scroll].performed += GeneralControlsPerformed;
+        InputManager.Current.Controls.actions[Scroll].performed += ScrollPerformed;
     }
 
     private void ScrollPerformed(InputAction.CallbackContext obj)

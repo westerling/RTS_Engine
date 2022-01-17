@@ -590,11 +590,11 @@ MonoBehaviour:
     - m_Amount: 6
       m_AttributeType: 2
     - m_Amount: 35
-      m_AttributeType: 20
-    - m_Amount: 25
-      m_AttributeType: 24
-    - m_Amount: 45
       m_AttributeType: 21
+    - m_Amount: 25
+      m_AttributeType: 25
+    - m_Amount: 45
+      m_AttributeType: 22
 --- !u!114 &2880876654824023484
 MonoBehaviour:
   m_ObjectHideFlags: 0

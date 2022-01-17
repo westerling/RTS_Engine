@@ -101,25 +101,6 @@ public class Targeter : NetworkBehaviour
         return Target == null;
     }
 
-    public bool PossibleTask(Task task)
-    {
-        switch (task)
-        {
-            case Task.Idle:
-            case Task.Move:
-            case Task.Garrison:
-                return true;
-            case Task.Build:
-                return Builder;
-            case Task.Attack:
-                return Attacker;
-            case Task.Deliver:
-            case Task.Collect:
-                return Collector;
-        }
-        return false;
-    }
-
     [Command]
     public void CmdSetTarget(GameObject targetGameObject)
     {

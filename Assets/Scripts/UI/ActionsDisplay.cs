@@ -3,8 +3,6 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
-using TMPro;
-using UnityEngine.EventSystems;
 
 public class ActionsDisplay : MonoBehaviour
 {
@@ -86,6 +84,7 @@ public class ActionsDisplay : MonoBehaviour
 
     public void TogglePanels()
     {
+        Debug.Log("toggle");
         m_PanelOne.SetActive(!m_PanelOne.activeSelf);
         m_PanelTwo.SetActive(!m_PanelTwo.activeSelf);
     }

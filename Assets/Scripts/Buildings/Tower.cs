@@ -1,3 +1,3 @@
-﻿public class Tower : Building
+﻿public class Tower : Building, IConnectable
 {
 }
